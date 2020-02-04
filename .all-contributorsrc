@@ -1,0 +1,25 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "uptonm",
+      "name": "Mike Upton",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/23084678?v=4",
+      "profile": "https://uptonm.dev/",
+      "contributions": [
+        "code",
+        "infra"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "visualizer",
+  "projectOwner": "path2finding",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
