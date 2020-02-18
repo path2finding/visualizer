@@ -1,23 +1,16 @@
 import * as React from "react";
-import { Canvas } from "react-three-fiber";
-import Box from "../components/Box";
+// import Canvas from "../components/Canvas";
+import MenuBarContainer from "../containers/MenuContainer";
 
-class App extends React.Component {
+class Root extends React.Component {
   render() {
     return (
-      <div className="container">
-        <h1 className="title">Hello World</h1>
-        <div style={{ border: "1px solid orangered" }}>
-          <Canvas>
-            <ambientLight />
-            <pointLight position={[10, 10, 10]} />
-            <Box position={[-1.2, 0, 0]} />
-            <Box position={[1.2, 0, 0]} />
-          </Canvas>
-        </div>
+      <div>
+        <MenuBarContainer />
+        {/* <Canvas /> */}
       </div>
     );
   }
 }
 
-export default App;
+export default Root;
