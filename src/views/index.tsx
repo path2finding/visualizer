@@ -4,19 +4,19 @@ import React , {Suspense} from "react";
 import { Canvas, useLoader } from "react-three-fiber";
 import Space from "../components/Box";
 
+// Components
+import MenuBarContainer from '../containers/MenuContainer';
+import Grid from '../components/Grid/Grid';
+
+import './index.scss';
+
 class App extends React.Component {
   
   render() {
     return (
-      <div className="container">
-        <h1 className="title">Hello World</h1>
-        <div style={{ border: "1px solid orangered" }}>
-          <Canvas style={{height: '100vh'}} >
-            <ambientLight />
-            <pointLight position={[10, 10, 10]} />
-              <Space type='endpoint' />
-          </Canvas>
-        </div>
+      <div className="root">
+        <MenuBarContainer />
+        <Grid gridSize={{ x: 10, y: 10 }} />
       </div>
     );
   }

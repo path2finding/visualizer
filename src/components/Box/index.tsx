@@ -58,6 +58,13 @@ const Empty: React.FC<BoxProps> = props => {
 }
 
 const Space: React.FC<BoxProps> = props => {
+
+  const [hovered, setHover] = useState(false)
+
+  const spaceClicked =(() => {
+    console.log('space clicked');
+  });
+
   const typeComponent = () => {
     switch(props.type) {
       case "wall":   return <Wall />;
@@ -69,7 +76,13 @@ const Space: React.FC<BoxProps> = props => {
   }
 
   return(
-    <mesh>
+    <mesh 
+      position={props.position}
+      onClick={e => spaceClicked()} 
+      onPointerOver={e => setHover(true)}
+      onPointerOut={e => setHover(false)}
+    >
+
       <Suspense fallback='none'>
         {typeComponent()}
       </Suspense>
