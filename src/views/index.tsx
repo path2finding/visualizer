@@ -1,18 +1,20 @@
-import * as React from "react";
-import { Canvas } from "react-three-fiber";
-import Box from "../components/Box";
+import * as THREE from "three"
+import React , {Suspense} from "react";
+
+import { Canvas, useLoader } from "react-three-fiber";
+import Space from "../components/Box";
 
 class App extends React.Component {
+  
   render() {
     return (
       <div className="container">
         <h1 className="title">Hello World</h1>
         <div style={{ border: "1px solid orangered" }}>
-          <Canvas>
+          <Canvas style={{height: '100vh'}} >
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
-            <Box position={[-1.2, 0, 0]} />
-            <Box position={[1.2, 0, 0]} />
+              <Space type='endpoint' />
           </Canvas>
         </div>
       </div>

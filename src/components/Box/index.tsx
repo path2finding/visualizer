@@ -1,42 +1,85 @@
-import React, { useRef, useState, MutableRefObject } from "react";
-import { useFrame } from "react-three-fiber";
-import { Mesh } from "three";
+import * as THREE from "three"
+import React, { useRef, useState, MutableRefObject, Suspense } from "react";
+import { useFrame, useLoader } from "react-three-fiber";
+import { Mesh, TextureLoader } from "three";
+
+//wall, start point, end point, empty, 
+
+const Wall: React.FC<BoxProps> = props => {
+
+  const texture = useLoader(THREE.TextureLoader, process.env.PUBLIC_URL + "stone.png");
+  const mesh: MutableRefObject<Mesh | undefined> = useRef();
+
+  return(
+    <mesh ref={mesh} >
+       <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
+          <meshPhongMaterial
+            attach="material"
+            map={texture}
+          />
+    </mesh>
+  );
+}
+
+const StartPoint: React.FC<BoxProps> = props => {
+  const texture = useLoader(THREE.TextureLoader, process.env.PUBLIC_URL + "dirt.png");
+  const mesh: MutableRefObject<Mesh | undefined> = useRef();
+
+  return(
+    <mesh
+      ref={mesh}
+    >
+       <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
+          <meshPhongMaterial
+            attach="material"
+            map={texture}
+          />
+        </mesh>
+    );
+}
+
+const EndPoint: React.FC<BoxProps> = props => {
+  const texture = useLoader(THREE.TextureLoader, process.env.PUBLIC_URL + "diamond_ore.png");
+  const mesh: MutableRefObject<Mesh | undefined> = useRef();
+
+  return(
+    <mesh ref={mesh}>
+       <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
+          <meshPhongMaterial
+            attach="material"
+            map={texture}
+          />
+        </mesh>
+  );
+}
+
+const Empty: React.FC<BoxProps> = props => {
+  return(<mesh></mesh>);
+}
+
+const Space: React.FC<BoxProps> = props => {
+  const typeComponent = () => {
+    switch(props.type) {
+      case "wall":   return <Wall />;
+      case "startpoint":   return <StartPoint />;
+      case "endpoint": return <EndPoint />;
+      case "empty":  return <Empty />;
+      default:      return <Empty />
+    }
+  }
+
+  return(
+    <mesh>
+      <Suspense fallback='none'>
+        {typeComponent()}
+      </Suspense>
+    </mesh> 
+  )
+};
 
 export interface BoxProps {
   position?: number[];
+  type?: string;
 }
 
-const Box: React.FC<BoxProps> = props => {
-  // This reference will give us direct access to the mesh
-  const mesh: MutableRefObject<Mesh | undefined> = useRef();
-
-  // Set up state for the hovered and active state
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
-
-  // Rotate mesh every frame, this is outside of React without overhead
-  useFrame(() => {
-    if (mesh && mesh.current) {
-      mesh.current.rotation.x = mesh.current.rotation.y += 0.01;
-    }
-  });
-
-  return (
-    <mesh
-      {...props}
-      ref={mesh}
-      scale={active ? [1.5, 1.5, 1.5] : [1, 1, 1]}
-      onClick={e => setActive(!active)}
-      onPointerOver={e => setHover(true)}
-      onPointerOut={e => setHover(false)}
-    >
-      <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshStandardMaterial
-        attach="material"
-        color={hovered ? "hotpink" : "orange"}
-      />
-    </mesh>
-  );
-};
-
-export default Box;
+export default Space;
