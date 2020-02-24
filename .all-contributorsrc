@@ -26,6 +26,29 @@
         "design",
         "doc"
       ]
+    },
+    {
+      "login": "JamesCoyne",
+      "name": "Jame Coyne",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/21059291?v=4",
+      "profile": "http://jame.dev",
+      "contributions": [
+        "code",
+        "design",
+        "doc",
+        "infra"
+      ]
+    },
+    {
+      "login": "gordenstein72",
+      "name": "Harry Gordenstein",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/33324346?v=4",
+      "profile": "https://github.com/gordenstein72",
+      "contributions": [
+        "code",
+        "infra",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
