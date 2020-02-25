@@ -2,6 +2,7 @@ import React, { MutableRefObject, useRef } from 'react';
 import { Canvas } from 'react-three-fiber';
 import { Mesh } from 'three';
 import './Grid.scss';
+import Space from '../Box/index';
 
 const createGridSpaces = (
   props: Props,
@@ -15,14 +16,7 @@ const createGridSpaces = (
     for (let i = 0; i < gridSize.x; i++) {
       key++;
       list.push(
-        <mesh {...props} ref={mesh} position={[i, j, 0]} key={key}>
-          <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-          <meshStandardMaterial
-            attach="material"
-            color={'hotpink'}
-            wireframe={true}
-          />
-        </mesh>
+        <Space type="wall" position={[i, j, 0]} key={key}/>
       );
     }
   }
@@ -49,7 +43,7 @@ const Grid: React.FC<Props> = props => {
       camera={{ fov: 100, position: [gridSize.x / 2, gridSize.y / 2, 10] }}
     >
       <ambientLight />
-      <pointLight position={[10, 10, 10]} />
+      {/* <pointLight position={[10, 10, 10]} /> */}
       {createGridSpaces(props, mesh, gridSize)}
     </Canvas>
   );
