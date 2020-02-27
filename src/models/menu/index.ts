@@ -8,4 +8,5 @@ export interface MenuState {
     | (string | number | boolean)[]
     | undefined;
   algorithms: DropdownItemProps[];
+  isPlaying: boolean;
 }

@@ -7,5 +7,6 @@ export const initialState: MenuState = {
     { value: "Djikstras", text: "Djikstras" },
     { value: "BFS", text: "BFS" },
     { value: "DFS", text: "DFS" }
-  ]
+  ],
+  isPlaying: false
 };

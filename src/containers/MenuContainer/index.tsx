@@ -3,7 +3,9 @@ import { bindActionCreators } from "redux";
 import {
   handleDropdownChange,
   handleStartVisualization,
-  handleStopVisualization
+  handleStopVisualization,
+  handleClearGrid,
+  handlePauseVisualization
 } from "../../actions/navbarActions";
 import MenuBar from "../../components/Menu";
 
@@ -12,7 +14,9 @@ const mapDispatchToProps = (dispatch: any) => {
     {
       handleDropdownChange,
       onStart: handleStartVisualization,
-      onStop: handleStopVisualization
+      onPause: handlePauseVisualization,
+      onStop: handleStopVisualization,
+      onClear: handleClearGrid
     },
     dispatch
   );
@@ -20,7 +24,8 @@ const mapDispatchToProps = (dispatch: any) => {
 
 const mapStateToProps = (state: any) => ({
   selectedAlgo: state.menu.selectedAlgo,
-  algorithms: state.menu.algorithms
+  algorithms: state.menu.algorithms,
+  isPlaying: state.menu.isPlaying
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar as any);
