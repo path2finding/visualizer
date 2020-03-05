@@ -11,8 +11,6 @@ import {
 } from "semantic-ui-react";
 
 const mockStore = configureStore();
-// const mockDispatchfn = jest.fn(() => new Promise(resolve => resolve('')));
-const mockDispatchfn = jest.fn();
 
 describe("<Menu />", () => {
   let wrapper: any;

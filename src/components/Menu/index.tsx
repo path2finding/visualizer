@@ -40,7 +40,7 @@ export interface MenuProps {
   ) => void;
 }
 
-class MenuBar extends React.Component<MenuProps, null> {
+class MenuBar extends React.Component<MenuProps, any> {
   render() {
     return (
       <Menu>
