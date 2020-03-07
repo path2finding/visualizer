@@ -45,20 +45,6 @@ describe("Menu Reducer Tests", () => {
     expect(updatedState).toEqual(expectedState);
   });
 
-  it("Clear Grid Expected State", () => {
-    // const action = {
-    //   type: CLEAR_GRID,
-    //   payload: null
-    // };
-
-    // const updatedState = menuReducer(initialState, action);
-    // const expectedState: MenuState = { ...initialState, isPlaying: true };
-
-    // expect(updatedState).toEqual(expectedState);
-    // Placeholder bc this reducer does not currently update state
-    expect(Math.pow(2, 2)).toEqual(4);
-  });
-
   it("Change Algorithm Expected State", () => {
     const action = {
       type: CHANGE_ALGO,
