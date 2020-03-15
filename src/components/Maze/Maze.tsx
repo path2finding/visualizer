@@ -4,11 +4,11 @@ import { Canvas } from 'react-three-fiber';
 // Components
 import Space from '../../containers/SpaceContainer/SpaceContainer';
 // Interfaces
-import { MazeState, Coord } from '../../models/maze';
+import { MazeState as MazeProps } from '../../models/maze';
 
 import './Maze.scss';
 
-const populateMaze = (mazeProps: MazeState) => {
+const populateMaze = (mazeProps: MazeProps) => {
   let list = [];
   let key = 0;
 
@@ -28,10 +28,6 @@ const populateMaze = (mazeProps: MazeState) => {
 
   return list;
 };
-
-export interface MazeProps extends MazeState {
-  handleChangeStart: (newPos: Coord) => void;
-}
 
 const Maze: React.FC<MazeProps> = props => {
   const { getSize } = props;

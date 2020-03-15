@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
+// import { bindActionCreators, Dispatch } from 'redux';
 import Grid from '../../components/Maze/Maze';
-import { handleChangeStart } from '../../actions/mazeActions';
+// import { handleChangeStart } from '../../actions/mazeActions';
 import { MazeState } from '../../models/maze';
 
 const mapStateToProps = (state: MazeState) => ({
@@ -9,13 +9,13 @@ const mapStateToProps = (state: MazeState) => ({
   getSize: state.getSize
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators(
-    {
-      handleChangeStart
-    },
-    dispatch
-  );
-};
+// const mapDispatchToProps = (dispatch: Dispatch) => {
+//   return bindActionCreators(
+//     {
+//       handleChangeStart
+//     },
+//     dispatch
+//   );
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Grid as any);
+export default connect(mapStateToProps, null)(Grid);
