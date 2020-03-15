@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import Grid from '../../components/Maze/Maze';
+import Space from '../../components/Space/Space';
 import { handleChangeStart } from '../../actions/mazeActions';
-import { MazeState } from '../../models/maze';
+import { SpaceState } from '../../models/space';
 
-const mapStateToProps = (state: MazeState) => ({
-  mazeInfo: state.mazeInfo,
-  getSize: state.getSize
+const mapStateToProps = (state: SpaceState) => ({
+  type: state.type,
+  position: state.position,
+  visited: state.visited
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -18,4 +19,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Grid as any);
+export default connect(mapStateToProps, mapDispatchToProps)(Space);

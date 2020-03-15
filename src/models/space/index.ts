@@ -1,4 +1,7 @@
+import { SpaceTypes } from './types';
+
 export interface SpaceState {
-  type: string;
+  type: SpaceTypes;
+  position?: number[];
   visited: Boolean;
 }

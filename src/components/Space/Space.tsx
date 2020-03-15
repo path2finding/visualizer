@@ -1,20 +1,31 @@
-import * as THREE from 'three';
-import React, { useRef, useState, MutableRefObject, Suspense } from 'react';
+import React, {
+  useRef,
+  useState,
+  MutableRefObject,
+  Suspense,
+  useEffect
+} from 'react';
 import { useLoader } from 'react-three-fiber';
-import { Mesh } from 'three';
+import { Mesh, TextureLoader } from 'three';
 
 // Interfaces
 import { SpaceState } from '../../models/space';
+import { Coord } from '../../models/maze';
 
-const GenericSpace: React.FC<BoxProps> = props => {
-  console.log(props);
+import { SpaceTypes } from '../../models/space/types';
+
+interface GenericSpaceProps {
+  type: string;
+}
+
+const GenericSpace: React.FC<GenericSpaceProps> = props => {
   const texture = useLoader(
-    THREE.TextureLoader,
+    TextureLoader,
     `${process.env.PUBLIC_URL}${props.type}.png`
   );
   const mesh: MutableRefObject<Mesh | undefined> = useRef();
 
-  if (props.type === 'empty') {
+  if (props.type === SpaceTypes.empty) {
     return <mesh></mesh>;
   }
 
@@ -26,30 +37,24 @@ const GenericSpace: React.FC<BoxProps> = props => {
   );
 };
 
-const Space: React.FC<BoxProps> = props => {
-  const [hovered, setHover] = useState(false);
+interface SpaceProps extends SpaceState {
+  handleChangeStart: (newPos: Coord) => void;
+}
+
+const Space: React.FC<SpaceProps> = props => {
+  // const [hovered, setHover] = useState(false);
 
   const spaceClicked = () => {
-    console.log('space clicked');
+    console.log('Click', props.position);
   };
 
   return (
-    <mesh
-      position={props.position}
-      onClick={e => spaceClicked()}
-      onPointerOver={e => setHover(true)}
-      onPointerOut={e => setHover(false)}
-    >
+    <mesh position={props.position} onClick={e => spaceClicked()}>
       <Suspense fallback="none">
         <GenericSpace type={props.type} />
       </Suspense>
     </mesh>
   );
 };
-
-export interface BoxProps {
-  position?: number[];
-  type?: string;
-}
 
 export default Space;

@@ -2,25 +2,26 @@ import React from 'react';
 import { Canvas } from 'react-three-fiber';
 
 // Components
-import Space from '../Space/Space';
+import Space from '../../containers/SpaceContainer/SpaceContainer';
 // Interfaces
-import { MazeState } from '../../models/maze';
-import { SpaceState } from '../../models/space';
+import { MazeState, Coord } from '../../models/maze';
 
 import './Maze.scss';
 
-const populateMaze = (
-  mazeSize: { x: number; y: number },
-  mazeInfo: { [key: number]: SpaceState[] }
-) => {
+const populateMaze = (mazeProps: MazeState) => {
   let list = [];
   let key = 0;
 
-  for (let j = 0; j < mazeSize.y; j++) {
-    for (let i = 0; i < mazeSize.x; i++) {
+  for (let j = 0; j < mazeProps.getSize().y; j++) {
+    for (let i = 0; i < mazeProps.getSize().x; i++) {
       key++;
       list.push(
-        <Space type={mazeInfo[j][i].type} position={[i, j, 0]} key={key} />
+        <Space
+          type={mazeProps.mazeInfo[j][i].type}
+          position={[i, j, 0]}
+          key={key}
+          visited={false}
+        />
       );
     }
   }
@@ -28,20 +29,20 @@ const populateMaze = (
   return list;
 };
 
-const Maze: React.FC<MazeState> = props => {
-  const { mazeInfo } = props;
-  const mazeSize = {
-    x: mazeInfo[0].length,
-    y: Object.keys(mazeInfo).length
-  };
+export interface MazeProps extends MazeState {
+  handleChangeStart: (newPos: Coord) => void;
+}
+
+const Maze: React.FC<MazeProps> = props => {
+  const { getSize } = props;
 
   return (
     <Canvas
       className="Maze"
-      camera={{ fov: 100, position: [mazeSize.x / 2, mazeSize.y / 2, 10] }}
+      camera={{ fov: 100, position: [getSize().x / 2, getSize().y / 2, 10] }}
     >
       <ambientLight />
-      {populateMaze(mazeSize, mazeInfo)}
+      {populateMaze(props)}
     </Canvas>
   );
 };
