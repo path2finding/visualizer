@@ -4,11 +4,11 @@ import Space from '../../components/Space/Space';
 import { handleChangeStart } from '../../actions/mazeActions';
 import { SpaceState } from '../../models/space';
 
-const mapStateToProps = (state: SpaceState) => ({
-  type: state.type,
-  position: state.position,
-  visited: state.visited
-});
+// const mapStateToProps = (state: SpaceState) => ({
+//   type: state.type,
+//   position: state.position,
+//   visited: state.visited
+// });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators(
@@ -19,4 +19,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Space);
+export default connect(null, mapDispatchToProps)(Space);
