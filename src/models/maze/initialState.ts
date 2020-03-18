@@ -1,5 +1,5 @@
 import { Maze } from './';
-import { SpaceTypes } from '../space/types';
+import { SpaceTypes } from '../../components/Space/types';
 
 export const initialState: Maze = {
   mazeInfo: {

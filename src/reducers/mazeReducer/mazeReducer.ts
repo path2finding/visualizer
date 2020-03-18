@@ -1,5 +1,5 @@
 // import { MazeState, MazeInfo, Coord } from '../../models/maze';
-import { SpaceTypes } from '../../models/space/types';
+import { SpaceTypes } from '../../components/Space/types';
 import { initialState } from '../../models/maze/initialState';
 import { Maze, MazeInfo, Coord } from '../../models/maze/index';
 import { CLEAR_GRID } from '../../actions/menuActions/menuActions';

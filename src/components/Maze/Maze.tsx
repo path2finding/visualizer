@@ -57,7 +57,7 @@ const populateMaze = (
         <Space
           type={mazeInfo[j][i].type}
           visited={mazeInfo[j][i].visited}
-          path={mazeInfo[i][j].path}
+          path={mazeInfo[j][i].path}
           position={[i, 0, j]}
           key={key}
           onChangeStart={() => handleChangeStart({ x: i, y: j })}
@@ -83,8 +83,8 @@ const Maze: React.FC<Props> = props => {
       className="Maze"
       //uncomment for isomentric mode ;)
       // orthographic
-      // camera = {{
-      //   position: new Vector3(0,0,0),
+      // camera={{
+      //   position: new Vector3(0, 0, 0),
       //   left: 100,
       //   right: 100,
       //   bottom: 100,

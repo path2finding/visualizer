@@ -1,4 +1,4 @@
-import { SpaceTypes } from '../space/types';
+import { SpaceTypes } from '../../components/Space/types';
 
 export interface Coord {
   x: number;

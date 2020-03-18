@@ -1,70 +1,7 @@
-import * as THREE from 'three';
-import React, {
-  useRef,
-  useState,
-  MutableRefObject,
-  Suspense,
-  useEffect
-} from 'react';
-import { useLoader, useFrame, stateContext } from 'react-three-fiber';
-import { Mesh, Vector3 } from 'three';
+import React, { useState } from 'react';
+import GenericSpace from './GenericSpace';
 
-import { SpaceTypes } from '../../models/space/types';
-
-interface Wall {
-  type: string;
-}
-
-const Wall: React.FC<Wall> = props => {
-  const texture = useLoader(
-    THREE.TextureLoader,
-    `${process.env.PUBLIC_URL}${props.type}.png`
-  );
-
-  return (
-    <mesh>
-      <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshPhongMaterial attach="material" map={texture} />
-    </mesh>
-  );
-};
-
-interface Empty {
-  visited: Boolean;
-  path: Boolean;
-}
-
-const Empty: React.FC<Empty> = props => {
-  return (
-    <mesh position={new Vector3(0, -0.5, 0)} rotation={[-(Math.PI / 2), 0, 0]}>
-      <planeBufferGeometry attach="geometry" args={[1, 1, 1, 1]} />
-      <meshPhongMaterial
-        attach="material"
-        color={props.visited ? (props.path ? 'red' : 'yellow') : 'blue'}
-      />
-    </mesh>
-  );
-};
-
-interface GenericSpace {
-  type: string;
-  visited: Boolean;
-  path: Boolean;
-}
-
-const GenericSpace: React.FC<GenericSpace> = props => {
-  const mesh: MutableRefObject<Mesh | undefined> = useRef();
-
-  if (props.type === 'empty') {
-    return <Empty visited={props.visited} path={props.path} />;
-  } else {
-    return (
-      <Suspense fallback="none">
-        <Wall type={props.type} />
-      </Suspense>
-    );
-  }
-};
+import { SpaceTypes } from './types';
 
 interface Props {
   type: SpaceTypes;
@@ -77,10 +14,6 @@ interface Props {
 
 const Space: React.FC<Props> = props => {
   const [hovered, setHover] = useState(false);
-
-  const spaceClicked = () => {
-    console.log('space clicked');
-  };
 
   return (
     <mesh
