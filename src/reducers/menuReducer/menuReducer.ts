@@ -3,9 +3,9 @@ import {
   START_VISUALIZATION,
   PAUSE_VISUALIZATION,
   STOP_VISUALIZATION
-} from "../actions/navbarActions";
-import { MenuState } from "../models/menu";
-import { initialState } from "../models/menu/initialState";
+} from '../../actions/menuActions/menuActions';
+import { MenuState } from '../../models/menu';
+import { initialState } from '../../models/menu/initialState';
 
 export const menuReducer = (
   state: MenuState = initialState,

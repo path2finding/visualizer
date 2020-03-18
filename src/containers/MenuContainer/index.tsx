@@ -1,13 +1,13 @@
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   handleDropdownChange,
   handleStartVisualization,
   handleStopVisualization,
   handleClearGrid,
   handlePauseVisualization
-} from "../../actions/navbarActions";
-import MenuBar from "../../components/Menu";
+} from '../../actions/menuActions/menuActions';
+import MenuBar from '../../components/Menu';
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators(

@@ -1,16 +1,6 @@
-import React, {
-  useRef,
-  useState,
-  MutableRefObject,
-  Suspense,
-  useEffect
-} from 'react';
+import React, { useRef, MutableRefObject, Suspense } from 'react';
 import { useLoader } from 'react-three-fiber';
 import { Mesh, TextureLoader } from 'three';
-
-// Interfaces
-import { SpaceState } from '../../models/space';
-import { Coord } from '../../models/maze';
 
 import { SpaceTypes } from '../../models/space/types';
 
@@ -37,19 +27,17 @@ const GenericSpace: React.FC<GenericSpaceProps> = props => {
   );
 };
 
-interface SpaceProps extends SpaceState {
-  handleChangeStart: (newPos: Coord) => void;
+interface Props {
+  type: SpaceTypes;
+  position: number[];
+  key: number;
+  visited: Boolean;
+  onChangeStart: () => void;
 }
 
-const Space: React.FC<SpaceProps> = props => {
-  // const [hovered, setHover] = useState(false);
-
-  const spaceClicked = () => {
-    console.log('Click', props.position);
-  };
-
+const Space: React.FC<Props> = props => {
   return (
-    <mesh position={props.position} onClick={e => spaceClicked()}>
+    <mesh position={props.position} onClick={e => props.onChangeStart()}>
       <Suspense fallback="none">
         <GenericSpace type={props.type} />
       </Suspense>

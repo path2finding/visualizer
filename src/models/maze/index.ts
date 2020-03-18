@@ -1,17 +1,20 @@
-import { SpaceState } from '../space';
 import { SpaceTypes } from '../space/types';
-
-export interface MazeInfo {
-  [key: number]: SpaceState[];
-}
 
 export interface Coord {
   x: number;
   y: number;
 }
 
-export interface MazeState {
+interface Space {
+  type: SpaceTypes;
+  visited: boolean;
+}
+
+export interface MazeInfo {
+  [key: number]: Space[];
+}
+
+export interface Maze {
   mazeInfo: MazeInfo;
-  getSize: () => Coord;
-  getSpaceCoord: (spaceType: SpaceTypes.start | SpaceTypes.end) => Coord | null;
+  clearMaze: MazeInfo;
 }
