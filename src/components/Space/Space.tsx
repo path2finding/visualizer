@@ -49,12 +49,20 @@ const GenericSpace: React.FC<BoxProps> = props => {
   }
 };
 
-const Space: React.FC<BoxProps> = props => {
+const Space: React.FC<SpaceProps> = props => {
 
   const [hovered, setHover] = useState(false);
 
   const spaceClicked = () => {
-    console.log('space clicked');
+    if (props.type === "wall") {
+      console.log('wall space clicked');
+      props.onSetEmpty()
+    }
+    if (props.type === "empty") {
+      console.log('empty space clicked');
+      props.onSetWall()
+    }
+   
   };
   
   return (
@@ -81,6 +89,11 @@ export interface BoxProps {
   type?: string;
   visited?: Boolean;
   path?: Boolean;
+}
+
+export interface SpaceProps extends BoxProps{
+  onSetWall: () => void,
+  onSetEmpty: () => void
 }
 
 export default Space;

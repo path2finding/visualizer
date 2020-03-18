@@ -10,6 +10,7 @@ import { MazeState } from '../../models/maze';
 import { SpaceState } from '../../models/space';
 
 import './Maze.scss';
+import { makeWall, makeEmpty } from '../../actions/mazeActions';
 
 const CameraController = () => {
   const { camera, gl } = useThree();
@@ -38,7 +39,9 @@ const CameraController = () => {
 
 const populateMaze = (
   mazeSize: { x: number; y: number },
-  mazeInfo: { [key: number]: SpaceState[] }
+  mazeInfo: { [key: number]: SpaceState[] },
+  makeWall: (data: {x: number; y: number}, type: string) => void,
+  makeEmpty: (data: {x: number; y: number}, type: string) => void
 ) => {
   console.log(mazeInfo);
   let list = [];
@@ -49,7 +52,10 @@ const populateMaze = (
       key++;
       console.log('visited: ' + mazeInfo[j][i].visited);
       list.push(
-        <Space type={mazeInfo[j][i].type} visited={mazeInfo[j][i].visited} path={mazeInfo[i][j].path} position={[i, 0, j]} key={key} />
+        <Space type={mazeInfo[j][i].type} visited={mazeInfo[j][i].visited} path={mazeInfo[i][j].path} position={[i, 0, j]} key={key} 
+        onSetWall={() => makeWall( {x:i, y:j}, "empty" )}
+        onSetEmpty={() => makeEmpty( {x:i, y:j}, "wall" )}
+        />
       );
     }
   }
@@ -57,7 +63,12 @@ const populateMaze = (
   return list;
 };
 
-const Maze: React.FC<MazeState> = props => {
+interface Props extends MazeState {
+  makeWall: any;
+  makeEmpty: any;
+}
+
+const Maze: React.FC<Props> = props => {
   const { mazeInfo } = props;
   const mazeSize = {
     x: mazeInfo[0].length,
@@ -86,7 +97,7 @@ const Maze: React.FC<MazeState> = props => {
         <planeBufferGeometry attach="geometry" args={[100, 100, 100, 100]}/>
         <meshPhongMaterial attach="material" wireframe={true} color={'grey'}/>
       </mesh>
-      {populateMaze(mazeSize, mazeInfo)}
+      {populateMaze(mazeSize, mazeInfo, props.makeWall, props.makeEmpty)}
     </Canvas>
   );
 };
