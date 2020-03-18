@@ -8,6 +8,7 @@ export interface Coord {
 interface Space {
   type: SpaceTypes;
   visited: boolean;
+  path: boolean;
 }
 
 export interface MazeInfo {

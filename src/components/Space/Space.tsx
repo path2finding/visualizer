@@ -1,30 +1,69 @@
-import React, { useRef, MutableRefObject, Suspense } from 'react';
-import { useLoader } from 'react-three-fiber';
-import { Mesh, TextureLoader } from 'three';
+import * as THREE from 'three';
+import React, {
+  useRef,
+  useState,
+  MutableRefObject,
+  Suspense,
+  useEffect
+} from 'react';
+import { useLoader, useFrame, stateContext } from 'react-three-fiber';
+import { Mesh, Vector3 } from 'three';
 
 import { SpaceTypes } from '../../models/space/types';
 
-interface GenericSpaceProps {
+interface Wall {
   type: string;
 }
 
-const GenericSpace: React.FC<GenericSpaceProps> = props => {
+const Wall: React.FC<Wall> = props => {
   const texture = useLoader(
-    TextureLoader,
+    THREE.TextureLoader,
     `${process.env.PUBLIC_URL}${props.type}.png`
   );
-  const mesh: MutableRefObject<Mesh | undefined> = useRef();
-
-  if (props.type === SpaceTypes.empty) {
-    return <mesh></mesh>;
-  }
 
   return (
-    <mesh ref={mesh}>
+    <mesh>
       <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
       <meshPhongMaterial attach="material" map={texture} />
     </mesh>
   );
+};
+
+interface Empty {
+  visited: Boolean;
+  path: Boolean;
+}
+
+const Empty: React.FC<Empty> = props => {
+  return (
+    <mesh position={new Vector3(0, -0.5, 0)} rotation={[-(Math.PI / 2), 0, 0]}>
+      <planeBufferGeometry attach="geometry" args={[1, 1, 1, 1]} />
+      <meshPhongMaterial
+        attach="material"
+        color={props.visited ? (props.path ? 'red' : 'yellow') : 'blue'}
+      />
+    </mesh>
+  );
+};
+
+interface GenericSpace {
+  type: string;
+  visited: Boolean;
+  path: Boolean;
+}
+
+const GenericSpace: React.FC<GenericSpace> = props => {
+  const mesh: MutableRefObject<Mesh | undefined> = useRef();
+
+  if (props.type === 'empty') {
+    return <Empty visited={props.visited} path={props.path} />;
+  } else {
+    return (
+      <Suspense fallback="none">
+        <Wall type={props.type} />
+      </Suspense>
+    );
+  }
 };
 
 interface Props {
@@ -32,15 +71,38 @@ interface Props {
   position: number[];
   key: number;
   visited: Boolean;
+  path: Boolean;
   onChangeStart: () => void;
 }
 
 const Space: React.FC<Props> = props => {
+  const [hovered, setHover] = useState(false);
+
+  const spaceClicked = () => {
+    console.log('space clicked');
+  };
+
   return (
-    <mesh position={props.position} onClick={e => props.onChangeStart()}>
-      <Suspense fallback="none">
-        <GenericSpace type={props.type} />
-      </Suspense>
+    <mesh
+      position={props.position}
+      onClick={e => props.onChangeStart()}
+      onPointerOver={e => setHover(true)}
+      onPointerOut={e => setHover(false)}
+    >
+      <GenericSpace
+        type={props.type}
+        visited={props.visited}
+        path={props.path}
+      />
+      {hovered && (
+        <mesh>
+          <boxBufferGeometry
+            attach="geometry"
+            args={[1.0001, 1.0001, 1.0001]}
+          />
+          <meshPhongMaterial attach="material" wireframe={true} />
+        </mesh>
+      )}
     </mesh>
   );
 };
