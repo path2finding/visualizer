@@ -16,6 +16,8 @@ describe("<Menu />", () => {
   let wrapper: any;
 
   const props: MenuProps = {
+    canMoveStart: false,
+    canMoveEnd: false,
     selectedAlgo: undefined,
     algorithms: [
       { value: "A*", text: "A*" },
@@ -28,7 +30,9 @@ describe("<Menu />", () => {
     onStart: jest.fn(),
     onPause: jest.fn(),
     onStop: jest.fn(),
-    onClear: jest.fn()
+    onClear: jest.fn(),
+    toggleMoveStart: jest.fn(),
+    toggleMoveEnd: jest.fn()
   };
 
   it("defines the component", () => {
@@ -46,7 +50,7 @@ describe("<Menu />", () => {
     expect(wrapper.find(SemanticMenu.Item)).toBeDefined();
     expect(wrapper.find(SemanticMenu.Item)).toHaveLength(2);
     expect(wrapper.find(SemanticIcon)).toBeDefined();
-    expect(wrapper.find(SemanticIcon)).toHaveLength(4);
+    expect(wrapper.find(SemanticIcon)).toHaveLength(6);
   });
 
   it("Dropdown renders", () => {
@@ -55,7 +59,7 @@ describe("<Menu />", () => {
 
   it("Buttons render", () => {
     expect(wrapper.find(SemanticButton)).toBeDefined();
-    expect(wrapper.find(SemanticButton)).toHaveLength(3);
+    expect(wrapper.find(SemanticButton)).toHaveLength(5);
   });
 
   it("Play button calls action", () => {
@@ -92,7 +96,7 @@ describe("<Menu />", () => {
   it("Clear button calls action", () => {
     wrapper
       .find(SemanticButton)
-      .at(2)
+      .at(4)
       .simulate("click");
     expect(props.onClear).toHaveBeenCalled();
   });
