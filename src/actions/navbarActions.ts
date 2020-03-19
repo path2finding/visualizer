@@ -1,5 +1,4 @@
 import { DropdownProps, ButtonProps } from "semantic-ui-react";
-import { emptyStatement } from "@babel/types";
 
 export const CHANGE_ALGO = "CHANGE_ALGO";
 export const START_VISUALIZATION = "START_VISUALIZATION";
@@ -56,5 +55,3 @@ export const handleClearGrid = (
     payload: null
   };
 };
-
-
