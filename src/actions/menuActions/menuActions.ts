@@ -5,6 +5,8 @@ export const START_VISUALIZATION = "START_VISUALIZATION";
 export const PAUSE_VISUALIZATION = "PAUSE_VISUALIZATION";
 export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const CLEAR_GRID = "CLEAR_GRID";
+export const TOGGLE_MOVE_START = "TOGGLE_MOVE_START";
+export const TOGGLE_MOVE_END = "TOGGLE_MOVE_END";
 
 export const handleDropdownChange = (
   _: React.SyntheticEvent<HTMLElement, Event>,
@@ -52,6 +54,26 @@ export const handleClearGrid = (
 ) => {
   return {
     type: CLEAR_GRID,
+    payload: null
+  };
+};
+
+export const toggleMoveStart = (
+  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  data: ButtonProps
+) => {
+  return {
+    type: TOGGLE_MOVE_START,
+    payload: null
+  };
+};
+
+export const toggleMoveEnd = (
+  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  data: ButtonProps
+) => {
+  return {
+    type: TOGGLE_MOVE_END,
     payload: null
   };
 };

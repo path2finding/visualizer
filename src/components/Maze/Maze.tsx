@@ -41,12 +41,16 @@ const CameraController = () => {
   return null;
 };
 
-const populateMaze = (
-  mazeInfo: MazeInfo,
-  handleChangeStart: (newPost: Coord) => void,
-  makeWall: (coord: Coord) => void,
-  makeEmpty: (coord: Coord) => void
-) => {
+const populateMaze = (props: Props) => {
+  const {
+    canMoveStart,
+    canMoveEnd,
+    handleChangeStart,
+    handleChangeEnd,
+    makeWall,
+    makeEmpty
+  } = props;
+  const { mazeInfo } = props.maze;
   const mazeSize = getMazeSize(mazeInfo);
   let list = [];
   let key = 0;
@@ -61,7 +65,10 @@ const populateMaze = (
           path={mazeInfo[y][x].path}
           position={[x, 0, y]}
           key={key}
+          canMoveStart={canMoveStart}
+          canMoveEnd={canMoveEnd}
           onChangeStart={() => handleChangeStart({ x, y })}
+          onChangeEnd={() => handleChangeEnd({ x, y })}
           onSetWall={() => makeWall({ x, y })}
           onSetEmpty={() => makeEmpty({ x, y })}
         />
@@ -74,15 +81,15 @@ const populateMaze = (
 
 interface Props {
   maze: IMaze;
+  canMoveStart: boolean;
+  canMoveEnd: boolean;
   handleChangeStart: (newPos: Coord) => void;
+  handleChangeEnd: (newPos: Coord) => void;
   makeWall: (coord: Coord) => void;
   makeEmpty: (coord: Coord) => void;
 }
 
 const Maze: React.FC<Props> = props => {
-  const { mazeInfo } = props.maze;
-  // const mazeSize = getMazeSize(mazeInfo);
-
   return (
     <Canvas
       className="Maze"
@@ -104,12 +111,7 @@ const Maze: React.FC<Props> = props => {
         <planeBufferGeometry attach="geometry" args={[100, 100, 100, 100]} />
         <meshPhongMaterial attach="material" wireframe={true} color={"grey"} />
       </mesh>
-      {populateMaze(
-        mazeInfo,
-        props.handleChangeStart,
-        props.makeWall,
-        props.makeEmpty
-      )}
+      {populateMaze(props)}
     </Canvas>
   );
 };

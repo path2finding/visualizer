@@ -9,4 +9,6 @@ export interface MenuState {
     | undefined;
   algorithms: DropdownItemProps[];
   isPlaying: boolean;
+  canMoveStart: boolean;
+  canMoveEnd: boolean;
 }

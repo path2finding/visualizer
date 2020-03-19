@@ -8,5 +8,7 @@ export const initialState: MenuState = {
     { value: "BFS", text: "BFS" },
     { value: "DFS", text: "DFS" }
   ],
-  isPlaying: false
+  isPlaying: false,
+  canMoveStart: false,
+  canMoveEnd: false
 };

@@ -1,10 +1,10 @@
-// import { MazeState, MazeInfo, Coord } from '../../models/maze';
 import { SpaceTypes } from "../../components/Space/types";
 import { initialState } from "../../models/maze/initialState";
 import { Maze, MazeInfo, Coord } from "../../models/maze/index";
 import { CLEAR_GRID } from "../../actions/menuActions/menuActions";
 import {
   CHANGE_START,
+  CHANGE_END,
   MAKE_WALL,
   MAKE_EMPTY
 } from "../../actions/mazeActions/mazeActions";
@@ -33,29 +33,26 @@ const getCoord = (
   return null;
 };
 
-const updateStartPos = (newPos: Coord, state: Maze) => {
-  const { mazeInfo } = state;
-  let newMaze = mazeInfo;
-
-  const startCoord = getCoord(mazeInfo, SpaceTypes.start);
-
-  if (startCoord) {
-    newMaze[startCoord.y][startCoord.x].type = SpaceTypes.empty;
-  }
-
-  newMaze[newPos.y][newPos.x].type = SpaceTypes.start;
-
-  return newMaze;
-};
-
 const changeSpaceType = (
   state: Maze,
-  coord: { x: number; y: number },
-  spaceType: SpaceTypes.wall | SpaceTypes.empty
+  coord: Coord,
+  spaceType:
+    | SpaceTypes.wall
+    | SpaceTypes.empty
+    | SpaceTypes.start
+    | SpaceTypes.end
 ) => {
   const { mazeInfo } = state;
-
   let newMaze = mazeInfo;
+
+  // If the space we are updating is the start of end point we need to get rid of the old one
+  if (spaceType === SpaceTypes.start || spaceType === SpaceTypes.end) {
+    const oldCoord = getCoord(mazeInfo, spaceType);
+
+    if (oldCoord) {
+      newMaze[oldCoord.y][oldCoord.x].type = SpaceTypes.empty;
+    }
+  }
 
   newMaze[coord.y][coord.x].type = spaceType;
 
@@ -72,7 +69,12 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
     case CHANGE_START:
       return {
         ...state,
-        mazeInfo: updateStartPos(payload, state)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.start)
+      };
+    case CHANGE_END:
+      return {
+        ...state,
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.end)
       };
     case MAKE_WALL:
       return {

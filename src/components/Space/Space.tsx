@@ -9,7 +9,10 @@ interface Props {
   key: number;
   visited: Boolean;
   path: Boolean;
+  canMoveStart: boolean;
+  canMoveEnd: boolean;
   onChangeStart: () => void;
+  onChangeEnd: () => void;
   onSetWall: () => void;
   onSetEmpty: () => void;
 }
@@ -18,15 +21,19 @@ const Space: React.FC<Props> = props => {
   const [hovered, setHover] = useState(false);
 
   const spaceClicked = () => {
-    if (props.type === "wall") {
-      props.onSetEmpty();
-    }
-    if (props.type === "empty") {
-      props.onSetWall();
+    if (props.canMoveStart) {
+      props.onChangeStart();
+    } else if (props.canMoveEnd) {
+      props.onChangeEnd();
+    } else {
+      if (props.type === SpaceTypes.wall) {
+        props.onSetEmpty();
+      }
+      if (props.type === SpaceTypes.empty) {
+        props.onSetWall();
+      }
     }
   };
-
-  // props.onChangeStart()
 
   return (
     <mesh
