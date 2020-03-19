@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { Canvas, useThree } from 'react-three-fiber';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import React, { useEffect } from "react";
+import { Canvas, useThree } from "react-three-fiber";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 // Components
-import Space from '../../components/Space/Space';
+import Space from "../../components/Space/Space";
 
 // Interfaces
-import { Maze as IMaze, MazeInfo } from '../../models/maze/index';
-import { Coord } from '../../models/maze';
+import { Maze as IMaze, MazeInfo } from "../../models/maze/index";
+import { Coord } from "../../models/maze";
 
-import './Maze.scss';
+import "./Maze.scss";
 
 // Helper functions
 const getMazeSize = (mazeInfo: MazeInfo) => {
@@ -43,24 +43,27 @@ const CameraController = () => {
 
 const populateMaze = (
   mazeInfo: MazeInfo,
-  handleChangeStart: (newPost: Coord) => void
+  handleChangeStart: (newPost: Coord) => void,
+  makeWall: (coord: Coord) => void,
+  makeEmpty: (coord: Coord) => void
 ) => {
   const mazeSize = getMazeSize(mazeInfo);
   let list = [];
   let key = 0;
 
-  for (let j = 0; j < mazeSize.y; j++) {
-    for (let i = 0; i < mazeSize.x; i++) {
+  for (let y = 0; y < mazeSize.y; y++) {
+    for (let x = 0; x < mazeSize.x; x++) {
       key++;
-      console.log('visited: ' + mazeInfo[j][i].visited);
       list.push(
         <Space
-          type={mazeInfo[j][i].type}
-          visited={mazeInfo[j][i].visited}
-          path={mazeInfo[j][i].path}
-          position={[i, 0, j]}
+          type={mazeInfo[y][x].type}
+          visited={mazeInfo[y][x].visited}
+          path={mazeInfo[y][x].path}
+          position={[x, 0, y]}
           key={key}
-          onChangeStart={() => handleChangeStart({ x: i, y: j })}
+          onChangeStart={() => handleChangeStart({ x, y })}
+          onSetWall={() => makeWall({ x, y })}
+          onSetEmpty={() => makeEmpty({ x, y })}
         />
       );
     }
@@ -72,11 +75,13 @@ const populateMaze = (
 interface Props {
   maze: IMaze;
   handleChangeStart: (newPos: Coord) => void;
+  makeWall: (coord: Coord) => void;
+  makeEmpty: (coord: Coord) => void;
 }
 
 const Maze: React.FC<Props> = props => {
   const { mazeInfo } = props.maze;
-  const mazeSize = getMazeSize(mazeInfo);
+  // const mazeSize = getMazeSize(mazeInfo);
 
   return (
     <Canvas
@@ -97,9 +102,14 @@ const Maze: React.FC<Props> = props => {
       {/* background grid */}
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0.5, -0.5, 0.5]}>
         <planeBufferGeometry attach="geometry" args={[100, 100, 100, 100]} />
-        <meshPhongMaterial attach="material" wireframe={true} color={'grey'} />
+        <meshPhongMaterial attach="material" wireframe={true} color={"grey"} />
       </mesh>
-      {populateMaze(mazeInfo, props.handleChangeStart)}
+      {populateMaze(
+        mazeInfo,
+        props.handleChangeStart,
+        props.makeWall,
+        props.makeEmpty
+      )}
     </Canvas>
   );
 };

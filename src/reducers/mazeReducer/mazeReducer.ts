@@ -1,9 +1,13 @@
 // import { MazeState, MazeInfo, Coord } from '../../models/maze';
-import { SpaceTypes } from '../../components/Space/types';
-import { initialState } from '../../models/maze/initialState';
-import { Maze, MazeInfo, Coord } from '../../models/maze/index';
-import { CLEAR_GRID } from '../../actions/menuActions/menuActions';
-import { CHANGE_START } from '../../actions/mazeActions/mazeActions';
+import { SpaceTypes } from "../../components/Space/types";
+import { initialState } from "../../models/maze/initialState";
+import { Maze, MazeInfo, Coord } from "../../models/maze/index";
+import { CLEAR_GRID } from "../../actions/menuActions/menuActions";
+import {
+  CHANGE_START,
+  MAKE_WALL,
+  MAKE_EMPTY
+} from "../../actions/mazeActions/mazeActions";
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
   return {
@@ -44,6 +48,20 @@ const updateStartPos = (newPos: Coord, state: Maze) => {
   return newMaze;
 };
 
+const changeSpaceType = (
+  state: Maze,
+  coord: { x: number; y: number },
+  spaceType: SpaceTypes.wall | SpaceTypes.empty
+) => {
+  const { mazeInfo } = state;
+
+  let newMaze = mazeInfo;
+
+  newMaze[coord.y][coord.x].type = spaceType;
+
+  return newMaze;
+};
+
 export const mazeReducer = (state = initialState, { type, payload }: any) => {
   switch (type) {
     case CLEAR_GRID:
@@ -55,6 +73,16 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
       return {
         ...state,
         mazeInfo: updateStartPos(payload, state)
+      };
+    case MAKE_WALL:
+      return {
+        ...state,
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.wall)
+      };
+    case MAKE_EMPTY:
+      return {
+        ...state,
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty)
       };
     default:
       return state;

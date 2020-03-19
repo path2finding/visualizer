@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import GenericSpace from './GenericSpace';
+import React, { useState } from "react";
+import GenericSpace from "./GenericSpace";
 
-import { SpaceTypes } from './types';
+import { SpaceTypes } from "./types";
 
 interface Props {
   type: SpaceTypes;
@@ -10,15 +10,28 @@ interface Props {
   visited: Boolean;
   path: Boolean;
   onChangeStart: () => void;
+  onSetWall: () => void;
+  onSetEmpty: () => void;
 }
 
 const Space: React.FC<Props> = props => {
   const [hovered, setHover] = useState(false);
 
+  const spaceClicked = () => {
+    if (props.type === "wall") {
+      props.onSetEmpty();
+    }
+    if (props.type === "empty") {
+      props.onSetWall();
+    }
+  };
+
+  // props.onChangeStart()
+
   return (
     <mesh
       position={props.position}
-      onClick={e => props.onChangeStart()}
+      onClick={e => spaceClicked()}
       onPointerOver={e => setHover(true)}
       onPointerOut={e => setHover(false)}
     >
