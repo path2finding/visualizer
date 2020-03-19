@@ -1,4 +1,4 @@
-import configureStore from 'redux-mock-store';
+import configureStore from "redux-mock-store";
 import {
   handleStartVisualization,
   handleStopVisualization,
@@ -9,12 +9,16 @@ import {
   PAUSE_VISUALIZATION,
   CLEAR_GRID,
   CHANGE_ALGO,
+  TOGGLE_MOVE_START,
+  TOGGLE_MOVE_END,
+  toggleMoveStart,
+  toggleMoveEnd,
   handleDropdownChange
-} from './menuActions';
-import { ButtonProps, DropdownProps } from 'semantic-ui-react';
-import { initialState } from '../../models/menu/initialState';
+} from "./menuActions";
+import { ButtonProps, DropdownProps } from "semantic-ui-react";
+import { initialState } from "../../models/menu/initialState";
 
-describe('Navbar Action Tests', () => {
+describe("Navbar Action Tests", () => {
   const mockStore = configureStore();
   const reduxStore = mockStore({ menu: initialState });
 
@@ -22,8 +26,8 @@ describe('Navbar Action Tests', () => {
     reduxStore.clearActions();
   });
 
-  describe('Start Visualization Test', () => {
-    it('Should dispatch correct action', () => {
+  describe("Start Visualization Test", () => {
+    it("Should dispatch correct action", () => {
       const expectedActions = [
         {
           type: START_VISUALIZATION,
@@ -40,8 +44,8 @@ describe('Navbar Action Tests', () => {
     });
   });
 
-  describe('Stop Visualization Test', () => {
-    it('Should dispatch correct action', () => {
+  describe("Stop Visualization Test", () => {
+    it("Should dispatch correct action", () => {
       const expectedActions = [
         {
           type: STOP_VISUALIZATION,
@@ -58,8 +62,8 @@ describe('Navbar Action Tests', () => {
     });
   });
 
-  describe('Pause Visualization Test', () => {
-    it('Should modify redux store', () => {
+  describe("Pause Visualization Test", () => {
+    it("Should modify redux store", () => {
       const expectedActions = [
         {
           type: PAUSE_VISUALIZATION,
@@ -76,8 +80,44 @@ describe('Navbar Action Tests', () => {
     });
   });
 
-  describe('Clear Grid Test', () => {
-    it('Should dispatch correct action', () => {
+  describe("Move Start Point Test", () => {
+    it("Should modify redux store", () => {
+      const expectedActions = [
+        {
+          type: TOGGLE_MOVE_START,
+          payload: null
+        }
+      ];
+      reduxStore.dispatch(
+        toggleMoveStart(
+          { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
+          {} as ButtonProps
+        )
+      );
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("Move End Point Test", () => {
+    it("Should modify redux store", () => {
+      const expectedActions = [
+        {
+          type: TOGGLE_MOVE_END,
+          payload: null
+        }
+      ];
+      reduxStore.dispatch(
+        toggleMoveEnd(
+          { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
+          {} as ButtonProps
+        )
+      );
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("Clear Grid Test", () => {
+    it("Should dispatch correct action", () => {
       const expectedActions = [
         {
           type: CLEAR_GRID,
@@ -94,8 +134,8 @@ describe('Navbar Action Tests', () => {
     });
   });
 
-  describe('Change Algorithm Test', () => {
-    it('Should dispatch correct action', () => {
+  describe("Change Algorithm Test", () => {
+    it("Should dispatch correct action", () => {
       const expectedActions = [
         {
           type: CHANGE_ALGO,

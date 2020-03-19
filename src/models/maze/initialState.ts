@@ -5,7 +5,7 @@ export const initialState: Maze = {
   mazeInfo: {
     0: [
       { type: SpaceTypes.wall, visited: false, path: false },
-      { type: SpaceTypes.wall, visited: false, path: false },
+      { type: SpaceTypes.empty, visited: false, path: false },
       { type: SpaceTypes.start, visited: false, path: false },
       { type: SpaceTypes.wall, visited: false, path: false },
       { type: SpaceTypes.wall, visited: false, path: false }

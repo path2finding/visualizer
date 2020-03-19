@@ -85,12 +85,28 @@ describe("<Menu />", () => {
     expect(props.onPause).toHaveBeenCalled();
   });
 
-  it("Strop button calls action", () => {
+  it("Stop button calls action", () => {
     wrapper
       .find(SemanticButton)
       .at(1)
       .simulate("click");
     expect(props.onStop).toHaveBeenCalled();
+  });
+
+  it("Move Start Point button calls action", () => {
+    wrapper
+      .find(SemanticButton)
+      .at(2)
+      .simulate("click");
+    expect(props.toggleMoveStart).toHaveBeenCalled();
+  });
+
+  it("Move End Point button calls action", () => {
+    wrapper
+      .find(SemanticButton)
+      .at(3)
+      .simulate("click");
+    expect(props.toggleMoveEnd).toHaveBeenCalled();
   });
 
   it("Clear button calls action", () => {
