@@ -1,63 +1,37 @@
-import * as THREE from 'three';
-import React, {
-  useRef,
-  useState,
-  MutableRefObject,
-  Suspense,
-  useEffect
-} from 'react';
-import { useLoader, useFrame, stateContext } from 'react-three-fiber';
-import { Mesh, Vector3 } from 'three';
+import React, { useState } from "react";
+import GenericSpace from "./GenericSpace";
 
-const Wall: React.FC<BoxProps> = props => {
-  const texture = useLoader(
-    THREE.TextureLoader,
-    `${process.env.PUBLIC_URL}${props.type}.png`
-  );
+import { SpaceTypes } from "./types";
 
-  return (
-    <mesh>
-      <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshPhongMaterial attach="material" map={texture} />
-    </mesh>
-  );
-};
+interface Props {
+  type: SpaceTypes;
+  position: number[];
+  key: number;
+  visited: Boolean;
+  path: Boolean;
+  canMoveStart: boolean;
+  canMoveEnd: boolean;
+  onChangeStart: () => void;
+  onChangeEnd: () => void;
+  onSetWall: () => void;
+  onSetEmpty: () => void;
+}
 
-const Empty: React.FC<BoxProps> = props => {
-  return (
-    <mesh position={new Vector3(0, -0.5, 0)} rotation={[-(Math.PI / 2), 0, 0]}>
-      <planeBufferGeometry attach="geometry" args={[1, 1, 1, 1]} />
-      <meshPhongMaterial
-        attach="material"
-        color={props.visited ? (props.path ? 'red' : 'yellow') : 'blue'}
-      />
-    </mesh>
-  );
-};
-
-const GenericSpace: React.FC<BoxProps> = props => {
-  const mesh: MutableRefObject<Mesh | undefined> = useRef();
-
-  if (props.type === 'empty') {
-    return <Empty visited={props.visited} path={props.path} />;
-  } else {
-    return (
-      <Suspense fallback="none">
-        <Wall type={props.type} />
-      </Suspense>
-    );
-  }
-};
-
-const Space: React.FC<SpaceProps> = props => {
+const Space: React.FC<Props> = props => {
   const [hovered, setHover] = useState(false);
 
   const spaceClicked = () => {
-    if (props.type === 'wall') {
-      props.onSetEmpty();
-    }
-    if (props.type === 'empty') {
-      props.onSetWall();
+    if (props.canMoveStart) {
+      props.onChangeStart();
+    } else if (props.canMoveEnd) {
+      props.onChangeEnd();
+    } else {
+      if (props.type === SpaceTypes.wall) {
+        props.onSetEmpty();
+      }
+      if (props.type === SpaceTypes.empty) {
+        props.onSetWall();
+      }
     }
   };
 
@@ -85,17 +59,5 @@ const Space: React.FC<SpaceProps> = props => {
     </mesh>
   );
 };
-
-export interface BoxProps {
-  position?: number[];
-  type?: string;
-  visited?: Boolean;
-  path?: Boolean;
-}
-
-export interface SpaceProps extends BoxProps {
-  onSetWall: () => void;
-  onSetEmpty: () => void;
-}
 
 export default Space;

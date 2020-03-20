@@ -9,10 +9,14 @@ import {
   PAUSE_VISUALIZATION,
   CLEAR_GRID,
   CHANGE_ALGO,
+  TOGGLE_MOVE_START,
+  TOGGLE_MOVE_END,
+  toggleMoveStart,
+  toggleMoveEnd,
   handleDropdownChange
-} from "./navbarActions";
+} from "./menuActions";
 import { ButtonProps, DropdownProps } from "semantic-ui-react";
-import { initialState } from "../models/menu/initialState";
+import { initialState } from "../../models/menu/initialState";
 
 describe("Navbar Action Tests", () => {
   const mockStore = configureStore();
@@ -68,6 +72,42 @@ describe("Navbar Action Tests", () => {
       ];
       reduxStore.dispatch(
         handlePauseVisualization(
+          { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
+          {} as ButtonProps
+        )
+      );
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("Move Start Point Test", () => {
+    it("Should modify redux store", () => {
+      const expectedActions = [
+        {
+          type: TOGGLE_MOVE_START,
+          payload: null
+        }
+      ];
+      reduxStore.dispatch(
+        toggleMoveStart(
+          { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
+          {} as ButtonProps
+        )
+      );
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("Move End Point Test", () => {
+    it("Should modify redux store", () => {
+      const expectedActions = [
+        {
+          type: TOGGLE_MOVE_END,
+          payload: null
+        }
+      ];
+      reduxStore.dispatch(
+        toggleMoveEnd(
           { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
           {} as ButtonProps
         )

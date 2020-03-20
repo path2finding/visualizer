@@ -3,10 +3,12 @@ import {
   START_VISUALIZATION,
   STOP_VISUALIZATION,
   PAUSE_VISUALIZATION,
-  CHANGE_ALGO
-} from "../actions/navbarActions";
-import { initialState } from "../models/menu/initialState";
-import { MenuState } from "../models/menu";
+  CHANGE_ALGO,
+  TOGGLE_MOVE_START,
+  TOGGLE_MOVE_END
+} from "../../actions/menuActions/menuActions";
+import { initialState } from "../../models/menu/initialState";
+import { MenuState } from "../../models/menu";
 
 describe("Menu Reducer Tests", () => {
   it("Start Visualization Expected State", () => {
@@ -41,6 +43,30 @@ describe("Menu Reducer Tests", () => {
 
     const updatedState = menuReducer(initialState, action);
     const expectedState: MenuState = { ...initialState, isPlaying: false };
+
+    expect(updatedState).toEqual(expectedState);
+  });
+
+  it("Toggle Move Start Point Expected State", () => {
+    const action = {
+      type: TOGGLE_MOVE_START,
+      payload: null
+    };
+
+    const updatedState = menuReducer(initialState, action);
+    const expectedState: MenuState = { ...initialState, canMoveStart: true };
+
+    expect(updatedState).toEqual(expectedState);
+  });
+
+  it("Toggle Move End Point Expected State", () => {
+    const action = {
+      type: TOGGLE_MOVE_END,
+      payload: null
+    };
+
+    const updatedState = menuReducer(initialState, action);
+    const expectedState: MenuState = { ...initialState, canMoveEnd: true };
 
     expect(updatedState).toEqual(expectedState);
   });

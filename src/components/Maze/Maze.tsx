@@ -1,15 +1,23 @@
-import React, { useEffect } from 'react';
-import { Canvas, useThree } from 'react-three-fiber';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import React, { useEffect } from "react";
+import { Canvas, useThree } from "react-three-fiber";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 // Components
-import Space from '../Space/Space';
+import Space from "../../components/Space/Space";
 
 // Interfaces
-import { MazeState } from '../../models/maze';
-import { SpaceState } from '../../models/space';
+import { Maze as IMaze, MazeInfo } from "../../models/maze/index";
+import { Coord } from "../../models/maze";
 
-import './Maze.scss';
+import "./Maze.scss";
+
+// Helper functions
+const getMazeSize = (mazeInfo: MazeInfo) => {
+  return {
+    x: mazeInfo[0].length,
+    y: Object.keys(mazeInfo).length
+  };
+};
 
 const CameraController = () => {
   const { camera, gl } = useThree();
@@ -33,12 +41,17 @@ const CameraController = () => {
   return null;
 };
 
-const populateMaze = (
-  mazeSize: { x: number; y: number },
-  mazeInfo: { [key: number]: SpaceState[] },
-  makeWall: (coord: { x: number; y: number }) => void,
-  makeEmpty: (coord: { x: number; y: number }) => void
-) => {
+const populateMaze = (props: Props) => {
+  const {
+    canMoveStart,
+    canMoveEnd,
+    handleChangeStart,
+    handleChangeEnd,
+    makeWall,
+    makeEmpty
+  } = props;
+  const { mazeInfo } = props.maze;
+  const mazeSize = getMazeSize(mazeInfo);
   let list = [];
   let key = 0;
 
@@ -52,6 +65,10 @@ const populateMaze = (
           path={mazeInfo[y][x].path}
           position={[x, 0, y]}
           key={key}
+          canMoveStart={canMoveStart}
+          canMoveEnd={canMoveEnd}
+          onChangeStart={() => handleChangeStart({ x, y })}
+          onChangeEnd={() => handleChangeEnd({ x, y })}
           onSetWall={() => makeWall({ x, y })}
           onSetEmpty={() => makeEmpty({ x, y })}
         />
@@ -63,26 +80,23 @@ const populateMaze = (
 };
 
 interface Props {
-  makeWall: (coord: { x: number; y: number }) => void;
-  makeEmpty: (coord: { x: number; y: number }) => void;
-  maze: MazeState;
+  maze: IMaze;
+  canMoveStart: boolean;
+  canMoveEnd: boolean;
+  handleChangeStart: (newPos: Coord) => void;
+  handleChangeEnd: (newPos: Coord) => void;
+  makeWall: (coord: Coord) => void;
+  makeEmpty: (coord: Coord) => void;
 }
 
 const Maze: React.FC<Props> = props => {
-  const { mazeInfo } = props.maze;
-
-  const mazeSize = {
-    x: mazeInfo[0].length,
-    y: Object.keys(mazeInfo).length
-  };
-
   return (
     <Canvas
       className="Maze"
       //uncomment for isomentric mode ;)
       // orthographic
-      // camera = {{
-      //   position: new Vector3(0,0,0),
+      // camera={{
+      //   position: new Vector3(0, 0, 0),
       //   left: 100,
       //   right: 100,
       //   bottom: 100,
@@ -95,9 +109,9 @@ const Maze: React.FC<Props> = props => {
       {/* background grid */}
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0.5, -0.5, 0.5]}>
         <planeBufferGeometry attach="geometry" args={[100, 100, 100, 100]} />
-        <meshPhongMaterial attach="material" wireframe={true} color={'grey'} />
+        <meshPhongMaterial attach="material" wireframe={true} color={"grey"} />
       </mesh>
-      {populateMaze(mazeSize, mazeInfo, props.makeWall, props.makeEmpty)}
+      {populateMaze(props)}
     </Canvas>
   );
 };

@@ -1,17 +1,11 @@
-import { MazeState } from './';
+import { Maze } from "./";
+import { SpaceTypes } from "../../components/Space/types";
 
-export enum SpaceTypes {
-  wall = 'wall',
-  empty = 'empty',
-  start = 'startpoint',
-  end = 'endpoint'
-}
-
-export const initialState: MazeState = {
+export const initialState: Maze = {
   mazeInfo: {
     0: [
       { type: SpaceTypes.wall, visited: false, path: false },
-      { type: SpaceTypes.wall, visited: false, path: false },
+      { type: SpaceTypes.empty, visited: false, path: false },
       { type: SpaceTypes.start, visited: false, path: false },
       { type: SpaceTypes.wall, visited: false, path: false },
       { type: SpaceTypes.wall, visited: false, path: false }

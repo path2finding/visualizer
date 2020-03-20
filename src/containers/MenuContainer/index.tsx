@@ -5,9 +5,13 @@ import {
   handleStartVisualization,
   handleStopVisualization,
   handleClearGrid,
-  handlePauseVisualization
-} from "../../actions/navbarActions";
+  handlePauseVisualization,
+  toggleMoveStart,
+  toggleMoveEnd
+} from "../../actions/menuActions/menuActions";
 import MenuBar from "../../components/Menu";
+
+import { RootState } from "typesafe-actions";
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators(
@@ -16,16 +20,20 @@ const mapDispatchToProps = (dispatch: any) => {
       onStart: handleStartVisualization,
       onPause: handlePauseVisualization,
       onStop: handleStopVisualization,
-      onClear: handleClearGrid
+      onClear: handleClearGrid,
+      toggleMoveStart,
+      toggleMoveEnd
     },
     dispatch
   );
 };
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: RootState) => ({
   selectedAlgo: state.menu.selectedAlgo,
   algorithms: state.menu.algorithms,
-  isPlaying: state.menu.isPlaying
+  isPlaying: state.menu.isPlaying,
+  canMoveStart: state.menu.canMoveStart,
+  canMoveEnd: state.menu.canMoveEnd
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar as any);

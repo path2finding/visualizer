@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
-import { menuReducer } from './menuReducer';
-import { mazeReducer } from './mazeReducer';
+import { History } from 'history';
+import { menuReducer } from './menuReducer/menuReducer';
+import { mazeReducer } from './mazeReducer/mazeReducer';
 
-const rootReducer = (history: any) =>
+const rootReducer = (history: History) =>
   combineReducers({
     router: connectRouter(history),
     menu: menuReducer,
