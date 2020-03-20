@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Canvas, useThree } from "react-three-fiber";
+import { Canvas, useThree, useFrame } from "react-three-fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 // Components
@@ -10,6 +10,7 @@ import { Maze as IMaze, MazeInfo } from "../../models/maze/index";
 import { Coord } from "../../models/maze";
 
 import "./Maze.scss";
+import { Vector3, MOUSE } from "three";
 
 // Helper functions
 const getMazeSize = (mazeInfo: MazeInfo) => {
@@ -21,19 +22,18 @@ const getMazeSize = (mazeInfo: MazeInfo) => {
 
 const CameraController = () => {
   const { camera, gl } = useThree();
+
   useEffect(() => {
     const controls = new OrbitControls(camera, gl.domElement);
 
-    controls.minDistance = 5;
+    controls.minDistance = 2;
     controls.maxDistance = 30;
-    controls.keyPanSpeed = 10;
+    controls.keyPanSpeed = 20;
 
-    //uncomment to limit orbit rotation
-    // controls.maxAzimuthAngle = (Math.PI / 360) * angle;
-    // controls.minAzimuthAngle = (Math.PI / 360) * -angle;
-
-    controls.maxPolarAngle = (Math.PI / 360) * 180;
-
+    controls.maxAzimuthAngle = 0;
+    controls.minAzimuthAngle = 0;
+    controls.maxPolarAngle = 0;
+    
     return () => {
       controls.dispose();
     };
@@ -102,7 +102,11 @@ const Maze: React.FC<Props> = props => {
       //   bottom: 100,
       //   top: 10
       // }}
+      camera={{
+        position: new Vector3(0,10,0)
+      }}
     >
+     
       <CameraController />
       <ambientLight />
 
