@@ -7,7 +7,8 @@ import {
   handleClearGrid,
   handlePauseVisualization,
   toggleMoveStart,
-  toggleMoveEnd
+  toggleMoveEnd,
+  saveMaze,
 } from "../../actions/menuActions/menuActions";
 import MenuBar from "../../components/Menu";
 
@@ -22,7 +23,8 @@ const mapDispatchToProps = (dispatch: any) => {
       onStop: handleStopVisualization,
       onClear: handleClearGrid,
       toggleMoveStart,
-      toggleMoveEnd
+      toggleMoveEnd,
+      saveMaze
     },
     dispatch
   );

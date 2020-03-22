@@ -31,6 +31,7 @@ describe("<Menu />", () => {
     onPause: jest.fn(),
     onStop: jest.fn(),
     onClear: jest.fn(),
+    onSave: jest.fn(),
     toggleMoveStart: jest.fn(),
     toggleMoveEnd: jest.fn()
   };
@@ -115,6 +116,14 @@ describe("<Menu />", () => {
       .at(4)
       .simulate("click");
     expect(props.onClear).toHaveBeenCalled();
+  });
+
+  it("Save Maze button calls action", () => {
+    wrapper
+      .find(SemanticButton)
+      .at(5)
+      .simulate("click");
+    expect(props.onSave).toHaveBeenCalled();
   });
 
   // it("Change dropdown selection", () => {

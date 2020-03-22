@@ -32,6 +32,10 @@ export interface MenuProps extends MenuState {
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
   ) => void;
+  onSave: (
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    data: ButtonProps
+  ) => void;
   toggleMoveStart: (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
@@ -52,6 +56,7 @@ class MenuBar extends React.Component<MenuProps, any> {
       onPause,
       onStart,
       onStop,
+      onSave,
       toggleMoveEnd,
       toggleMoveStart,
       selectedAlgo,
@@ -100,6 +105,10 @@ class MenuBar extends React.Component<MenuProps, any> {
           <Button color="orange" circular onClick={onClear}>
             <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
             <span>Clear Grid</span>
+          </Button>
+          <Button color="purple" circular onClick={onSave}>
+            <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
+            <span>Save Maze</span>
           </Button>
           &nbsp; {/* Essentially just a fancy space */}
           <Dropdown

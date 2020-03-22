@@ -7,6 +7,7 @@ export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const CLEAR_GRID = "CLEAR_GRID";
 export const TOGGLE_MOVE_START = "TOGGLE_MOVE_START";
 export const TOGGLE_MOVE_END = "TOGGLE_MOVE_END";
+export const SAVE_MAZE = "SAVE_MAZE"
 
 export const handleDropdownChange = (
   _: React.SyntheticEvent<HTMLElement, Event>,
@@ -77,3 +78,13 @@ export const toggleMoveEnd = (
     payload: null
   };
 };
+
+export const saveMaze = (
+  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  data: ButtonProps
+) => {
+  console.log("save maze menu action")
+  return{
+    payload: null
+  }
+}
