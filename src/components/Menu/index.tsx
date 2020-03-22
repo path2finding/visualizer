@@ -6,12 +6,15 @@ import {
   Dropdown,
   Button,
   Icon,
-  ButtonProps
+  ButtonProps,
+  Modal
 } from "semantic-ui-react";
+import { MazeInfo } from "../../models/maze";
 
 export interface MenuProps extends MenuState {
   canMoveStart: boolean;
   canMoveEnd: boolean;
+  maze: MazeInfo;
   handleDropdownChange: (
     _: React.SyntheticEvent<HTMLElement, Event>,
     { value }: DropdownProps
@@ -32,6 +35,12 @@ export interface MenuProps extends MenuState {
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
   ) => void;
+  saveMaze: (
+    maze: MazeInfo
+  ) => void;
+  loadMaze: (
+    maze: MazeInfo
+  ) => void;
   toggleMoveStart: (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
@@ -47,11 +56,14 @@ class MenuBar extends React.Component<MenuProps, any> {
     const {
       canMoveStart,
       canMoveEnd,
+      maze,
       isPlaying,
       onClear,
       onPause,
       onStart,
       onStop,
+      saveMaze,
+      loadMaze,
       toggleMoveEnd,
       toggleMoveStart,
       selectedAlgo,
@@ -101,6 +113,30 @@ class MenuBar extends React.Component<MenuProps, any> {
             <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
             <span>Clear Grid</span>
           </Button>
+          &nbsp; {/* Essentially just a fancy space */}
+          <Modal trigger={<Button color="blue" circular onClick={() => saveMaze(maze)}> 
+            <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
+            <span>Save Maze</span>
+          </Button>} centered={false}>
+            <Modal.Header>Copy this text to save your maze</Modal.Header>
+              <Modal.Content>
+                  <Modal.Description>
+                      {JSON.stringify(maze)}
+                  </Modal.Description>
+              </Modal.Content>
+            </Modal>
+          &nbsp; {/* Essentially just a fancy space */}
+          <Modal trigger={<Button color="blue" circular onClick={() => loadMaze(maze)}> 
+            <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
+            <span>Save Maze</span>
+          </Button>} centered={false}>
+            <Modal.Header>Copy this text to save your maze</Modal.Header>
+              <Modal.Content>
+                  <Modal.Description>
+                      {JSON.stringify(maze)}
+                  </Modal.Description>
+              </Modal.Content>
+            </Modal>
           &nbsp; {/* Essentially just a fancy space */}
           <Dropdown
             onChange={handleDropdownChange}
