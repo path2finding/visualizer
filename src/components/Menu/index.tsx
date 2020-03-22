@@ -110,7 +110,7 @@ class MenuBar extends React.Component<MenuProps, any> {
             <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
             <span>Clear Grid</span>
           </Button>
-
+          &nbsp; {/* Essentially just a fancy space */}
           <Modal trigger={<Button color="blue" circular onClick={() => saveMaze(maze)}> 
             <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
             <span>Save Maze</span>
