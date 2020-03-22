@@ -7,11 +7,14 @@ import {
   handleClearGrid,
   handlePauseVisualization,
   toggleMoveStart,
-  toggleMoveEnd
+  toggleMoveEnd,
+  loadMaze
 } from "../../actions/menuActions/menuActions";
 import MenuBar from "../../components/Menu";
 
 import { RootState } from "typesafe-actions";
+import { mazeReducer } from "../../reducers/mazeReducer/mazeReducer";
+import Maze from "../../components/Maze/Maze";
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators(
@@ -22,7 +25,8 @@ const mapDispatchToProps = (dispatch: any) => {
       onStop: handleStopVisualization,
       onClear: handleClearGrid,
       toggleMoveStart,
-      toggleMoveEnd
+      toggleMoveEnd,
+      loadMaze
     },
     dispatch
   );
@@ -33,7 +37,8 @@ const mapStateToProps = (state: RootState) => ({
   algorithms: state.menu.algorithms,
   isPlaying: state.menu.isPlaying,
   canMoveStart: state.menu.canMoveStart,
-  canMoveEnd: state.menu.canMoveEnd
+  canMoveEnd: state.menu.canMoveEnd,
+  loadMaze: Maze
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar as any);
