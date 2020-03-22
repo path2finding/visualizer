@@ -8,10 +8,12 @@ import {
   Icon,
   ButtonProps
 } from "semantic-ui-react";
+import { MazeInfo } from "../../models/maze";
 
 export interface MenuProps extends MenuState {
   canMoveStart: boolean;
   canMoveEnd: boolean;
+  maze: MazeInfo;
   handleDropdownChange: (
     _: React.SyntheticEvent<HTMLElement, Event>,
     { value }: DropdownProps
@@ -32,9 +34,8 @@ export interface MenuProps extends MenuState {
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
   ) => void;
-  onSave: (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    data: ButtonProps
+  saveMaze: (
+    maze: MazeInfo
   ) => void;
   toggleMoveStart: (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -51,12 +52,13 @@ class MenuBar extends React.Component<MenuProps, any> {
     const {
       canMoveStart,
       canMoveEnd,
+      maze,
       isPlaying,
       onClear,
       onPause,
       onStart,
       onStop,
-      onSave,
+      saveMaze,
       toggleMoveEnd,
       toggleMoveStart,
       selectedAlgo,
@@ -106,8 +108,8 @@ class MenuBar extends React.Component<MenuProps, any> {
             <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
             <span>Clear Grid</span>
           </Button>
-          <Button color="purple" circular onClick={onSave}>
-            <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
+          <Button color="blue" circular onClick={() => saveMaze(maze)}>
+            <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
             <span>Save Maze</span>
           </Button>
           &nbsp; {/* Essentially just a fancy space */}

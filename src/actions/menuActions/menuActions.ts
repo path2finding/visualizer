@@ -1,4 +1,5 @@
 import { DropdownProps, ButtonProps } from "semantic-ui-react";
+import { Maze, MazeInfo } from "../../models/maze";
 
 export const CHANGE_ALGO = "CHANGE_ALGO";
 export const START_VISUALIZATION = "START_VISUALIZATION";
@@ -80,11 +81,11 @@ export const toggleMoveEnd = (
 };
 
 export const saveMaze = (
-  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  data: ButtonProps
+  maze: MazeInfo
 ) => {
-  console.log("save maze menu action")
+  console.log(JSON.stringify(maze))
   return{
+    type: SAVE_MAZE,
     payload: null
   }
 }

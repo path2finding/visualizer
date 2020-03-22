@@ -35,7 +35,10 @@ const mapStateToProps = (state: RootState) => ({
   algorithms: state.menu.algorithms,
   isPlaying: state.menu.isPlaying,
   canMoveStart: state.menu.canMoveStart,
-  canMoveEnd: state.menu.canMoveEnd
+  canMoveEnd: state.menu.canMoveEnd,
+  maze: state.maze.mazeInfo
 });
+
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar as any);
