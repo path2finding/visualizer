@@ -1,4 +1,4 @@
-import { DropdownProps, ButtonProps } from "semantic-ui-react";
+import { DropdownProps, ButtonProps} from "semantic-ui-react";
 import { Maze, MazeInfo } from "../../models/maze";
 
 export const CHANGE_ALGO = "CHANGE_ALGO";
@@ -86,6 +86,6 @@ export const saveMaze = (
   console.log(JSON.stringify(maze))
   return{
     type: SAVE_MAZE,
-    payload: null
+    payload: JSON.stringify(maze)
   }
 }

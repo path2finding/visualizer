@@ -6,7 +6,9 @@ import {
   Dropdown,
   Button,
   Icon,
-  ButtonProps
+  ButtonProps,
+  Modal,
+  Header
 } from "semantic-ui-react";
 import { MazeInfo } from "../../models/maze";
 
@@ -108,10 +110,19 @@ class MenuBar extends React.Component<MenuProps, any> {
             <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
             <span>Clear Grid</span>
           </Button>
-          <Button color="blue" circular onClick={() => saveMaze(maze)}>
+
+          <Modal trigger={<Button color="blue" circular onClick={() => saveMaze(maze)}> 
             <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
             <span>Save Maze</span>
-          </Button>
+          </Button>} centered={false}>
+            <Modal.Header>Copy this text to save your maze</Modal.Header>
+              <Modal.Content>
+                  <Modal.Description>
+                      {JSON.stringify(maze)}
+                  </Modal.Description>
+              </Modal.Content>
+            </Modal>
+          
           &nbsp; {/* Essentially just a fancy space */}
           <Dropdown
             onChange={handleDropdownChange}
