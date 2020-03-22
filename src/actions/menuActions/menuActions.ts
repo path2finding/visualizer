@@ -1,4 +1,4 @@
-import { DropdownProps, ButtonProps} from "semantic-ui-react";
+import { DropdownProps, ButtonProps } from "semantic-ui-react";
 import { Maze, MazeInfo } from "../../models/maze";
 
 export const CHANGE_ALGO = "CHANGE_ALGO";
@@ -8,7 +8,7 @@ export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const CLEAR_GRID = "CLEAR_GRID";
 export const TOGGLE_MOVE_START = "TOGGLE_MOVE_START";
 export const TOGGLE_MOVE_END = "TOGGLE_MOVE_END";
-export const SAVE_MAZE = "SAVE_MAZE"
+export const SAVE_MAZE = "SAVE_MAZE";
 
 export const handleDropdownChange = (
   _: React.SyntheticEvent<HTMLElement, Event>,
@@ -80,12 +80,11 @@ export const toggleMoveEnd = (
   };
 };
 
-export const saveMaze = (
-  maze: MazeInfo
-) => {
-  console.log(JSON.stringify(maze))
-  return{
+export const saveMaze = (maze: MazeInfo) => {
+  console.log("This is not hooked up to a reducer");
+  console.log(JSON.stringify(maze));
+  return {
     type: SAVE_MAZE,
     payload: JSON.stringify(maze)
-  }
-}
+  };
+};
