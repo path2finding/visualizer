@@ -1,5 +1,5 @@
 import { SpaceTypes } from "../../components/Space/types";
-import { initialState } from "../../models/maze/initialState";
+import { initialState, generateMaze } from "../../models/maze/initialState";
 import { Maze, MazeInfo, Coord } from "../../models/maze/index";
 import { CLEAR_GRID } from "../../actions/menuActions/menuActions";
 import {
@@ -64,7 +64,11 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
     case CLEAR_GRID:
       return {
         ...state,
-        mazeInfo: state.clearMaze
+        mazeInfo: generateMaze(
+          Object.keys(state.mazeInfo).length,
+          state.mazeInfo[0].length,
+          true
+        )
       };
     case CHANGE_START:
       return {
