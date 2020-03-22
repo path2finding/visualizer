@@ -6,7 +6,8 @@ import {
   CHANGE_START,
   CHANGE_END,
   MAKE_WALL,
-  MAKE_EMPTY
+  MAKE_EMPTY,
+  LOAD_MAZE
 } from "../../actions/mazeActions/mazeActions";
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
@@ -90,6 +91,9 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
         ...state,
         mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty)
       };
+    case LOAD_MAZE:
+      console.log(payload)
+      return payload
     default:
       return state;
   }

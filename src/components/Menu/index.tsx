@@ -7,9 +7,13 @@ import {
   Button,
   Icon,
   ButtonProps,
-  Modal
+  Modal,
+  Form,
+  TextAreaProps
 } from "semantic-ui-react";
-import { MazeInfo } from "../../models/maze";
+import { MazeInfo, Maze } from "../../models/maze";
+import { stateContext } from "react-three-fiber";
+//import { loadMaze } from "../../actions/mazeActions/mazeActions";
 
 export interface MenuProps extends MenuState {
   canMoveStart: boolean;
@@ -51,7 +55,34 @@ export interface MenuProps extends MenuState {
   ) => void;
 }
 
-class MenuBar extends React.Component<MenuProps, any> {
+export interface _MenuState{
+  value: string;
+  showModal: boolean;
+}
+
+class MenuBar extends React.Component<MenuProps, _MenuState> {
+  state = {
+    value: "",
+    showModal: false
+  }
+
+  //event: React.FormEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
+  handleChange = (event: React.FormEvent<HTMLTextAreaElement>, data: TextAreaProps): void => {
+    this.setState({value: data.value as string})
+  }
+
+  handleSubmit = () => {
+    const maze: MazeInfo = JSON.parse(this.state.value).then(() => {
+      this.props.loadMaze(maze)
+      this.setState({value:"", showModal:false})
+    }).catch((err: any) => console.log(err))
+    
+  }
+
+  handleClick = () => {
+    this.setState({...this.state, showModal: true})
+  }
+
   render() {
     const {
       canMoveStart,
@@ -63,7 +94,6 @@ class MenuBar extends React.Component<MenuProps, any> {
       onStart,
       onStop,
       saveMaze,
-      loadMaze,
       toggleMoveEnd,
       toggleMoveStart,
       selectedAlgo,
@@ -126,14 +156,24 @@ class MenuBar extends React.Component<MenuProps, any> {
               </Modal.Content>
             </Modal>
           &nbsp; {/* Essentially just a fancy space */}
-          <Modal trigger={<Button color="blue" circular onClick={() => loadMaze(maze)}> 
-            <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
-            <span>Save Maze</span>
-          </Button>} centered={false}>
-            <Modal.Header>Copy this text to save your maze</Modal.Header>
+          <Button color="blue" circular onClick={this.handleClick.bind(this)}> 
+            <Icon name="upload" style={{ marginRight: "0.5rem" }} />
+            <span>Load Maze</span>
+          </Button>
+          <Modal centered={false} open={this.state.showModal}>
+            <Modal.Header>Paste your maze in the text box</Modal.Header>
               <Modal.Content>
                   <Modal.Description>
-                      {JSON.stringify(maze)}
+                    {/* Trying to hook up this textarea to capture maze info
+                    inspration, https://react.semantic-ui.com/collections/form/#usage-capture-values */ }
+                    <Form onSubmit={this.handleSubmit.bind(this)}>
+                        <label>Maze Text</label>
+                        <Form.TextArea style={{ minHeight:500 , minWidth: 800}} placeholder='Maze Text'
+                        name="name"
+                        value={this.state.value}
+                        onChange = {this.handleChange.bind(this)}/>
+                        <Form.Button content='Submit' />
+                    </Form>
                   </Modal.Description>
               </Modal.Content>
             </Modal>

@@ -4,7 +4,8 @@ import {
   PAUSE_VISUALIZATION,
   STOP_VISUALIZATION,
   TOGGLE_MOVE_START,
-  TOGGLE_MOVE_END
+  TOGGLE_MOVE_END,
+  LOAD_MAZE
 } from "../../actions/menuActions/menuActions";
 import { MenuState } from "../../models/menu";
 import { initialState } from "../../models/menu/initialState";
@@ -59,7 +60,7 @@ export const menuReducer = (
           canMoveStart: false
         };
       }
-
+      
       return {
         ...state,
         canMoveEnd: !state.canMoveEnd
