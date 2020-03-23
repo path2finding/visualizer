@@ -35,11 +35,9 @@ export const makeEmpty = (coord: Coord): AnyAction => {
   };
 };
 
-
 export const loadMaze = (maze: MazeInfo): AnyAction => {
-  //console.log(maze)
   return {
     type: LOAD_MAZE,
-    payload: {mazeInfo: maze, clearMaze: generateMaze(5,5,true)} as Maze
+    payload: { mazeInfo: maze, clearMaze: generateMaze(5, 5, true) } as Maze
   };
 };
