@@ -10,6 +10,7 @@ import {
   toggleMoveEnd,
   saveMaze
 } from "../../actions/menuActions/menuActions";
+import { loadMaze } from "../../actions/mazeActions/mazeActions";
 import MenuBar from "../../components/Menu";
 
 import { RootState } from "typesafe-actions";
@@ -33,6 +34,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       onClear: handleClearGrid,
       toggleMoveStart,
       toggleMoveEnd,
+      loadMaze,
       saveMaze
     },
     dispatch

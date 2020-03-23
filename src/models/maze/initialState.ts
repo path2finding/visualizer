@@ -24,7 +24,7 @@ export const generateMaze = (
         });
       else
         maze[i].push({
-          type: SpaceTypes.wall,
+          type: SpaceTypes.empty,
           visited: false,
           path: false
         });

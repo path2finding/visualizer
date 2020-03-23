@@ -1,5 +1,5 @@
 import { DropdownProps, ButtonProps } from "semantic-ui-react";
-import { Maze, MazeInfo } from "../../models/maze";
+import { MazeInfo } from "../../models/maze";
 
 export const CHANGE_ALGO = "CHANGE_ALGO";
 export const START_VISUALIZATION = "START_VISUALIZATION";
@@ -8,6 +8,7 @@ export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const CLEAR_GRID = "CLEAR_GRID";
 export const TOGGLE_MOVE_START = "TOGGLE_MOVE_START";
 export const TOGGLE_MOVE_END = "TOGGLE_MOVE_END";
+export const LOAD_MAZE = "LOAD_MAZE";
 export const SAVE_MAZE = "SAVE_MAZE";
 
 export const handleDropdownChange = (
@@ -76,6 +77,14 @@ export const toggleMoveEnd = (
 ) => {
   return {
     type: TOGGLE_MOVE_END,
+    payload: null
+  };
+};
+
+export const loadMaze = (maze: MazeInfo) => {
+  console.log("load maze");
+  return {
+    type: LOAD_MAZE,
     payload: null
   };
 };

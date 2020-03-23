@@ -35,7 +35,8 @@ describe("<Menu />", () => {
     onClear: jest.fn(),
     toggleMoveStart: jest.fn(),
     toggleMoveEnd: jest.fn(),
-    saveMaze: jest.fn()
+    saveMaze: jest.fn(),
+    loadMaze: jest.fn()
   };
 
   it("defines the component", () => {
@@ -53,7 +54,7 @@ describe("<Menu />", () => {
     expect(wrapper.find(SemanticMenu.Item)).toBeDefined();
     expect(wrapper.find(SemanticMenu.Item)).toHaveLength(2);
     expect(wrapper.find(SemanticIcon)).toBeDefined();
-    expect(wrapper.find(SemanticIcon)).toHaveLength(7);
+    expect(wrapper.find(SemanticIcon)).toHaveLength(8);
   });
 
   it("Dropdown renders", () => {
@@ -62,7 +63,7 @@ describe("<Menu />", () => {
 
   it("Buttons render", () => {
     expect(wrapper.find(SemanticButton)).toBeDefined();
-    expect(wrapper.find(SemanticButton)).toHaveLength(6);
+    expect(wrapper.find(SemanticButton)).toHaveLength(7);
   });
 
   it("Play button calls action", () => {
