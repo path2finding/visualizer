@@ -160,6 +160,10 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
     this.setState({ ...this.state, showModal: true });
   };
 
+  handleClose = () => {
+    this.setState({ ...this.state, showModal: false });
+  };
+
   render() {
     const {
       canMoveStart,
@@ -230,6 +234,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               </Button>
             }
             centered={false}
+            closeIcon
           >
             <Modal.Header>Copy this text to save your maze</Modal.Header>
             <Modal.Content>
@@ -243,7 +248,12 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             <Icon name="upload" style={{ marginRight: "0.5rem" }} />
             <span>Load Maze</span>
           </Button>
-          <Modal centered={false} open={this.state.showModal}>
+          <Modal
+            centered={false}
+            open={this.state.showModal}
+            onClose={this.handleClose.bind(this)}
+            closeIcon
+          >
             <Modal.Header>Paste your maze in the text box</Modal.Header>
             <Modal.Content>
               <Modal.Description>
