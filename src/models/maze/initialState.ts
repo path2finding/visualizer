@@ -34,6 +34,6 @@ export const generateMaze = (
 };
 
 export const initialState: Maze = {
-  mazeInfo: generateMaze(5, 5),
+  mazeInfo: generateMaze(20, 20),
   clearMaze: generateMaze(5, 5, true)
 };

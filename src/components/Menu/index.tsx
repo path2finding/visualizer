@@ -56,6 +56,7 @@ export interface _MenuState {
   value: string;
   showModal: boolean;
   hasError: boolean;
+  errorMessage: string;
 }
 
 export const yupSpaceSchema = yup.object({
@@ -71,7 +72,8 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
   state = {
     value: "",
     showModal: false,
-    hasError: false
+    hasError: false,
+    errorMessage: ""
   };
 
   checkDynamicKeys = (keys: any[]): boolean => {
@@ -117,20 +119,40 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
       const maze: MazeInfo = JSON.parse(this.state.value);
       const keys = Object.keys(maze);
       if (keys.length === 0) {
-        console.log("HEY BITCH");
+        this.setState({
+          ...this.state,
+          hasError: true,
+          errorMessage: "Object should have keys!"
+        });
       } else {
         const keysAreValid = this.checkDynamicKeys(keys);
         if (!keysAreValid) {
-          this.setState({ ...this.state, hasError: true });
+          this.setState({
+            ...this.state,
+            hasError: true,
+            errorMessage: "Object keys must be numeric!"
+          });
         } else {
           const spacesAreValid = this.checkSpace(keys, maze);
-          console.log(spacesAreValid);
+          if (!spacesAreValid) {
+            this.setState({
+              ...this.state,
+              hasError: true,
+              errorMessage:
+                "Spaces required parameters type, visited, and path!"
+            });
+          } else {
+            this.props.loadMaze(maze);
+            this.setState({ value: "", showModal: false, hasError: false });
+          }
         }
-        // this.props.loadMaze(maze);
-        // this.setState({ value: "", showModal: false, hasError: false });
       }
     } catch (e) {
-      this.setState({ ...this.state, hasError: true });
+      this.setState({
+        ...this.state,
+        hasError: true,
+        errorMessage: "Maze data must be in JSON format!"
+      });
       console.log(e);
     }
   };
@@ -235,7 +257,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
                     error={
                       this.state.hasError
                         ? {
-                            content: "Please Use JSON Formatted Data",
+                            content: this.state.errorMessage,
                             pointing: "below"
                           }
                         : false
