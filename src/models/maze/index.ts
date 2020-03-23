@@ -5,7 +5,7 @@ export interface Coord {
   y: number;
 }
 
-interface Space {
+export interface Space {
   type: SpaceTypes;
   visited: boolean;
   path: boolean;
