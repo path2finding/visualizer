@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { bindActionCreators, Dispatch } from "redux";
 import {
   handleDropdownChange,
   handleStartVisualization,
@@ -8,15 +8,23 @@ import {
   handlePauseVisualization,
   toggleMoveStart,
   toggleMoveEnd,
+  saveMaze
 } from "../../actions/menuActions/menuActions";
-import{ loadMaze } from "../../actions/mazeActions/mazeActions"
+import { loadMaze } from "../../actions/mazeActions/mazeActions";
 import MenuBar from "../../components/Menu";
 
 import { RootState } from "typesafe-actions";
-import { mazeReducer } from "../../reducers/mazeReducer/mazeReducer";
-import Maze from "../../components/Maze/Maze";
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapStateToProps = (state: RootState) => ({
+  selectedAlgo: state.menu.selectedAlgo,
+  algorithms: state.menu.algorithms,
+  isPlaying: state.menu.isPlaying,
+  canMoveStart: state.menu.canMoveStart,
+  canMoveEnd: state.menu.canMoveEnd,
+  maze: state.maze
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators(
     {
       handleDropdownChange,
@@ -26,19 +34,11 @@ const mapDispatchToProps = (dispatch: any) => {
       onClear: handleClearGrid,
       toggleMoveStart,
       toggleMoveEnd,
-      loadMaze
+      loadMaze,
+      saveMaze
     },
     dispatch
   );
 };
 
-const mapStateToProps = (state: RootState) => ({
-  selectedAlgo: state.menu.selectedAlgo,
-  algorithms: state.menu.algorithms,
-  isPlaying: state.menu.isPlaying,
-  canMoveStart: state.menu.canMoveStart,
-  canMoveEnd: state.menu.canMoveEnd,
-  loadMaze: Maze
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(MenuBar as any);
+export default connect(mapStateToProps, mapDispatchToProps)(MenuBar);

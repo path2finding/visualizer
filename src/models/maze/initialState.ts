@@ -24,7 +24,7 @@ export const generateMaze = (
         });
       else
         maze[i].push({
-          type: SpaceTypes.wall,
+          type: SpaceTypes.empty,
           visited: false,
           path: false
         });
@@ -34,6 +34,6 @@ export const generateMaze = (
 };
 
 export const initialState: Maze = {
-  mazeInfo: generateMaze(20, 20),
+  mazeInfo: generateMaze(5, 5),
   clearMaze: generateMaze(5, 5, true)
 };

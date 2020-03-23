@@ -11,15 +11,14 @@ import {
   Form,
   TextAreaProps
 } from "semantic-ui-react";
-import { MazeInfo, Space } from "../../models/maze";
+import { MazeInfo } from "../../models/maze";
 import * as yup from "yup";
-import { mapValues } from "lodash";
-//import { loadMaze } from "../../actions/mazeActions/mazeActions";
+import { Maze } from "../../models/maze";
 
 export interface MenuProps extends MenuState {
   canMoveStart: boolean;
   canMoveEnd: boolean;
-  maze: MazeInfo;
+  maze: Maze;
   handleDropdownChange: (
     _: React.SyntheticEvent<HTMLElement, Event>,
     { value }: DropdownProps
@@ -178,6 +177,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
       algorithms,
       handleDropdownChange
     } = this.props;
+    const { mazeInfo } = this.props.maze;
 
     return (
       <Menu>
@@ -224,7 +224,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           &nbsp; {/* Essentially just a fancy space */}
           <Modal
             trigger={
-              <Button color="blue" circular onClick={() => saveMaze(maze)}>
+              <Button color="blue" circular onClick={e => saveMaze(mazeInfo)}>
                 <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
                 <span>Save Maze</span>
               </Button>
@@ -233,7 +233,9 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           >
             <Modal.Header>Copy this text to save your maze</Modal.Header>
             <Modal.Content>
-              <Modal.Description>{JSON.stringify(maze)}</Modal.Description>
+              <Modal.Description>
+                {JSON.stringify(maze.mazeInfo)}
+              </Modal.Description>
             </Modal.Content>
           </Modal>
           &nbsp; {/* Essentially just a fancy space */}

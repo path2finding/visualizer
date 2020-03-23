@@ -9,6 +9,7 @@ export const CLEAR_GRID = "CLEAR_GRID";
 export const TOGGLE_MOVE_START = "TOGGLE_MOVE_START";
 export const TOGGLE_MOVE_END = "TOGGLE_MOVE_END";
 export const LOAD_MAZE = "LOAD_MAZE";
+export const SAVE_MAZE = "SAVE_MAZE";
 
 export const handleDropdownChange = (
   _: React.SyntheticEvent<HTMLElement, Event>,
@@ -80,12 +81,19 @@ export const toggleMoveEnd = (
   };
 };
 
-export const loadMaze = (
-  maze: MazeInfo
-) => {
-  console.log("load maze")
+export const loadMaze = (maze: MazeInfo) => {
+  console.log("load maze");
   return {
     type: LOAD_MAZE,
     payload: null
+  };
+};
+
+export const saveMaze = (maze: MazeInfo) => {
+  console.log("This is not hooked up to a reducer");
+  console.log(JSON.stringify(maze));
+  return {
+    type: SAVE_MAZE,
+    payload: JSON.stringify(maze)
   };
 };
