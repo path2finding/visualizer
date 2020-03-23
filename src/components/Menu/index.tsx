@@ -6,12 +6,18 @@ import {
   Dropdown,
   Button,
   Icon,
-  ButtonProps
+  ButtonProps,
+  Modal,
+  Header,
+  DropdownItemProps
 } from "semantic-ui-react";
+import { Maze, MazeInfo } from "../../models/maze";
+import { saveMaze } from "../../actions/menuActions/menuActions";
 
 export interface MenuProps extends MenuState {
   canMoveStart: boolean;
   canMoveEnd: boolean;
+  maze: Maze;
   handleDropdownChange: (
     _: React.SyntheticEvent<HTMLElement, Event>,
     { value }: DropdownProps
@@ -40,6 +46,7 @@ export interface MenuProps extends MenuState {
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
   ) => void;
+  saveMaze: (mazeInfo: MazeInfo) => void;
 }
 
 class MenuBar extends React.Component<MenuProps, any> {
@@ -58,6 +65,7 @@ class MenuBar extends React.Component<MenuProps, any> {
       algorithms,
       handleDropdownChange
     } = this.props;
+    const { mazeInfo } = this.props.maze;
 
     return (
       <Menu>
@@ -101,6 +109,21 @@ class MenuBar extends React.Component<MenuProps, any> {
             <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
             <span>Clear Grid</span>
           </Button>
+          &nbsp; {/* Essentially just a fancy space */}
+          <Modal
+            trigger={
+              <Button color="blue" circular onClick={e => saveMaze(mazeInfo)}>
+                <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
+                <span>Save Maze</span>
+              </Button>
+            }
+            centered={false}
+          >
+            <Modal.Header>Copy this text to save your maze</Modal.Header>
+            <Modal.Content>
+              <Modal.Description>{JSON.stringify(mazeInfo)}</Modal.Description>
+            </Modal.Content>
+          </Modal>
           &nbsp; {/* Essentially just a fancy space */}
           <Dropdown
             onChange={handleDropdownChange}

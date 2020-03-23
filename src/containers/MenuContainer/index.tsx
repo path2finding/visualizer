@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { bindActionCreators, Dispatch } from "redux";
 import {
   handleDropdownChange,
   handleStartVisualization,
@@ -7,13 +7,23 @@ import {
   handleClearGrid,
   handlePauseVisualization,
   toggleMoveStart,
-  toggleMoveEnd
+  toggleMoveEnd,
+  saveMaze
 } from "../../actions/menuActions/menuActions";
 import MenuBar from "../../components/Menu";
 
 import { RootState } from "typesafe-actions";
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapStateToProps = (state: RootState) => ({
+  selectedAlgo: state.menu.selectedAlgo,
+  algorithms: state.menu.algorithms,
+  isPlaying: state.menu.isPlaying,
+  canMoveStart: state.menu.canMoveStart,
+  canMoveEnd: state.menu.canMoveEnd,
+  maze: state.maze
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators(
     {
       handleDropdownChange,
@@ -22,18 +32,11 @@ const mapDispatchToProps = (dispatch: any) => {
       onStop: handleStopVisualization,
       onClear: handleClearGrid,
       toggleMoveStart,
-      toggleMoveEnd
+      toggleMoveEnd,
+      saveMaze
     },
     dispatch
   );
 };
 
-const mapStateToProps = (state: RootState) => ({
-  selectedAlgo: state.menu.selectedAlgo,
-  algorithms: state.menu.algorithms,
-  isPlaying: state.menu.isPlaying,
-  canMoveStart: state.menu.canMoveStart,
-  canMoveEnd: state.menu.canMoveEnd
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(MenuBar as any);
+export default connect(mapStateToProps, mapDispatchToProps)(MenuBar);

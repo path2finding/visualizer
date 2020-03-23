@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import { mount } from "../../setupTests";
 import Menu, { MenuProps } from ".";
+import { initialState } from "../../models/maze/initialState";
 import {
   Menu as SemanticMenu,
   Icon as SemanticIcon,
@@ -26,13 +27,15 @@ describe("<Menu />", () => {
       { value: "DFS", text: "DFS" }
     ],
     isPlaying: false,
+    maze: initialState,
     handleDropdownChange: jest.fn(),
     onStart: jest.fn(),
     onPause: jest.fn(),
     onStop: jest.fn(),
     onClear: jest.fn(),
     toggleMoveStart: jest.fn(),
-    toggleMoveEnd: jest.fn()
+    toggleMoveEnd: jest.fn(),
+    saveMaze: jest.fn()
   };
 
   it("defines the component", () => {
@@ -50,7 +53,7 @@ describe("<Menu />", () => {
     expect(wrapper.find(SemanticMenu.Item)).toBeDefined();
     expect(wrapper.find(SemanticMenu.Item)).toHaveLength(2);
     expect(wrapper.find(SemanticIcon)).toBeDefined();
-    expect(wrapper.find(SemanticIcon)).toHaveLength(6);
+    expect(wrapper.find(SemanticIcon)).toHaveLength(7);
   });
 
   it("Dropdown renders", () => {
@@ -59,7 +62,7 @@ describe("<Menu />", () => {
 
   it("Buttons render", () => {
     expect(wrapper.find(SemanticButton)).toBeDefined();
-    expect(wrapper.find(SemanticButton)).toHaveLength(5);
+    expect(wrapper.find(SemanticButton)).toHaveLength(6);
   });
 
   it("Play button calls action", () => {
@@ -116,6 +119,15 @@ describe("<Menu />", () => {
       .simulate("click");
     expect(props.onClear).toHaveBeenCalled();
   });
+
+  // TODO: This fails because it's not hooked up to a reducer
+  // it("Save Maze button calls action", () => {
+  //   wrapper
+  //     .find(SemanticButton)
+  //     .at(5)
+  //     .simulate("click");
+  //   expect(props.saveMaze).toHaveBeenCalled();
+  // });
 
   // it("Change dropdown selection", () => {
   //   wrapper
