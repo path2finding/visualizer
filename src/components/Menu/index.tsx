@@ -11,9 +11,10 @@ import {
   Form,
   TextAreaProps
 } from "semantic-ui-react";
-import { MazeInfo } from "../../models/maze";
+import { MazeInfo, Space } from "../../models/maze";
 import * as yup from "yup";
 import { Maze } from "../../models/maze";
+import { SpaceTypes } from "../Space/types";
 
 export interface MenuProps extends MenuState {
   canMoveStart: boolean;
@@ -105,6 +106,20 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
     return true;
   };
 
+  checkStartEndPoints = (maze: MazeInfo): boolean => {
+    let numStart: number = 0;
+    let numEnd: number = 0;
+    // eslint-disable-next-line array-callback-return
+    Object.keys(maze).map((key: string) => {
+      // eslint-disable-next-line array-callback-return
+      maze[+key].map((value: Space) => {
+        numStart += value.type === SpaceTypes.start ? 1 : 0;
+        numEnd += value.type === SpaceTypes.end ? 1 : 0;
+      });
+    });
+    return numStart <= 1 && numEnd <= 1;
+  };
+
   //event: React.FormEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
   handleChange = (
     _: React.FormEvent<HTMLTextAreaElement>,
@@ -141,8 +156,18 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
                 "Spaces required parameters type, visited, and path!"
             });
           } else {
-            this.props.loadMaze(maze);
-            this.setState({ value: "", showModal: false, hasError: false });
+            const startEndPointsValid = this.checkStartEndPoints(maze);
+            if (!startEndPointsValid) {
+              this.setState({
+                ...this.state,
+                hasError: true,
+                errorMessage:
+                  "Maze can only have one start point and one end point"
+              });
+            } else {
+              this.props.loadMaze(maze);
+              this.setState({ value: "", showModal: false, hasError: false });
+            }
           }
         }
       }
