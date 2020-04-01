@@ -14,6 +14,7 @@ import {
 import { MazeInfo, Space } from "../../models/maze";
 import * as yup from "yup";
 import { Maze } from "../../models/maze";
+import { SpaceTypes } from "../Space/types";
 
 export interface MenuProps extends MenuState {
   canMoveStart: boolean;
@@ -112,8 +113,8 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
     Object.keys(maze).map((key: string) => {
       // eslint-disable-next-line array-callback-return
       maze[+key].map((value: Space) => {
-        numStart += value.type === "startpoint" ? 1 : 0;
-        numEnd += value.type === "endpoint" ? 1 : 0;
+        numStart += value.type === SpaceTypes.start ? 1 : 0;
+        numEnd += value.type === SpaceTypes.end ? 1 : 0;
       });
     });
     return numStart <= 1 && numEnd <= 1;
