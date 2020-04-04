@@ -5,11 +5,15 @@ import {
   makeWall,
   makeEmpty,
   loadMaze,
+  setPath,
+  setVisited,
   CHANGE_START,
   CHANGE_END,
   MAKE_WALL,
   MAKE_EMPTY,
-  LOAD_MAZE
+  LOAD_MAZE,
+  SET_PATH,
+  SET_VISITED,
 } from "./mazeActions";
 import { initialState, generateMaze } from "../../models/maze/initialState";
 
@@ -28,8 +32,8 @@ describe("Maze Action Tests", () => {
       const expectedActions = [
         {
           type: CHANGE_START,
-          payload: newPos
-        }
+          payload: newPos,
+        },
       ];
       reduxStore.dispatch(handleChangeStart(newPos));
       expect(reduxStore.getActions()).toEqual(expectedActions);
@@ -43,8 +47,8 @@ describe("Maze Action Tests", () => {
       const expectedActions = [
         {
           type: CHANGE_END,
-          payload: newPos
-        }
+          payload: newPos,
+        },
       ];
       reduxStore.dispatch(handleChangeEnd(newPos));
       expect(reduxStore.getActions()).toEqual(expectedActions);
@@ -58,8 +62,8 @@ describe("Maze Action Tests", () => {
       const expectedActions = [
         {
           type: MAKE_WALL,
-          payload: pos
-        }
+          payload: pos,
+        },
       ];
       reduxStore.dispatch(makeWall(pos));
       expect(reduxStore.getActions()).toEqual(expectedActions);
@@ -73,8 +77,8 @@ describe("Maze Action Tests", () => {
       const expectedActions = [
         {
           type: MAKE_EMPTY,
-          payload: pos
-        }
+          payload: pos,
+        },
       ];
       reduxStore.dispatch(makeEmpty(pos));
       expect(reduxStore.getActions()).toEqual(expectedActions);
@@ -88,10 +92,40 @@ describe("Maze Action Tests", () => {
       const expectedActions = [
         {
           type: LOAD_MAZE,
-          payload: { mazeInfo: maze, clearMaze: generateMaze(5, 5, true) }
-        }
+          payload: { mazeInfo: maze, clearMaze: generateMaze(5, 5, true) },
+        },
       ];
       reduxStore.dispatch(loadMaze(maze));
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("Set Path Test", () => {
+    it("Should call SET_PATH action", () => {
+      const coord = { x: 2, y: 2 };
+      const expectedActions = [
+        {
+          type: SET_PATH,
+          payload: coord,
+        },
+      ];
+
+      reduxStore.dispatch(setPath(coord));
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("Set Visited Test", () => {
+    it("Should call SET_VISITED action", () => {
+      const coord = { x: 2, y: 2 };
+      const expectedActions = [
+        {
+          type: SET_VISITED,
+          payload: coord,
+        },
+      ];
+
+      reduxStore.dispatch(setVisited(coord));
       expect(reduxStore.getActions()).toEqual(expectedActions);
     });
   });
