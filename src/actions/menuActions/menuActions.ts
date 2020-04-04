@@ -4,7 +4,6 @@ import { MazeInfo } from "../../models/maze";
 export const CHANGE_ALGO = "CHANGE_ALGO";
 export const START_VISUALIZATION = "START_VISUALIZATION";
 export const PAUSE_VISUALIZATION = "PAUSE_VISUALIZATION";
-export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const CLEAR_GRID = "CLEAR_GRID";
 export const TOGGLE_MOVE_START = "TOGGLE_MOVE_START";
 export const TOGGLE_MOVE_END = "TOGGLE_MOVE_END";
@@ -17,7 +16,7 @@ export const handleDropdownChange = (
 ) => {
   return {
     type: CHANGE_ALGO,
-    payload: data.value
+    payload: data.value,
   };
 };
 
@@ -27,7 +26,7 @@ export const handleStartVisualization = (
 ) => {
   return {
     type: START_VISUALIZATION,
-    payload: null
+    payload: null,
   };
 };
 
@@ -37,17 +36,7 @@ export const handlePauseVisualization = (
 ) => {
   return {
     type: PAUSE_VISUALIZATION,
-    payload: null
-  };
-};
-
-export const handleStopVisualization = (
-  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  data: ButtonProps
-) => {
-  return {
-    type: STOP_VISUALIZATION,
-    payload: null
+    payload: null,
   };
 };
 
@@ -57,7 +46,7 @@ export const handleClearGrid = (
 ) => {
   return {
     type: CLEAR_GRID,
-    payload: null
+    payload: null,
   };
 };
 
@@ -67,7 +56,7 @@ export const toggleMoveStart = (
 ) => {
   return {
     type: TOGGLE_MOVE_START,
-    payload: null
+    payload: null,
   };
 };
 
@@ -77,7 +66,7 @@ export const toggleMoveEnd = (
 ) => {
   return {
     type: TOGGLE_MOVE_END,
-    payload: null
+    payload: null,
   };
 };
 
@@ -85,7 +74,7 @@ export const loadMaze = (maze: MazeInfo) => {
   console.log("load maze");
   return {
     type: LOAD_MAZE,
-    payload: null
+    payload: null,
   };
 };
 
@@ -94,6 +83,6 @@ export const saveMaze = (maze: MazeInfo) => {
   console.log(JSON.stringify(maze));
   return {
     type: SAVE_MAZE,
-    payload: JSON.stringify(maze)
+    payload: JSON.stringify(maze),
   };
 };

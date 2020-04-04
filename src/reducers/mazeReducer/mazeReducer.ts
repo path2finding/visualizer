@@ -7,13 +7,14 @@ import {
   CHANGE_END,
   MAKE_WALL,
   MAKE_EMPTY,
-  LOAD_MAZE
+  LOAD_MAZE,
+  STOP_VISUALIZATION,
 } from "../../actions/mazeActions/mazeActions";
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
   return {
     x: mazeInfo[0].length,
-    y: Object.keys(mazeInfo).length
+    y: Object.keys(mazeInfo).length,
   };
 };
 
@@ -69,31 +70,36 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
           Object.keys(state.mazeInfo).length,
           state.mazeInfo[0].length,
           true
-        )
+        ),
       };
     case CHANGE_START:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.start)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.start),
       };
     case CHANGE_END:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.end)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.end),
       };
     case MAKE_WALL:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.wall)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.wall),
       };
     case MAKE_EMPTY:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty),
       };
     case LOAD_MAZE:
-      console.log(payload)
-      return payload
+      console.log(payload);
+      return payload;
+    case STOP_VISUALIZATION:
+      return {
+        ...state,
+        path: new Array<Coord>(),
+      };
     default:
       return state;
   }
