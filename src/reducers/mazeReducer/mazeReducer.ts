@@ -7,17 +7,19 @@ import {
   CHANGE_END,
   MAKE_WALL,
   MAKE_EMPTY,
-  LOAD_MAZE
+  LOAD_MAZE,
+  SET_PATH,
+  SET_VISITED,
 } from "../../actions/mazeActions/mazeActions";
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
   return {
     x: mazeInfo[0].length,
-    y: Object.keys(mazeInfo).length
+    y: Object.keys(mazeInfo).length,
   };
 };
 
-// // Gets the coordinate of either the start or end points
+// Gets the coordinate of either the start or end points
 const getCoord = (
   mazeInfo: MazeInfo,
   spaceType: SpaceTypes.start | SpaceTypes.end
@@ -60,6 +62,18 @@ const changeSpaceType = (
   return newMaze;
 };
 
+const updateSpaceProp = (
+  coord: Coord,
+  mazeInfo: MazeInfo,
+  prop: "path" | "visited"
+) => {
+  let newMaze = mazeInfo;
+
+  newMaze[coord.y][coord.x][prop] = !mazeInfo[coord.y][coord.x][prop];
+
+  return newMaze;
+};
+
 export const mazeReducer = (state = initialState, { type, payload }: any) => {
   switch (type) {
     case CLEAR_GRID:
@@ -69,31 +83,41 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
           Object.keys(state.mazeInfo).length,
           state.mazeInfo[0].length,
           true
-        )
+        ),
       };
     case CHANGE_START:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.start)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.start),
       };
     case CHANGE_END:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.end)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.end),
       };
     case MAKE_WALL:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.wall)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.wall),
       };
     case MAKE_EMPTY:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty),
       };
     case LOAD_MAZE:
-      console.log(payload)
-      return payload
+      console.log(payload);
+      return payload;
+    case SET_PATH:
+      return {
+        ...state,
+        mazeInfo: updateSpaceProp(payload, state.mazeInfo, "path"),
+      };
+    case SET_VISITED:
+      return {
+        ...state,
+        mazeInfo: updateSpaceProp(payload, state.mazeInfo, "visited"),
+      };
     default:
       return state;
   }
