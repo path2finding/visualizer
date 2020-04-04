@@ -26,7 +26,7 @@ describe("Maze Action Tests", () => {
   });
 
   describe("Change Start Point Test", () => {
-    it("Should dispatch correct action", () => {
+    it("Should call CHANGE_START action", () => {
       const newPos = { x: 1, y: 1 };
 
       const expectedActions = [
@@ -41,7 +41,7 @@ describe("Maze Action Tests", () => {
   });
 
   describe("Change End Point Test", () => {
-    it("Should dispatch correct action", () => {
+    it("Should call CHANGE_END action", () => {
       const newPos = { x: 1, y: 1 };
 
       const expectedActions = [
@@ -56,7 +56,7 @@ describe("Maze Action Tests", () => {
   });
 
   describe("Make Wall Test", () => {
-    it("Should modify redux store", () => {
+    it("Should call MAKE_WALL action", () => {
       const pos = { x: 1, y: 1 };
 
       const expectedActions = [
@@ -71,7 +71,7 @@ describe("Maze Action Tests", () => {
   });
 
   describe("Make Empty Test", () => {
-    it("Should modify redux store", () => {
+    it("Should call MAKE_EMPTY action", () => {
       const pos = { x: 1, y: 1 };
 
       const expectedActions = [
@@ -86,7 +86,7 @@ describe("Maze Action Tests", () => {
   });
 
   describe("Load Maze Test", () => {
-    it("Should modify redux store", () => {
+    it("Should call LOAD_MAZE action", () => {
       const maze = generateMaze(5, 5, false);
 
       const expectedActions = [
