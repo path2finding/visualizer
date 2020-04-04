@@ -1,11 +1,9 @@
 import configureStore from "redux-mock-store";
 import {
   handleStartVisualization,
-  handleStopVisualization,
   handlePauseVisualization,
   handleClearGrid,
   START_VISUALIZATION,
-  STOP_VISUALIZATION,
   PAUSE_VISUALIZATION,
   CLEAR_GRID,
   CHANGE_ALGO,
@@ -13,7 +11,7 @@ import {
   TOGGLE_MOVE_END,
   toggleMoveStart,
   toggleMoveEnd,
-  handleDropdownChange
+  handleDropdownChange,
 } from "./menuActions";
 import { ButtonProps, DropdownProps } from "semantic-ui-react";
 import { initialState } from "../../models/menu/initialState";
@@ -31,29 +29,11 @@ describe("Navbar Action Tests", () => {
       const expectedActions = [
         {
           type: START_VISUALIZATION,
-          payload: null
-        }
+          payload: null,
+        },
       ];
       reduxStore.dispatch(
         handleStartVisualization(
-          { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
-          {} as ButtonProps
-        )
-      );
-      expect(reduxStore.getActions()).toEqual(expectedActions);
-    });
-  });
-
-  describe("Stop Visualization Test", () => {
-    it("Should dispatch correct action", () => {
-      const expectedActions = [
-        {
-          type: STOP_VISUALIZATION,
-          payload: null
-        }
-      ];
-      reduxStore.dispatch(
-        handleStopVisualization(
           { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
           {} as ButtonProps
         )
@@ -67,8 +47,8 @@ describe("Navbar Action Tests", () => {
       const expectedActions = [
         {
           type: PAUSE_VISUALIZATION,
-          payload: null
-        }
+          payload: null,
+        },
       ];
       reduxStore.dispatch(
         handlePauseVisualization(
@@ -85,8 +65,8 @@ describe("Navbar Action Tests", () => {
       const expectedActions = [
         {
           type: TOGGLE_MOVE_START,
-          payload: null
-        }
+          payload: null,
+        },
       ];
       reduxStore.dispatch(
         toggleMoveStart(
@@ -103,8 +83,8 @@ describe("Navbar Action Tests", () => {
       const expectedActions = [
         {
           type: TOGGLE_MOVE_END,
-          payload: null
-        }
+          payload: null,
+        },
       ];
       reduxStore.dispatch(
         toggleMoveEnd(
@@ -121,8 +101,8 @@ describe("Navbar Action Tests", () => {
       const expectedActions = [
         {
           type: CLEAR_GRID,
-          payload: null
-        }
+          payload: null,
+        },
       ];
       reduxStore.dispatch(
         handleClearGrid(
@@ -139,8 +119,8 @@ describe("Navbar Action Tests", () => {
       const expectedActions = [
         {
           type: CHANGE_ALGO,
-          payload: undefined
-        }
+          payload: undefined,
+        },
       ];
       reduxStore.dispatch(
         handleDropdownChange(

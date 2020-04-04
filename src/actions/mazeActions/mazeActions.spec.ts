@@ -9,9 +9,12 @@ import {
   CHANGE_END,
   MAKE_WALL,
   MAKE_EMPTY,
-  LOAD_MAZE
+  LOAD_MAZE,
+  STOP_VISUALIZATION,
+  handleStopVisualization,
 } from "./mazeActions";
 import { initialState, generateMaze } from "../../models/maze/initialState";
+import { ButtonProps } from "semantic-ui-react";
 
 describe("Maze Action Tests", () => {
   const mockStore = configureStore();
@@ -28,8 +31,8 @@ describe("Maze Action Tests", () => {
       const expectedActions = [
         {
           type: CHANGE_START,
-          payload: newPos
-        }
+          payload: newPos,
+        },
       ];
       reduxStore.dispatch(handleChangeStart(newPos));
       expect(reduxStore.getActions()).toEqual(expectedActions);
@@ -43,8 +46,8 @@ describe("Maze Action Tests", () => {
       const expectedActions = [
         {
           type: CHANGE_END,
-          payload: newPos
-        }
+          payload: newPos,
+        },
       ];
       reduxStore.dispatch(handleChangeEnd(newPos));
       expect(reduxStore.getActions()).toEqual(expectedActions);
@@ -58,8 +61,8 @@ describe("Maze Action Tests", () => {
       const expectedActions = [
         {
           type: MAKE_WALL,
-          payload: pos
-        }
+          payload: pos,
+        },
       ];
       reduxStore.dispatch(makeWall(pos));
       expect(reduxStore.getActions()).toEqual(expectedActions);
@@ -73,8 +76,8 @@ describe("Maze Action Tests", () => {
       const expectedActions = [
         {
           type: MAKE_EMPTY,
-          payload: pos
-        }
+          payload: pos,
+        },
       ];
       reduxStore.dispatch(makeEmpty(pos));
       expect(reduxStore.getActions()).toEqual(expectedActions);
@@ -88,10 +91,28 @@ describe("Maze Action Tests", () => {
       const expectedActions = [
         {
           type: LOAD_MAZE,
-          payload: { mazeInfo: maze, clearMaze: generateMaze(5, 5, true) }
-        }
+          payload: { mazeInfo: maze, clearMaze: generateMaze(5, 5, true) },
+        },
       ];
       reduxStore.dispatch(loadMaze(maze));
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("Stop Visualization Test", () => {
+    it("Should dispatch correct action", () => {
+      const expectedActions = [
+        {
+          type: STOP_VISUALIZATION,
+          payload: null,
+        },
+      ];
+      reduxStore.dispatch(
+        handleStopVisualization(
+          { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
+          {} as ButtonProps
+        )
+      );
       expect(reduxStore.getActions()).toEqual(expectedActions);
     });
   });
