@@ -18,5 +18,4 @@ export interface MazeInfo {
 export interface Maze {
   mazeInfo: MazeInfo;
   clearMaze: MazeInfo;
-  path: Coord[];
 }

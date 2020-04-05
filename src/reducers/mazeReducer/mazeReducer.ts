@@ -1,6 +1,6 @@
 import { SpaceTypes } from "../../components/Space/types";
 import { initialState, generateMaze } from "../../models/maze/initialState";
-import { Maze, MazeInfo, Coord } from "../../models/maze/index";
+import { Maze, MazeInfo, Coord, Space } from "../../models/maze/index";
 import { CLEAR_GRID } from "../../actions/menuActions/menuActions";
 import {
   CHANGE_START,
@@ -98,7 +98,16 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
     case STOP_VISUALIZATION:
       return {
         ...state,
-        path: new Array<Coord>(),
+        mazeInfo: Object.keys(state.mazeInfo).map((value: string) => {
+          return state.mazeInfo[+value].map(
+            (value: Space): Space => {
+              return {
+                ...value,
+                path: false,
+              } as Space;
+            }
+          );
+        }) as MazeInfo,
       };
     default:
       return state;
