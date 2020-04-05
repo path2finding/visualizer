@@ -6,9 +6,9 @@ export const initialState: MenuState = {
     { value: "A*", text: "A*" },
     { value: "Djikstras", text: "Djikstras" },
     { value: "BFS", text: "BFS" },
-    { value: "DFS", text: "DFS" }
+    { value: "DFS", text: "DFS" },
   ],
   isPlaying: false,
   canMoveStart: false,
-  canMoveEnd: false
+  canMoveEnd: false,
 };

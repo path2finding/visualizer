@@ -1,6 +1,6 @@
 import { SpaceTypes } from "../../components/Space/types";
 import { initialState, generateMaze } from "../../models/maze/initialState";
-import { Maze, MazeInfo, Coord } from "../../models/maze/index";
+import { Maze, MazeInfo, Coord, Space } from "../../models/maze/index";
 import { CLEAR_GRID } from "../../actions/menuActions/menuActions";
 import {
   CHANGE_START,
@@ -10,7 +10,13 @@ import {
   LOAD_MAZE,
   SET_PATH,
   SET_VISITED,
+  STOP_VISUALIZATION,
 } from "../../actions/mazeActions/mazeActions";
+
+enum SpaceProps {
+  path = "path",
+  visited = "visited",
+}
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
   return {
@@ -65,7 +71,7 @@ const changeSpaceType = (
 const updateSpaceProp = (
   coord: Coord,
   mazeInfo: MazeInfo,
-  prop: "path" | "visited"
+  prop: SpaceProps
 ) => {
   let newMaze = mazeInfo;
 
@@ -111,12 +117,26 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
     case SET_PATH:
       return {
         ...state,
-        mazeInfo: updateSpaceProp(payload, state.mazeInfo, "path"),
+        mazeInfo: updateSpaceProp(payload, state.mazeInfo, SpaceProps.path),
       };
     case SET_VISITED:
       return {
         ...state,
-        mazeInfo: updateSpaceProp(payload, state.mazeInfo, "visited"),
+        mazeInfo: updateSpaceProp(payload, state.mazeInfo, SpaceProps.visited),
+      };
+    case STOP_VISUALIZATION:
+      return {
+        ...state,
+        mazeInfo: Object.keys(state.mazeInfo).map((value: string) => {
+          return state.mazeInfo[+value].map(
+            (value: Space): Space => {
+              return {
+                ...value,
+                path: false,
+              } as Space;
+            }
+          );
+        }) as MazeInfo,
       };
     default:
       return state;

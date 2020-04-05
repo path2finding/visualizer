@@ -14,8 +14,11 @@ import {
   LOAD_MAZE,
   SET_PATH,
   SET_VISITED,
+  STOP_VISUALIZATION,
+  handleStopVisualization,
 } from "./mazeActions";
 import { initialState, generateMaze } from "../../models/maze/initialState";
+import { ButtonProps } from "semantic-ui-react";
 
 describe("Maze Action Tests", () => {
   const mockStore = configureStore();
@@ -126,6 +129,25 @@ describe("Maze Action Tests", () => {
       ];
 
       reduxStore.dispatch(setVisited(coord));
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("Stop Visualization Test", () => {
+    it("Should dispatch correct action", () => {
+      const expectedActions = [
+        {
+          type: STOP_VISUALIZATION,
+          payload: null,
+        },
+      ];
+
+      reduxStore.dispatch(
+        handleStopVisualization(
+          { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
+          {} as ButtonProps
+        )
+      );
       expect(reduxStore.getActions()).toEqual(expectedActions);
     });
   });
