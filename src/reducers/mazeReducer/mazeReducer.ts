@@ -1,19 +1,20 @@
 import { SpaceTypes } from "../../components/Space/types";
 import { initialState, generateMaze } from "../../models/maze/initialState";
-import { Maze, MazeInfo, Coord } from "../../models/maze/index";
+import { Maze, MazeInfo, Coord, Space } from "../../models/maze/index";
 import { CLEAR_GRID } from "../../actions/menuActions/menuActions";
 import {
   CHANGE_START,
   CHANGE_END,
   MAKE_WALL,
   MAKE_EMPTY,
-  LOAD_MAZE
+  LOAD_MAZE,
+  STOP_VISUALIZATION,
 } from "../../actions/mazeActions/mazeActions";
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
   return {
     x: mazeInfo[0].length,
-    y: Object.keys(mazeInfo).length
+    y: Object.keys(mazeInfo).length,
   };
 };
 
@@ -69,31 +70,45 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
           Object.keys(state.mazeInfo).length,
           state.mazeInfo[0].length,
           true
-        )
+        ),
       };
     case CHANGE_START:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.start)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.start),
       };
     case CHANGE_END:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.end)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.end),
       };
     case MAKE_WALL:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.wall)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.wall),
       };
     case MAKE_EMPTY:
       return {
         ...state,
-        mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty)
+        mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty),
       };
     case LOAD_MAZE:
-      console.log(payload)
-      return payload
+      console.log(payload);
+      return payload;
+    case STOP_VISUALIZATION:
+      return {
+        ...state,
+        mazeInfo: Object.keys(state.mazeInfo).map((value: string) => {
+          return state.mazeInfo[+value].map(
+            (value: Space): Space => {
+              return {
+                ...value,
+                path: false,
+              } as Space;
+            }
+          );
+        }) as MazeInfo,
+      };
     default:
       return state;
   }

@@ -2,11 +2,11 @@ import {
   CHANGE_ALGO,
   START_VISUALIZATION,
   PAUSE_VISUALIZATION,
-  STOP_VISUALIZATION,
   TOGGLE_MOVE_START,
   TOGGLE_MOVE_END,
-  LOAD_MAZE
+  LOAD_MAZE,
 } from "../../actions/menuActions/menuActions";
+import { STOP_VISUALIZATION } from "../../actions/mazeActions/mazeActions";
 import { MenuState } from "../../models/menu";
 import { initialState } from "../../models/menu/initialState";
 
@@ -18,22 +18,22 @@ export const menuReducer = (
     case CHANGE_ALGO:
       return {
         ...state,
-        selectedAlgo: payload
+        selectedAlgo: payload,
       };
     case START_VISUALIZATION:
       return {
         ...state,
-        isPlaying: true
+        isPlaying: true,
       };
     case PAUSE_VISUALIZATION:
       return {
         ...state,
-        isPlaying: false
+        isPlaying: false,
       };
     case STOP_VISUALIZATION:
       return {
         ...state,
-        isPlaying: false
+        isPlaying: false,
       };
     case TOGGLE_MOVE_START:
       // Check for making `canMoveEnd` false if setting
@@ -42,13 +42,13 @@ export const menuReducer = (
         return {
           ...state,
           canMoveStart: !state.canMoveStart,
-          canMoveEnd: false
+          canMoveEnd: false,
         };
       }
 
       return {
         ...state,
-        canMoveStart: !state.canMoveStart
+        canMoveStart: !state.canMoveStart,
       };
     case TOGGLE_MOVE_END:
       // Check for making `canMoveStart` false if setting
@@ -57,13 +57,13 @@ export const menuReducer = (
         return {
           ...state,
           canMoveEnd: !state.canMoveEnd,
-          canMoveStart: false
+          canMoveStart: false,
         };
       }
-      
+
       return {
         ...state,
-        canMoveEnd: !state.canMoveEnd
+        canMoveEnd: !state.canMoveEnd,
       };
     default:
       return state;
