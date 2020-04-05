@@ -8,8 +8,15 @@ import {
   MAKE_WALL,
   MAKE_EMPTY,
   LOAD_MAZE,
+  SET_PATH,
+  SET_VISITED,
   STOP_VISUALIZATION,
 } from "../../actions/mazeActions/mazeActions";
+
+enum SpaceProps {
+  path = "path",
+  visited = "visited",
+}
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
   return {
@@ -18,7 +25,7 @@ const getMazeSize = (mazeInfo: MazeInfo): Coord => {
   };
 };
 
-// // Gets the coordinate of either the start or end points
+// Gets the coordinate of either the start or end points
 const getCoord = (
   mazeInfo: MazeInfo,
   spaceType: SpaceTypes.start | SpaceTypes.end
@@ -61,6 +68,18 @@ const changeSpaceType = (
   return newMaze;
 };
 
+const updateSpaceProp = (
+  coord: Coord,
+  mazeInfo: MazeInfo,
+  prop: SpaceProps
+) => {
+  let newMaze = mazeInfo;
+
+  newMaze[coord.y][coord.x][prop] = !mazeInfo[coord.y][coord.x][prop];
+
+  return newMaze;
+};
+
 export const mazeReducer = (state = initialState, { type, payload }: any) => {
   switch (type) {
     case CLEAR_GRID:
@@ -95,6 +114,16 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
     case LOAD_MAZE:
       console.log(payload);
       return payload;
+    case SET_PATH:
+      return {
+        ...state,
+        mazeInfo: updateSpaceProp(payload, state.mazeInfo, SpaceProps.path),
+      };
+    case SET_VISITED:
+      return {
+        ...state,
+        mazeInfo: updateSpaceProp(payload, state.mazeInfo, SpaceProps.visited),
+      };
     case STOP_VISUALIZATION:
       return {
         ...state,

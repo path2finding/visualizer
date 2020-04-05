@@ -16,7 +16,7 @@ import { Vector3, MOUSE } from "three";
 const getMazeSize = (mazeInfo: MazeInfo) => {
   return {
     x: mazeInfo[0].length,
-    y: Object.keys(mazeInfo).length
+    y: Object.keys(mazeInfo).length,
   };
 };
 
@@ -33,7 +33,7 @@ const CameraController = () => {
     controls.maxAzimuthAngle = 0;
     controls.minAzimuthAngle = 0;
     controls.maxPolarAngle = 0;
-    
+
     return () => {
       controls.dispose();
     };
@@ -48,7 +48,7 @@ const populateMaze = (props: Props) => {
     handleChangeStart,
     handleChangeEnd,
     makeWall,
-    makeEmpty
+    makeEmpty,
   } = props;
   const { mazeInfo } = props.maze;
   const mazeSize = getMazeSize(mazeInfo);
@@ -87,9 +87,11 @@ interface Props {
   handleChangeEnd: (newPos: Coord) => void;
   makeWall: (coord: Coord) => void;
   makeEmpty: (coord: Coord) => void;
+  setPath: (coord: Coord) => void;
+  setVisited: (coord: Coord) => void;
 }
 
-const Maze: React.FC<Props> = props => {
+const Maze: React.FC<Props> = (props) => {
   return (
     <Canvas
       className="Maze"
@@ -103,10 +105,9 @@ const Maze: React.FC<Props> = props => {
       //   top: 10
       // }}
       camera={{
-        position: new Vector3(0,10,0)
+        position: new Vector3(0, 10, 0),
       }}
     >
-     
       <CameraController />
       <ambientLight />
 

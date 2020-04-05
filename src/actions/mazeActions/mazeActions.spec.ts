@@ -5,11 +5,15 @@ import {
   makeWall,
   makeEmpty,
   loadMaze,
+  setPath,
+  setVisited,
   CHANGE_START,
   CHANGE_END,
   MAKE_WALL,
   MAKE_EMPTY,
   LOAD_MAZE,
+  SET_PATH,
+  SET_VISITED,
   STOP_VISUALIZATION,
   handleStopVisualization,
 } from "./mazeActions";
@@ -25,7 +29,7 @@ describe("Maze Action Tests", () => {
   });
 
   describe("Change Start Point Test", () => {
-    it("Should dispatch correct action", () => {
+    it("Should call CHANGE_START action", () => {
       const newPos = { x: 1, y: 1 };
 
       const expectedActions = [
@@ -40,7 +44,7 @@ describe("Maze Action Tests", () => {
   });
 
   describe("Change End Point Test", () => {
-    it("Should dispatch correct action", () => {
+    it("Should call CHANGE_END action", () => {
       const newPos = { x: 1, y: 1 };
 
       const expectedActions = [
@@ -55,7 +59,7 @@ describe("Maze Action Tests", () => {
   });
 
   describe("Make Wall Test", () => {
-    it("Should modify redux store", () => {
+    it("Should call MAKE_WALL action", () => {
       const pos = { x: 1, y: 1 };
 
       const expectedActions = [
@@ -70,7 +74,7 @@ describe("Maze Action Tests", () => {
   });
 
   describe("Make Empty Test", () => {
-    it("Should modify redux store", () => {
+    it("Should call MAKE_EMPTY action", () => {
       const pos = { x: 1, y: 1 };
 
       const expectedActions = [
@@ -85,7 +89,7 @@ describe("Maze Action Tests", () => {
   });
 
   describe("Load Maze Test", () => {
-    it("Should modify redux store", () => {
+    it("Should call LOAD_MAZE action", () => {
       const maze = generateMaze(5, 5, false);
 
       const expectedActions = [
@@ -99,6 +103,36 @@ describe("Maze Action Tests", () => {
     });
   });
 
+  describe("Set Path Test", () => {
+    it("Should call SET_PATH action", () => {
+      const coord = { x: 2, y: 2 };
+      const expectedActions = [
+        {
+          type: SET_PATH,
+          payload: coord,
+        },
+      ];
+
+      reduxStore.dispatch(setPath(coord));
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("Set Visited Test", () => {
+    it("Should call SET_VISITED action", () => {
+      const coord = { x: 2, y: 2 };
+      const expectedActions = [
+        {
+          type: SET_VISITED,
+          payload: coord,
+        },
+      ];
+
+      reduxStore.dispatch(setVisited(coord));
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
   describe("Stop Visualization Test", () => {
     it("Should dispatch correct action", () => {
       const expectedActions = [
@@ -107,6 +141,7 @@ describe("Maze Action Tests", () => {
           payload: null,
         },
       ];
+
       reduxStore.dispatch(
         handleStopVisualization(
           { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,

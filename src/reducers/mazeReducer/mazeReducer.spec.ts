@@ -5,7 +5,9 @@ import {
   CHANGE_START,
   CHANGE_END,
   MAKE_WALL,
-  MAKE_EMPTY
+  MAKE_EMPTY,
+  SET_PATH,
+  SET_VISITED,
 } from "../../actions/mazeActions/mazeActions";
 import { Maze } from "../../models/maze";
 import { SpaceTypes } from "../../components/Space/types";
@@ -14,13 +16,13 @@ describe("Maze Reducer Tests", () => {
   it("Clear Grid Expected State", () => {
     const action = {
       type: CLEAR_GRID,
-      payload: null
+      payload: null,
     };
 
     const updatedState = mazeReducer(initialState, action);
     const expectedState: Maze = {
       ...initialState,
-      mazeInfo: initialState.clearMaze
+      mazeInfo: initialState.clearMaze,
     };
 
     expect(updatedState).toEqual(expectedState);
@@ -31,7 +33,7 @@ describe("Maze Reducer Tests", () => {
 
     const action = {
       type: CHANGE_START,
-      payload: newCoord
+      payload: newCoord,
     };
 
     let newMaze = initialState.mazeInfo;
@@ -40,7 +42,7 @@ describe("Maze Reducer Tests", () => {
     const updatedState = mazeReducer(initialState, action);
     const expectedState: Maze = {
       ...initialState,
-      mazeInfo: newMaze
+      mazeInfo: newMaze,
     };
 
     expect(updatedState).toEqual(expectedState);
@@ -51,7 +53,7 @@ describe("Maze Reducer Tests", () => {
 
     const action = {
       type: CHANGE_END,
-      payload: newCoord
+      payload: newCoord,
     };
 
     let newMaze = initialState.mazeInfo;
@@ -60,7 +62,7 @@ describe("Maze Reducer Tests", () => {
     const updatedState = mazeReducer(initialState, action);
     const expectedState: Maze = {
       ...initialState,
-      mazeInfo: newMaze
+      mazeInfo: newMaze,
     };
 
     expect(updatedState).toEqual(expectedState);
@@ -72,7 +74,7 @@ describe("Maze Reducer Tests", () => {
 
     const action = {
       type: MAKE_EMPTY,
-      payload: newCoord
+      payload: newCoord,
     };
 
     let newMaze = initialState.mazeInfo;
@@ -81,7 +83,7 @@ describe("Maze Reducer Tests", () => {
     const updatedState = mazeReducer(initialState, action);
     const expectedState: Maze = {
       ...initialState,
-      mazeInfo: newMaze
+      mazeInfo: newMaze,
     };
 
     expect(updatedState).toEqual(expectedState);
@@ -93,7 +95,7 @@ describe("Maze Reducer Tests", () => {
 
     const action = {
       type: MAKE_WALL,
-      payload: newCoord
+      payload: newCoord,
     };
 
     let newMaze = initialState.mazeInfo;
@@ -102,7 +104,47 @@ describe("Maze Reducer Tests", () => {
     const updatedState = mazeReducer(initialState, action);
     const expectedState: Maze = {
       ...initialState,
-      mazeInfo: newMaze
+      mazeInfo: newMaze,
+    };
+
+    expect(updatedState).toEqual(expectedState);
+  });
+
+  it("Changes a space's property 'path' to true", () => {
+    const coord = { x: 2, y: 2 };
+
+    const action = {
+      type: SET_PATH,
+      payload: coord,
+    };
+
+    let newMaze = initialState.mazeInfo;
+    newMaze[coord.y][coord.x].path = true;
+
+    const updatedState = mazeReducer(initialState, action);
+    const expectedState: Maze = {
+      ...initialState,
+      mazeInfo: newMaze,
+    };
+
+    expect(updatedState).toEqual(expectedState);
+  });
+
+  it("Changes a space's property 'visited' to true", () => {
+    const coord = { x: 2, y: 2 };
+
+    const action = {
+      type: SET_VISITED,
+      payload: coord,
+    };
+
+    let newMaze = initialState.mazeInfo;
+    newMaze[coord.y][coord.x].visited = true;
+
+    const updatedState = mazeReducer(initialState, action);
+    const expectedState: Maze = {
+      ...initialState,
+      mazeInfo: newMaze,
     };
 
     expect(updatedState).toEqual(expectedState);
