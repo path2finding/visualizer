@@ -5,6 +5,7 @@ import {
   TOGGLE_MOVE_START,
   TOGGLE_MOVE_END,
   LOAD_MAZE,
+  CHANGE_SPEED
 } from "../../actions/menuActions/menuActions";
 import { STOP_VISUALIZATION } from "../../actions/mazeActions/mazeActions";
 import { MenuState } from "../../models/menu";
@@ -19,6 +20,11 @@ export const menuReducer = (
       return {
         ...state,
         selectedAlgo: payload,
+      };
+      case CHANGE_SPEED:
+      return {
+        ...state,
+        currentSpeed: payload,
       };
     case START_VISUALIZATION:
       return {

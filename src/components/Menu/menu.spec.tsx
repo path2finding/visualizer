@@ -54,7 +54,7 @@ describe("<Menu />", () => {
     expect(wrapper.find(SemanticMenu.Item)).toBeDefined();
     expect(wrapper.find(SemanticMenu.Item)).toHaveLength(2);
     expect(wrapper.find(SemanticIcon)).toBeDefined();
-    expect(wrapper.find(SemanticIcon)).toHaveLength(8);
+    expect(wrapper.find(SemanticIcon)).toHaveLength(9);
   });
 
   it("Dropdown renders", () => {

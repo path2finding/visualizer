@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import {
   handleDropdownChange,
+  handleDropdownSpeed,
   handleStartVisualization,
   handleClearGrid,
   handlePauseVisualization,
@@ -20,6 +21,8 @@ import { RootState } from "typesafe-actions";
 const mapStateToProps = (state: RootState) => ({
   selectedAlgo: state.menu.selectedAlgo,
   algorithms: state.menu.algorithms,
+  currentSpeed: state.menu.currentSpeed,
+  speed: state.menu.speed,
   isPlaying: state.menu.isPlaying,
   canMoveStart: state.menu.canMoveStart,
   canMoveEnd: state.menu.canMoveEnd,
@@ -30,6 +33,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators(
     {
       handleDropdownChange,
+      handleDropdownSpeed,
       onStart: handleStartVisualization,
       onPause: handlePauseVisualization,
       onStop: handleStopVisualization,
