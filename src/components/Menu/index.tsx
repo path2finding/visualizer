@@ -15,6 +15,8 @@ import { MazeInfo, Space } from "../../models/maze";
 import * as yup from "yup";
 import { Maze } from "../../models/maze";
 import { SpaceTypes } from "../Space/types";
+import { stateContext } from "react-three-fiber";
+import algos from '../../algos';
 
 export interface MenuProps extends MenuState {
   canMoveStart: boolean;
@@ -189,6 +191,22 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
     this.setState({ ...this.state, showModal: false });
   };
 
+  getInfo = () => {
+    let al = this.props.selectedAlgo
+    if(al==null){
+      al = "Select an algorithm"
+    }else if(al=="A*"){ 
+      al = algos.a;
+    }else if(al=="BFS"){
+      al = algos.BFS
+    }else if(al=="DFS"){
+      al = algos.DFS
+    }else if(al=="Djikstras"){
+      al = algos.Djikstras
+    }
+    return al as string
+  }
+
   render() {
     const {
       canMoveStart,
@@ -313,6 +331,23 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             selection
             options={algorithms}
           />
+          &nbsp; {/* Essentially just a fancy space */}
+          <Modal
+            trigger={
+              <Button color="blue" circular >
+                <Icon name="info" />
+              </Button>
+            }
+            centered={false}
+            closeIcon
+          >
+            <Modal.Header>Algorithm Info</Modal.Header>
+            <Modal.Content>
+              <Modal.Description>
+                {this.getInfo()}
+              </Modal.Description>
+            </Modal.Content>
+          </Modal>
         </Menu.Item>
       </Menu>
     );
