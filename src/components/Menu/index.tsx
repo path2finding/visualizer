@@ -139,7 +139,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           &nbsp; {/* Essentially just a fancy space */}
           <Dropdown
             onChange={handleDropdownSpeed}
-            text={"x"+(currentSpeed as unknown as string) || "Change Speed"}
+            text={"Playback speed x"+(currentSpeed) || "Change Speed"}
             value={currentSpeed}
             selection
             options={speed}
