@@ -37,4 +37,5 @@ export const generateMaze = (
 export const initialState: Maze = {
   mazeInfo: generateMaze(5, 5),
   clearMaze: generateMaze(5, 5, true),
+  bfsQueue: [],
 };

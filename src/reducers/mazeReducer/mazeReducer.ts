@@ -11,6 +11,8 @@ import {
   SET_PATH,
   SET_VISITED,
   STOP_VISUALIZATION,
+  UPDATE_BFS_QUEUE,
+  PROGRESS_BFS,
 } from "../../actions/mazeActions/mazeActions";
 
 enum SpaceProps {
@@ -137,6 +139,21 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
             }
           );
         }) as MazeInfo,
+      };
+    case UPDATE_BFS_QUEUE:
+      return {
+        ...state,
+        bfsQueue: payload,
+      };
+    case PROGRESS_BFS:
+      return {
+        ...state,
+        mazeInfo: updateSpaceProp(
+          payload.coord,
+          state.mazeInfo,
+          SpaceProps.visited
+        ),
+        bfsQueue: payload.queue,
       };
     default:
       return state;

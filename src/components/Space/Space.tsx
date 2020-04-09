@@ -17,7 +17,7 @@ interface Props {
   onSetEmpty: () => void;
 }
 
-const Space: React.FC<Props> = props => {
+const Space: React.FC<Props> = (props) => {
   const [hovered, setHover] = useState(false);
 
   const spaceClicked = () => {
@@ -38,9 +38,9 @@ const Space: React.FC<Props> = props => {
   return (
     <mesh
       position={props.position}
-      onClick={e => spaceClicked()}
-      onPointerOver={e => setHover(true)}
-      onPointerOut={e => setHover(false)}
+      onClick={(e) => spaceClicked()}
+      onPointerOver={(e) => setHover(true)}
+      onPointerOut={(e) => setHover(false)}
     >
       <GenericSpace
         type={props.type}

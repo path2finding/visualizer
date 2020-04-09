@@ -10,12 +10,15 @@ import {
   makeEmpty,
   setPath,
   setVisited,
+  updateBFSQueue,
+  progressBFS,
 } from "../../actions/mazeActions/mazeActions";
 
 const mapStateToProps = (state: RootState) => ({
   maze: state.maze,
   canMoveStart: state.menu.canMoveStart,
   canMoveEnd: state.menu.canMoveEnd,
+  isPlaying: state.menu.isPlaying,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -27,6 +30,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       makeEmpty,
       setPath,
       setVisited,
+      updateBFSQueue,
+      progressBFS,
     },
     dispatch
   );
