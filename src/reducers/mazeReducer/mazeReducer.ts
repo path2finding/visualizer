@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { SpaceTypes } from "../../components/Space/types";
 import { initialState, generateMaze } from "../../models/maze/initialState";
 import { Maze, MazeInfo, Coord, Space } from "../../models/maze/index";
@@ -70,14 +71,48 @@ const changeSpaceType = (
   return newMaze;
 };
 
+const showShortestPath = (endPoint: Coord, mazeInfo: MazeInfo) => {
+  let curr = endPoint;
+
+  while (
+    !_.isEqual(mazeInfo[curr.y][curr.x].parent, { x: curr.x, y: curr.y })
+  ) {
+    // console.log(mazeInfo[curr.y][curr.x].parent === { x: 0, y: 0 });
+
+    const currSpace = mazeInfo[curr.y][curr.x];
+    // console.log(currSpace);
+
+    currSpace.path = true;
+    if (currSpace.parent) {
+      curr = currSpace.parent;
+    }
+  }
+  return mazeInfo;
+};
+
 const updateSpaceProp = (
   coord: Coord,
   mazeInfo: MazeInfo,
-  prop: SpaceProps
+  prop: SpaceProps,
+  neighbors: Coord[] | Coord | null
 ) => {
   let newMaze = mazeInfo;
 
   newMaze[coord.y][coord.x][prop] = !mazeInfo[coord.y][coord.x][prop];
+
+  // Adds the parent coordinate to all the neighbors found in this iteration
+  if (neighbors) {
+    if (Array.isArray(neighbors)) {
+      neighbors.forEach((neighbor) => {
+        newMaze[neighbor.y][neighbor.x].parent = coord;
+      });
+    } else {
+      newMaze[neighbors.y][neighbors.x].parent = coord;
+
+      // Show the path
+      newMaze = showShortestPath(neighbors, newMaze);
+    }
+  }
 
   return newMaze;
 };
@@ -119,12 +154,22 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
     case SET_PATH:
       return {
         ...state,
-        mazeInfo: updateSpaceProp(payload, state.mazeInfo, SpaceProps.path),
+        mazeInfo: updateSpaceProp(
+          payload,
+          state.mazeInfo,
+          SpaceProps.path,
+          null
+        ),
       };
     case SET_VISITED:
       return {
         ...state,
-        mazeInfo: updateSpaceProp(payload, state.mazeInfo, SpaceProps.visited),
+        mazeInfo: updateSpaceProp(
+          payload,
+          state.mazeInfo,
+          SpaceProps.visited,
+          null
+        ),
       };
     case STOP_VISUALIZATION:
       return {
@@ -151,7 +196,8 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
         mazeInfo: updateSpaceProp(
           payload.coord,
           state.mazeInfo,
-          SpaceProps.visited
+          SpaceProps.visited,
+          payload.neighbors
         ),
         bfsQueue: payload.queue,
       };

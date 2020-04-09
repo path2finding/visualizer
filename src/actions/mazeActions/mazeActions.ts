@@ -79,12 +79,17 @@ export const updateBFSQueue = (queue: Coord[]): AnyAction => {
   };
 };
 
-export const progressBFS = (queue: Coord[], coord: Coord) => {
+export const progressBFS = (
+  queue: Coord[],
+  coord: Coord,
+  neighbors: Coord[] | Coord
+) => {
   return {
     type: PROGRESS_BFS,
     payload: {
       queue: queue,
       coord: coord,
+      neighbors: neighbors,
     },
   };
 };
