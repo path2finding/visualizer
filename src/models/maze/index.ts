@@ -18,4 +18,5 @@ export interface MazeInfo {
 export interface Maze {
   mazeInfo: MazeInfo;
   clearMaze: MazeInfo;
+  bfsQueue: Coord[];
 }

@@ -10,6 +10,8 @@ export const LOAD_MAZE = "LOAD_MAZE";
 export const SET_PATH = "SET_PATH";
 export const SET_VISITED = "SET_VISITED";
 export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
+export const UPDATE_BFS_QUEUE = "UPDATE_BFS_QUEUE";
+export const PROGRESS_BFS = "PROGRESS_BFS";
 
 export const handleChangeStart = (newPos: Coord): AnyAction => {
   return {
@@ -67,5 +69,22 @@ export const handleStopVisualization = (
   return {
     type: STOP_VISUALIZATION,
     payload: null,
+  };
+};
+
+export const updateBFSQueue = (queue: Coord[]): AnyAction => {
+  return {
+    type: UPDATE_BFS_QUEUE,
+    payload: queue,
+  };
+};
+
+export const progressBFS = (queue: Coord[], coord: Coord) => {
+  return {
+    type: PROGRESS_BFS,
+    payload: {
+      queue: queue,
+      coord: coord,
+    },
   };
 };

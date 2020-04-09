@@ -11,6 +11,7 @@ import { Coord } from "../../models/maze";
 
 import "./Maze.scss";
 import { Vector3, MOUSE } from "three";
+import { SpaceTypes } from "../Space/types";
 
 // Helper functions
 const getMazeSize = (mazeInfo: MazeInfo) => {
@@ -79,19 +80,125 @@ const populateMaze = (props: Props) => {
   return list;
 };
 
+const getStart = (mazeInfo: MazeInfo) => {
+  const mazeSize = getMazeSize(mazeInfo);
+
+  for (let y = 0; y < mazeSize.y; y++) {
+    for (let x = 0; x < mazeSize.x; x++) {
+      if (mazeInfo[y][x].type === SpaceTypes.start) {
+        return { x, y };
+      }
+    }
+  }
+  return null;
+};
+
+const inMazeBoundaries = (coord: Coord, mazeSize: Coord) => {
+  if (
+    coord.x >= 0 &&
+    coord.y >= 0 &&
+    coord.x < mazeSize.x - 1 &&
+    coord.y < mazeSize.y - 1
+  ) {
+    return true;
+  }
+  return false;
+};
+
+const getValidNeighbors = (coord: Coord, mazeInfo: MazeInfo) => {
+  console.log("Get neighbors");
+  const mazeSize = getMazeSize(mazeInfo);
+  let validNeighbors: Coord[] = [];
+  const neighbors = [
+    {
+      x: coord.x,
+      y: coord.y + 1,
+    },
+    {
+      x: coord.x + 1,
+      y: coord.y,
+    },
+    {
+      x: coord.x,
+      y: coord.y - 1,
+    },
+    {
+      x: coord.x - 1,
+      y: coord.y,
+    },
+  ];
+
+  neighbors.forEach((neighbor) => {
+    // console.log(mazeInfo);
+    // console.log(neighbor);
+    if (inMazeBoundaries(neighbor, mazeSize)) {
+      const neighborSpace = mazeInfo[neighbor.y][neighbor.x];
+      if (neighborSpace.type === SpaceTypes.empty && !neighborSpace.visited) {
+        validNeighbors.push(neighbor);
+      }
+    }
+  });
+
+  return validNeighbors;
+};
+
 interface Props {
   maze: IMaze;
   canMoveStart: boolean;
   canMoveEnd: boolean;
+  isPlaying: boolean;
   handleChangeStart: (newPos: Coord) => void;
   handleChangeEnd: (newPos: Coord) => void;
   makeWall: (coord: Coord) => void;
   makeEmpty: (coord: Coord) => void;
   setPath: (coord: Coord) => void;
   setVisited: (coord: Coord) => void;
+  updateBFSQueue: (queue: Coord[]) => void;
+  progressBFS: (queue: Coord[], coord: Coord) => void;
 }
 
 const Maze: React.FC<Props> = (props) => {
+  const { updateBFSQueue, isPlaying, progressBFS } = props;
+  const { mazeInfo, bfsQueue } = props.maze;
+
+  // console.log(getStart(mazeInfo));
+  // console.log(getValidNeighbors({ x: 1, y: 1 }, mazeInfo));
+
+  // console.log("BFS QUEUE");
+  // console.log(bfsQueue);
+  // console.log(mazeInfo);
+
+  const start = getStart(mazeInfo);
+
+  let queue = bfsQueue;
+  // This gets run once at the start
+  if (isPlaying && queue.length === 0) {
+    console.log("Start BFS");
+    if (start) {
+      queue.push(start);
+    }
+  }
+
+  setTimeout(function () {
+    if (queue.length > 0 && isPlaying) {
+      console.log("Going through BFS");
+      console.log("BFS QUEUE");
+      console.log(bfsQueue);
+
+      const curr = queue[0];
+
+      const currNeighbors = getValidNeighbors(curr, mazeInfo);
+      console.log(currNeighbors);
+
+      // Add neighbors to queue
+      queue = queue.concat(currNeighbors);
+      // Dequeue curr
+      queue.shift();
+      // Update bfsQueue and set curr to visited
+      progressBFS(queue, curr);
+    }
+  }, 2000);
+
   return (
     <Canvas
       className="Maze"
