@@ -46,8 +46,8 @@ export const loadMaze = (maze: MazeInfo): AnyAction => {
 };
 
 export const handleStopVisualization = (
-  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  data: ButtonProps
+  _?: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  data?: ButtonProps
 ) => {
   return {
     type: STOP_VISUALIZATION,

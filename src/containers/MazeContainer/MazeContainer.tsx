@@ -9,6 +9,7 @@ import {
   makeWall,
   makeEmpty,
   progressBFS,
+  handleStopVisualization,
 } from "../../actions/mazeActions/mazeActions";
 
 const mapStateToProps = (state: RootState) => ({
@@ -26,6 +27,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       makeWall,
       makeEmpty,
       progressBFS,
+      handleStopVisualization,
     },
     dispatch
   );

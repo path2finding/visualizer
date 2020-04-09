@@ -165,10 +165,11 @@ interface Props {
     coord: Coord,
     neighbors: Coord[] | Coord
   ) => void;
+  handleStopVisualization: () => void;
 }
 
 const Maze: React.FC<Props> = (props) => {
-  const { isPlaying, progressBFS } = props;
+  const { isPlaying, progressBFS, handleStopVisualization } = props;
   const { mazeInfo, bfsQueue } = props.maze;
 
   let queue = bfsQueue;
@@ -192,6 +193,7 @@ const Maze: React.FC<Props> = (props) => {
 
         // If we end up removing the last space we end BFS
         if (queue.length === 0) {
+          handleStopVisualization();
           return;
         }
       }
@@ -209,6 +211,7 @@ const Maze: React.FC<Props> = (props) => {
         // Update bfsQueue and set curr to visited
         progressBFS(queue, curr, currNeighbors);
       } else {
+        handleStopVisualization();
         progressBFS([], curr, currNeighbors);
       }
     }

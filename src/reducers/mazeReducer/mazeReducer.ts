@@ -13,11 +13,6 @@ import {
   PROGRESS_BFS,
 } from "../../actions/mazeActions/mazeActions";
 
-enum SpaceProps {
-  path = "path",
-  visited = "visited",
-}
-
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
   return {
     x: mazeInfo[0].length,
