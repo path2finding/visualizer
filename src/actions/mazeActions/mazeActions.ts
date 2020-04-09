@@ -7,10 +7,7 @@ export const CHANGE_END = "CHANGE_END";
 export const MAKE_WALL = "MAKE_WALL";
 export const MAKE_EMPTY = "MAKE_EMPTY";
 export const LOAD_MAZE = "LOAD_MAZE";
-export const SET_PATH = "SET_PATH";
-export const SET_VISITED = "SET_VISITED";
 export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
-export const UPDATE_BFS_QUEUE = "UPDATE_BFS_QUEUE";
 export const PROGRESS_BFS = "PROGRESS_BFS";
 
 export const handleChangeStart = (newPos: Coord): AnyAction => {
@@ -48,20 +45,6 @@ export const loadMaze = (maze: MazeInfo): AnyAction => {
   };
 };
 
-export const setPath = (coord: Coord): AnyAction => {
-  return {
-    type: SET_PATH,
-    payload: coord,
-  };
-};
-
-export const setVisited = (coord: Coord): AnyAction => {
-  return {
-    type: SET_VISITED,
-    payload: coord,
-  };
-};
-
 export const handleStopVisualization = (
   _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   data: ButtonProps
@@ -69,13 +52,6 @@ export const handleStopVisualization = (
   return {
     type: STOP_VISUALIZATION,
     payload: null,
-  };
-};
-
-export const updateBFSQueue = (queue: Coord[]): AnyAction => {
-  return {
-    type: UPDATE_BFS_QUEUE,
-    payload: queue,
   };
 };
 

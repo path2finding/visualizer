@@ -8,9 +8,6 @@ import {
   handleChangeEnd,
   makeWall,
   makeEmpty,
-  setPath,
-  setVisited,
-  updateBFSQueue,
   progressBFS,
 } from "../../actions/mazeActions/mazeActions";
 
@@ -28,9 +25,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       handleChangeEnd,
       makeWall,
       makeEmpty,
-      setPath,
-      setVisited,
-      updateBFSQueue,
       progressBFS,
     },
     dispatch

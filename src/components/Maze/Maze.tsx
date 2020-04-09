@@ -160,9 +160,6 @@ interface Props {
   handleChangeEnd: (newPos: Coord) => void;
   makeWall: (coord: Coord) => void;
   makeEmpty: (coord: Coord) => void;
-  setPath: (coord: Coord) => void;
-  setVisited: (coord: Coord) => void;
-  updateBFSQueue: (queue: Coord[]) => void;
   progressBFS: (
     queue: Coord[],
     coord: Coord,
