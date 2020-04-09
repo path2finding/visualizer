@@ -11,4 +11,6 @@ export interface MenuState {
   isPlaying: boolean;
   canMoveStart: boolean;
   canMoveEnd: boolean;
+  speed: DropdownItemProps[];
+  currentSpeed: number;
 }
