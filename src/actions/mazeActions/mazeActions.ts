@@ -2,15 +2,13 @@ import { AnyAction } from "redux";
 import { Coord, MazeInfo, Maze } from "../../models/maze";
 import { generateMaze } from "../../models/maze/initialState";
 import { ButtonProps } from "semantic-ui-react";
+import { PAUSE_VISUALIZATION } from "../menuActions/menuActions";
 export const CHANGE_START = "CHANGE_START";
 export const CHANGE_END = "CHANGE_END";
 export const MAKE_WALL = "MAKE_WALL";
 export const MAKE_EMPTY = "MAKE_EMPTY";
 export const LOAD_MAZE = "LOAD_MAZE";
-export const SET_PATH = "SET_PATH";
-export const SET_VISITED = "SET_VISITED";
 export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
-export const UPDATE_BFS_QUEUE = "UPDATE_BFS_QUEUE";
 export const PROGRESS_BFS = "PROGRESS_BFS";
 
 export const handleChangeStart = (newPos: Coord): AnyAction => {
@@ -48,23 +46,19 @@ export const loadMaze = (maze: MazeInfo): AnyAction => {
   };
 };
 
-export const setPath = (coord: Coord): AnyAction => {
+export const handlePauseVisualization = (
+  _?: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  data?: ButtonProps
+) => {
   return {
-    type: SET_PATH,
-    payload: coord,
-  };
-};
-
-export const setVisited = (coord: Coord): AnyAction => {
-  return {
-    type: SET_VISITED,
-    payload: coord,
+    type: PAUSE_VISUALIZATION,
+    payload: null,
   };
 };
 
 export const handleStopVisualization = (
-  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  data: ButtonProps
+  _?: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  data?: ButtonProps
 ) => {
   return {
     type: STOP_VISUALIZATION,
@@ -72,19 +66,17 @@ export const handleStopVisualization = (
   };
 };
 
-export const updateBFSQueue = (queue: Coord[]): AnyAction => {
-  return {
-    type: UPDATE_BFS_QUEUE,
-    payload: queue,
-  };
-};
-
-export const progressBFS = (queue: Coord[], coord: Coord) => {
+export const progressBFS = (
+  queue: Coord[],
+  coord: Coord,
+  neighbors: Coord[] | Coord
+) => {
   return {
     type: PROGRESS_BFS,
     payload: {
       queue: queue,
       coord: coord,
+      neighbors: neighbors,
     },
   };
 };

@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { SpaceTypes } from "../../components/Space/types";
 import { initialState, generateMaze } from "../../models/maze/initialState";
 import { Maze, MazeInfo, Coord, Space } from "../../models/maze/index";
@@ -8,17 +9,9 @@ import {
   MAKE_WALL,
   MAKE_EMPTY,
   LOAD_MAZE,
-  SET_PATH,
-  SET_VISITED,
   STOP_VISUALIZATION,
-  UPDATE_BFS_QUEUE,
   PROGRESS_BFS,
 } from "../../actions/mazeActions/mazeActions";
-
-enum SpaceProps {
-  path = "path",
-  visited = "visited",
-}
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
   return {
@@ -57,12 +50,20 @@ const changeSpaceType = (
   let newMaze = mazeInfo;
 
   // If the space we are updating is the start of end point we need to get rid of the old one
-  if (spaceType === SpaceTypes.start || spaceType === SpaceTypes.end) {
+  if (spaceType === SpaceTypes.end) {
     const oldCoord = getCoord(mazeInfo, spaceType);
 
     if (oldCoord) {
       newMaze[oldCoord.y][oldCoord.x].type = SpaceTypes.empty;
     }
+  } else if (spaceType === SpaceTypes.start) {
+    const oldCoord = getCoord(mazeInfo, spaceType);
+
+    if (oldCoord) {
+      newMaze[oldCoord.y][oldCoord.x].type = SpaceTypes.empty;
+      newMaze[oldCoord.y][oldCoord.x].parent = null;
+    }
+    newMaze[coord.y][coord.x].parent = coord;
   }
 
   newMaze[coord.y][coord.x].type = spaceType;
@@ -70,14 +71,46 @@ const changeSpaceType = (
   return newMaze;
 };
 
+const showShortestPath = (endPoint: Coord, mazeInfo: MazeInfo) => {
+  let curr = endPoint;
+
+  while (
+    !_.isEqual(mazeInfo[curr.y][curr.x].parent, { x: curr.x, y: curr.y })
+  ) {
+    const currSpace = mazeInfo[curr.y][curr.x];
+    currSpace.path = true;
+
+    if (currSpace.parent) {
+      curr = currSpace.parent;
+    }
+  }
+};
+
 const updateSpaceProp = (
   coord: Coord,
   mazeInfo: MazeInfo,
-  prop: SpaceProps
+  neighbors: Coord[] | Coord | null
 ) => {
   let newMaze = mazeInfo;
 
-  newMaze[coord.y][coord.x][prop] = !mazeInfo[coord.y][coord.x][prop];
+  // Sets the current space to visited
+  newMaze[coord.y][coord.x].visited = true;
+
+  if (neighbors) {
+    // If neighbors is an array we keep going with BFS
+    // Else if neighbors is a single object we've found the end and can show the path
+    if (Array.isArray(neighbors)) {
+      // Sets the parent of each neighbor
+      neighbors.forEach((neighbor) => {
+        newMaze[neighbor.y][neighbor.x].parent = coord;
+      });
+    } else {
+      // Sets the parent of the end point
+      newMaze[neighbors.y][neighbors.x].parent = coord;
+
+      showShortestPath(neighbors, newMaze);
+    }
+  }
 
   return newMaze;
 };
@@ -114,36 +147,29 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
         mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty),
       };
     case LOAD_MAZE:
-      console.log(payload);
       return payload;
-    case SET_PATH:
-      return {
-        ...state,
-        mazeInfo: updateSpaceProp(payload, state.mazeInfo, SpaceProps.path),
-      };
-    case SET_VISITED:
-      return {
-        ...state,
-        mazeInfo: updateSpaceProp(payload, state.mazeInfo, SpaceProps.visited),
-      };
     case STOP_VISUALIZATION:
       return {
         ...state,
-        mazeInfo: Object.keys(state.mazeInfo).map((value: string) => {
-          return state.mazeInfo[+value].map(
-            (value: Space): Space => {
-              return {
-                ...value,
-                path: false,
-              } as Space;
-            }
-          );
-        }) as MazeInfo,
-      };
-    case UPDATE_BFS_QUEUE:
-      return {
-        ...state,
-        bfsQueue: payload,
+        mazeInfo: Object.keys(state.mazeInfo).map(
+          (value: string, i: number) => {
+            return state.mazeInfo[+value].map(
+              (value: Space, j: number): Space => {
+                return {
+                  type:
+                    value.type === SpaceTypes.start ||
+                    value.type === SpaceTypes.end
+                      ? value.type
+                      : SpaceTypes.empty,
+                  path: false,
+                  visited: false,
+                  parent:
+                    value.type === SpaceTypes.start ? { x: i, y: j } : null,
+                } as Space;
+              }
+            );
+          }
+        ) as MazeInfo,
       };
     case PROGRESS_BFS:
       return {
@@ -151,11 +177,24 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
         mazeInfo: updateSpaceProp(
           payload.coord,
           state.mazeInfo,
-          SpaceProps.visited
+          payload.neighbors
         ),
         bfsQueue: payload.queue,
       };
     default:
       return state;
   }
+};
+
+const getStart = (mazeInfo: MazeInfo) => {
+  const mazeSize = getMazeSize(mazeInfo);
+
+  for (let y = 0; y < mazeSize.y; y++) {
+    for (let x = 0; x < mazeSize.x; x++) {
+      if (mazeInfo[y][x].type === SpaceTypes.start) {
+        return { x, y };
+      }
+    }
+  }
+  return null;
 };

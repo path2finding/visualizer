@@ -16,18 +16,21 @@ export const generateMaze = (
           type: SpaceTypes.start,
           visited: false,
           path: false,
+          parent: { x: i, y: j },
         });
       else if (i === x - 1 && j === y - 1 && !clear)
         maze[i].push({
           type: SpaceTypes.end,
           visited: false,
           path: false,
+          parent: null,
         });
       else
         maze[i].push({
           type: SpaceTypes.empty,
           visited: false,
           path: false,
+          parent: null,
         });
     }
   }
