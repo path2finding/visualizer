@@ -2,6 +2,7 @@ import { AnyAction } from "redux";
 import { Coord, MazeInfo, Maze } from "../../models/maze";
 import { generateMaze } from "../../models/maze/initialState";
 import { ButtonProps } from "semantic-ui-react";
+import { PAUSE_VISUALIZATION } from "../menuActions/menuActions";
 export const CHANGE_START = "CHANGE_START";
 export const CHANGE_END = "CHANGE_END";
 export const MAKE_WALL = "MAKE_WALL";
@@ -42,6 +43,16 @@ export const loadMaze = (maze: MazeInfo): AnyAction => {
   return {
     type: LOAD_MAZE,
     payload: { mazeInfo: maze, clearMaze: generateMaze(5, 5, true) } as Maze,
+  };
+};
+
+export const handlePauseVisualization = (
+  _?: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  data?: ButtonProps
+) => {
+  return {
+    type: PAUSE_VISUALIZATION,
+    payload: null,
   };
 };
 

@@ -10,6 +10,7 @@ import {
   makeEmpty,
   progressBFS,
   handleStopVisualization,
+  handlePauseVisualization,
 } from "../../actions/mazeActions/mazeActions";
 
 const mapStateToProps = (state: RootState) => ({
@@ -28,6 +29,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       makeEmpty,
       progressBFS,
       handleStopVisualization,
+      handlePauseVisualization,
     },
     dispatch
   );

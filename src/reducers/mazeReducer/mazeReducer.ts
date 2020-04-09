@@ -50,12 +50,20 @@ const changeSpaceType = (
   let newMaze = mazeInfo;
 
   // If the space we are updating is the start of end point we need to get rid of the old one
-  if (spaceType === SpaceTypes.start || spaceType === SpaceTypes.end) {
+  if (spaceType === SpaceTypes.end) {
     const oldCoord = getCoord(mazeInfo, spaceType);
 
     if (oldCoord) {
       newMaze[oldCoord.y][oldCoord.x].type = SpaceTypes.empty;
     }
+  } else if (spaceType === SpaceTypes.start) {
+    const oldCoord = getCoord(mazeInfo, spaceType);
+
+    if (oldCoord) {
+      newMaze[oldCoord.y][oldCoord.x].type = SpaceTypes.empty;
+      newMaze[oldCoord.y][oldCoord.x].parent = null;
+    }
+    newMaze[coord.y][coord.x].parent = coord;
   }
 
   newMaze[coord.y][coord.x].type = spaceType;
@@ -143,16 +151,25 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
     case STOP_VISUALIZATION:
       return {
         ...state,
-        mazeInfo: Object.keys(state.mazeInfo).map((value: string) => {
-          return state.mazeInfo[+value].map(
-            (value: Space): Space => {
-              return {
-                ...value,
-                path: false,
-              } as Space;
-            }
-          );
-        }) as MazeInfo,
+        mazeInfo: Object.keys(state.mazeInfo).map(
+          (value: string, i: number) => {
+            return state.mazeInfo[+value].map(
+              (value: Space, j: number): Space => {
+                return {
+                  type:
+                    value.type === SpaceTypes.start ||
+                    value.type === SpaceTypes.end
+                      ? value.type
+                      : SpaceTypes.empty,
+                  path: false,
+                  visited: false,
+                  parent:
+                    value.type === SpaceTypes.start ? { x: i, y: j } : null,
+                } as Space;
+              }
+            );
+          }
+        ) as MazeInfo,
       };
     case PROGRESS_BFS:
       return {
@@ -167,4 +184,17 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
     default:
       return state;
   }
+};
+
+const getStart = (mazeInfo: MazeInfo) => {
+  const mazeSize = getMazeSize(mazeInfo);
+
+  for (let y = 0; y < mazeSize.y; y++) {
+    for (let x = 0; x < mazeSize.x; x++) {
+      if (mazeInfo[y][x].type === SpaceTypes.start) {
+        return { x, y };
+      }
+    }
+  }
+  return null;
 };

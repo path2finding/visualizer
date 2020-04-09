@@ -165,17 +165,18 @@ interface Props {
     coord: Coord,
     neighbors: Coord[] | Coord
   ) => void;
-  handleStopVisualization: () => void;
+  handlePauseVisualization: () => void;
 }
 
 const Maze: React.FC<Props> = (props) => {
-  const { isPlaying, progressBFS, handleStopVisualization } = props;
+  const { isPlaying, progressBFS, handlePauseVisualization } = props;
   const { mazeInfo, bfsQueue } = props.maze;
 
   let queue = bfsQueue;
 
   // This gets run once at the start
   if (isPlaying && queue.length === 0) {
+    console.log("Init BFS");
     const start = getStart(mazeInfo);
     console.log("Start BFS");
     if (start) {
@@ -185,7 +186,7 @@ const Maze: React.FC<Props> = (props) => {
 
   setTimeout(function () {
     if (queue.length > 0 && isPlaying) {
-      console.log("Going through BFS");
+      console.log("Going through BFS", queue);
 
       // Removes any queued spaces that were previously visited
       while (mazeInfo[queue[0].y][queue[0].x].visited) {
@@ -193,7 +194,7 @@ const Maze: React.FC<Props> = (props) => {
 
         // If we end up removing the last space we end BFS
         if (queue.length === 0) {
-          handleStopVisualization();
+          handlePauseVisualization();
           return;
         }
       }
@@ -211,7 +212,7 @@ const Maze: React.FC<Props> = (props) => {
         // Update bfsQueue and set curr to visited
         progressBFS(queue, curr, currNeighbors);
       } else {
-        handleStopVisualization();
+        handlePauseVisualization();
         progressBFS([], curr, currNeighbors);
       }
     }
