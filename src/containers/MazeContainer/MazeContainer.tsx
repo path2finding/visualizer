@@ -12,6 +12,7 @@ import {
   setVisited,
   updateBFSQueue,
   progressBFS,
+  progressDJIKSTRA
 } from "../../actions/mazeActions/mazeActions";
 
 const mapStateToProps = (state: RootState) => ({
@@ -32,6 +33,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       setVisited,
       updateBFSQueue,
       progressBFS,
+      progressDJIKSTRA
     },
     dispatch
   );

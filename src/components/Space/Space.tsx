@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import GenericSpace from "./GenericSpace";
 
 import { SpaceTypes } from "./types";
+import { Space as ISpace, Coord } from "../../models/maze";
 
 interface Props {
   type: SpaceTypes;
@@ -9,6 +10,8 @@ interface Props {
   key: number;
   visited: Boolean;
   path: Boolean;
+  prev: Coord | null;
+  distanceFromStart: number; //for dijkstras
   canMoveStart: boolean;
   canMoveEnd: boolean;
   onChangeStart: () => void;

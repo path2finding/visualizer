@@ -9,6 +9,8 @@ export interface Space {
   type: SpaceTypes;
   visited: boolean;
   path: boolean;
+  distanceFromStart: number;
+  prev: Coord | null;
 }
 
 export interface MazeInfo {

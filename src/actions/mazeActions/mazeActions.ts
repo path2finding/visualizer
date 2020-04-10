@@ -12,6 +12,7 @@ export const SET_VISITED = "SET_VISITED";
 export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const UPDATE_BFS_QUEUE = "UPDATE_BFS_QUEUE";
 export const PROGRESS_BFS = "PROGRESS_BFS";
+export const PROGRESS_DJIKSTRA = "PROGRESS_DJIKSTRA";
 
 export const handleChangeStart = (newPos: Coord): AnyAction => {
   return {
@@ -84,6 +85,16 @@ export const progressBFS = (queue: Coord[], coord: Coord) => {
     type: PROGRESS_BFS,
     payload: {
       queue: queue,
+      coord: coord,
+    },
+  };
+};
+
+export const progressDJIKSTRA = (arr: Coord[], coord: Coord) => {
+  return {
+    type: PROGRESS_DJIKSTRA,
+    payload: {
+      queue: arr,
       coord: coord,
     },
   };

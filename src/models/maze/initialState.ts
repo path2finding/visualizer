@@ -1,11 +1,14 @@
 import { Maze, MazeInfo, Coord } from "./";
 import { SpaceTypes } from "../../components/Space/types";
+import { number } from "prop-types";
+import Space from "../../components/Space/Space";
 
 // TODO - Limit Maze Size to 20 x 20
 export const generateMaze = (
   x: number,
   y: number,
-  clear?: boolean
+  clear?: boolean,
+
 ): MazeInfo => {
   let maze: MazeInfo = {};
   for (let i = 0; i < x; i++) {
@@ -16,18 +19,24 @@ export const generateMaze = (
           type: SpaceTypes.start,
           visited: false,
           path: false,
+          distanceFromStart: -1,
+          prev: null
         });
       else if (i === x - 1 && j === y - 1 && !clear)
         maze[i].push({
           type: SpaceTypes.end,
           visited: false,
           path: false,
+          distanceFromStart: -1,
+          prev: null
         });
       else
         maze[i].push({
           type: SpaceTypes.empty,
           visited: false,
           path: false,
+          distanceFromStart: -1,
+          prev: null
         });
     }
   }

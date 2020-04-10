@@ -7,11 +7,14 @@ import Space from "../../components/Space/Space";
 
 // Interfaces
 import { Maze as IMaze, MazeInfo } from "../../models/maze/index";
-import { Coord } from "../../models/maze";
+import { Coord, Space as ISpace } from "../../models/maze";
+
 
 import "./Maze.scss";
 import { Vector3, MOUSE } from "three";
 import { SpaceTypes } from "../Space/types";
+import { Grid } from "semantic-ui-react";
+import { start } from "repl";
 
 // Helper functions
 const getMazeSize = (mazeInfo: MazeInfo) => {
@@ -64,6 +67,7 @@ const populateMaze = (props: Props) => {
           type={mazeInfo[y][x].type}
           visited={mazeInfo[y][x].visited}
           path={mazeInfo[y][x].path}
+          distanceFromStart={mazeInfo[y][x].distanceFromStart}
           position={[x, 0, y]}
           key={key}
           canMoveStart={canMoveStart}
@@ -155,11 +159,44 @@ interface Props {
   setVisited: (coord: Coord) => void;
   updateBFSQueue: (queue: Coord[]) => void;
   progressBFS: (queue: Coord[], coord: Coord) => void;
+  progressDJIKSTRA: (queue : Coord[], coord: Coord) => void;
 }
 
 const Maze: React.FC<Props> = (props) => {
-  const { isPlaying, progressBFS } = props;
+  const { isPlaying, progressBFS, progressDJIKSTRA } = props;
   const { mazeInfo, bfsQueue } = props.maze;
+
+  //set distance to all non 'startpoint' spaces to Infinity
+  
+ let curr = null;
+ let row = 0;
+ let index = 0;
+ let currRow = 0;
+ let currIndex = 0;
+
+  Object.keys(props.maze.mazeInfo).map((rowIndex: string) => {
+    props.maze.mazeInfo[+rowIndex].map((space: ISpace) => {
+       if(space.type == "startpoint"){
+          space.distanceFromStart = 0 
+          curr = space
+          currRow = row
+          currIndex = index
+        }else{
+          space.distanceFromStart = Infinity  
+        }
+        index++;
+    });
+    row++;
+  });
+  //START DJIKSTRAS
+  setTimeout(function () {
+    let djik = true;
+    while(djik){
+      let currCoord: Coord  = { x: currRow, y: currIndex }
+      const currNeighbors = getValidNeighbors( currCoord  , mazeInfo)
+      
+    }
+  }, 2000);
 
   return (
     <Canvas
