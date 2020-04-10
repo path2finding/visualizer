@@ -8,7 +8,9 @@ import {
   handleChangeEnd,
   makeWall,
   makeEmpty,
+  makeVisited,
   progressBFS,
+  progressAstar,
   handleStopVisualization,
   handlePauseVisualization,
 } from "../../actions/mazeActions/mazeActions";
@@ -18,6 +20,7 @@ const mapStateToProps = (state: RootState) => ({
   canMoveStart: state.menu.canMoveStart,
   canMoveEnd: state.menu.canMoveEnd,
   isPlaying: state.menu.isPlaying,
+  selectedAlgo: state.menu.selectedAlgo,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -27,7 +30,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       handleChangeEnd,
       makeWall,
       makeEmpty,
+      makeVisited,
       progressBFS,
+      progressAstar,
       handleStopVisualization,
       handlePauseVisualization,
     },

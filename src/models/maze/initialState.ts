@@ -17,6 +17,13 @@ export const generateMaze = (
           visited: false,
           path: false,
           parent: { x: i, y: j },
+          astar: {
+            i,
+            j,
+            f: 0,
+            g: 0,
+            h: 0,
+          },
         });
       else if (i === x - 1 && j === y - 1 && !clear)
         maze[i].push({
@@ -24,6 +31,13 @@ export const generateMaze = (
           visited: false,
           path: false,
           parent: null,
+          astar: {
+            i,
+            j,
+            f: 0,
+            g: 0,
+            h: 0,
+          },
         });
       else
         maze[i].push({
@@ -31,6 +45,13 @@ export const generateMaze = (
           visited: false,
           path: false,
           parent: null,
+          astar: {
+            i,
+            j,
+            f: 0,
+            g: 0,
+            h: 0,
+          },
         });
     }
   }
@@ -41,4 +62,6 @@ export const initialState: Maze = {
   mazeInfo: generateMaze(5, 5),
   clearMaze: generateMaze(5, 5, true),
   bfsQueue: [],
+  astarOpenSet: [],
+  astarClosedSet: [],
 };

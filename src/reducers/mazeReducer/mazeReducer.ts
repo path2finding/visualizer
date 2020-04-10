@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { SpaceTypes } from "../../components/Space/types";
 import { initialState, generateMaze } from "../../models/maze/initialState";
-import { Maze, MazeInfo, Coord, Space } from "../../models/maze/index";
+import { Maze, MazeInfo, Coord, Space, IAStar } from "../../models/maze/index";
 import { CLEAR_GRID } from "../../actions/menuActions/menuActions";
 import {
   CHANGE_START,
@@ -11,6 +11,8 @@ import {
   LOAD_MAZE,
   STOP_VISUALIZATION,
   PROGRESS_BFS,
+  PROGRESS_ASTAR,
+  MAKE_VISITED,
 } from "../../actions/mazeActions/mazeActions";
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
@@ -71,6 +73,13 @@ const changeSpaceType = (
   return newMaze;
 };
 
+const makeVisited = (coord: Coord, state: Maze) => {
+  const { mazeInfo } = state;
+  const newMaze = mazeInfo;
+  newMaze[coord.y][coord.x].visited = true;
+  return newMaze;
+};
+
 const showShortestPath = (endPoint: Coord, mazeInfo: MazeInfo) => {
   let curr = endPoint;
 
@@ -115,6 +124,23 @@ const updateSpaceProp = (
   return newMaze;
 };
 
+const updateAstar = (
+  coord: Coord,
+  mazeInfo: MazeInfo,
+  astar: IAStar,
+  parent?: Coord
+) => {
+  let newMaze = mazeInfo;
+
+  newMaze[coord.y][coord.x].astar = astar;
+
+  if (parent) {
+    newMaze[coord.y][coord.x].parent = parent;
+  }
+
+  return newMaze;
+};
+
 export const mazeReducer = (state = initialState, { type, payload }: any) => {
   switch (type) {
     case CLEAR_GRID:
@@ -145,6 +171,11 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
       return {
         ...state,
         mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty),
+      };
+    case MAKE_VISITED:
+      return {
+        ...state,
+        mazeInfo: makeVisited(payload, state),
       };
     case LOAD_MAZE:
       return payload;
@@ -180,6 +211,11 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
           payload.neighbors
         ),
         bfsQueue: payload.queue,
+      };
+    case PROGRESS_ASTAR:
+      return {
+        ...state,
+        mazeInfo: updateAstar(payload.coord, state.mazeInfo, payload.astar),
       };
     default:
       return state;
