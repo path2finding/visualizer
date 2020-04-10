@@ -196,6 +196,13 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
                   visited: false,
                   parent:
                     value.type === SpaceTypes.start ? { x: i, y: j } : null,
+                  astar: {
+                    i,
+                    j,
+                    f: 0,
+                    g: 0,
+                    h: 0,
+                  },
                 } as Space;
               }
             );
@@ -216,6 +223,8 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
       return {
         ...state,
         mazeInfo: updateAstar(payload.coord, state.mazeInfo, payload.astar),
+        astarOpenSet: payload.openSet || state.astarOpenSet,
+        astarClosedSet: payload.closedSet || state.astarClosedSet,
       };
     default:
       return state;

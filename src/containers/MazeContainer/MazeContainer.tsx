@@ -13,6 +13,8 @@ import {
   progressAstar,
   handleStopVisualization,
   handlePauseVisualization,
+  handleUpdateOpenSet,
+  handleUpdateClosedSet,
 } from "../../actions/mazeActions/mazeActions";
 
 const mapStateToProps = (state: RootState) => ({
@@ -35,6 +37,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       progressAstar,
       handleStopVisualization,
       handlePauseVisualization,
+      handleUpdateOpenSet,
+      handleUpdateClosedSet,
     },
     dispatch
   );

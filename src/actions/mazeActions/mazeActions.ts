@@ -12,6 +12,8 @@ export const LOAD_MAZE = "LOAD_MAZE";
 export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const PROGRESS_BFS = "PROGRESS_BFS";
 export const PROGRESS_ASTAR = "PROGRESS_ASTAR";
+export const UPDATE_OPEN_SET = "UPDATE_OPEN_SET";
+export const UPDATE_CLOSED_SET = "UPDATE_CLOSED_SET";
 
 export const handleChangeStart = (newPos: Coord): AnyAction => {
   return {
@@ -90,13 +92,35 @@ export const progressBFS = (
   };
 };
 
-export const progressAstar = (astar: IAStar, coord: Coord, parent?: Coord) => {
+export const progressAstar = (
+  astar: IAStar,
+  coord: Coord,
+  parent?: Coord,
+  openSet?: Coord[],
+  closedSet?: Coord[]
+) => {
   return {
     type: PROGRESS_ASTAR,
     payload: {
       astar,
       coord,
       parent,
+      openSet,
+      closedSet,
     },
+  };
+};
+
+export const handleUpdateOpenSet = (openSet: Coord[]) => {
+  return {
+    type: UPDATE_OPEN_SET,
+    payload: openSet,
+  };
+};
+
+export const handleUpdateClosedSet = (closedSet: Coord[]) => {
+  return {
+    type: UPDATE_CLOSED_SET,
+    payload: closedSet,
   };
 };

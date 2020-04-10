@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Canvas, useThree, useFrame } from "react-three-fiber";
+import { Canvas, useThree } from "react-three-fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 // Components
@@ -10,9 +10,8 @@ import { Maze as IMaze, MazeInfo, IAStar } from "../../models/maze/index";
 import { Coord } from "../../models/maze";
 
 import "./Maze.scss";
-import { Vector3, MOUSE } from "three";
+import { Vector3 } from "three";
 import { SpaceTypes } from "../Space/types";
-import { makeVisited } from "../../actions/mazeActions/mazeActions";
 
 // Helper functions
 const getMazeSize = (mazeInfo: MazeInfo) => {
@@ -197,6 +196,8 @@ interface Props {
   ) => void;
   progressAstar: (astar: IAStar, coord: Coord, parent?: Coord) => void;
   handlePauseVisualization: () => void;
+  handleUpdateOpenSet: (openSet: Coord[]) => void;
+  handleUpdateClosedSet: (closedSet: Coord[]) => void;
 }
 
 const Maze: React.FC<Props> = (props) => {
@@ -207,6 +208,8 @@ const Maze: React.FC<Props> = (props) => {
     progressBFS,
     progressAstar,
     handlePauseVisualization,
+    handleUpdateOpenSet,
+    handleUpdateClosedSet,
   } = props;
   const { mazeInfo, bfsQueue, astarOpenSet, astarClosedSet } = props.maze;
 
@@ -292,11 +295,10 @@ const Maze: React.FC<Props> = (props) => {
             handlePauseVisualization();
           }
 
-          console.log(`Removing {${current.x}, ${current.y}} from`, openSet);
           openSet = removeFromArr<Coord>(openSet, current);
-          console.log(`Removed {${current.x}, ${current.y}} from`, openSet);
           closedSet.push(current);
-          console.log(`Pushed {${current.x}, ${current.y}} to `, closedSet);
+          handleUpdateOpenSet(openSet);
+          handleUpdateClosedSet(closedSet);
 
           let neighbors = getValidNeighbors(current, mazeInfo);
           if (!Array.isArray(neighbors)) neighbors = [neighbors];
@@ -338,6 +340,7 @@ const Maze: React.FC<Props> = (props) => {
                 );
                 newPath = true;
                 openSet.push(neighbor);
+                handleUpdateOpenSet(openSet);
                 console.log("After setting g", openSet);
               }
 
@@ -359,7 +362,7 @@ const Maze: React.FC<Props> = (props) => {
           console.log("NO SOLUTION");
           handlePauseVisualization();
         }
-      }, 500);
+      }, 1000);
     }
   }
 

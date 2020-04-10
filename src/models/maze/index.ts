@@ -17,7 +17,7 @@ export interface Space {
   type: SpaceTypes;
   visited: boolean;
   path: boolean;
-  parent: Coord | null;
+  parent: Coord | null | undefined;
   astar: IAStar;
 }
 
