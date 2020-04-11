@@ -173,7 +173,7 @@ const getLowestFScore = (openSet: Coord[], mazeInfo: MazeInfo): Coord => {
   let lowest = openSet[0];
 
   openSet.forEach((coord) => {
-    if (mazeInfo[coord.y][coord.x] < mazeInfo[lowest.y][lowest.x]) {
+    if (mazeInfo[coord.y][coord.x].f < mazeInfo[lowest.y][lowest.x].f) {
       lowest = coord;
     }
   });
@@ -223,7 +223,8 @@ interface Props {
   progressAstar: (
     openSet: Coord[],
     closedSet: Coord[],
-    newMazeInfo: MazeInfo
+    newMazeInfo: MazeInfo,
+    end: Coord
   ) => void;
   handlePauseVisualization: () => void;
   // handleUpdateOpenSet: (openSet: Coord[]) => void;
@@ -308,26 +309,38 @@ const Maze: React.FC<Props> = (props) => {
         console.log("Running Astar");
         let newMazeInfo = mazeInfo;
         let current = getLowestFScore(openSet, mazeInfo);
+        const end = getEnd(mazeInfo) as Coord;
 
         // Check if finished
-        if (mazeInfo[current.y][current.x].type === SpaceTypes.end) {
+        if (includesCoord(closedSet, end)) {
           // Find the Path
           console.log("DONE");
           handlePauseVisualization();
+          // openSet = [];
           return;
         }
 
         // Add current to closedSet
-        closedSet.push(current);
+        if (!includesCoord(closedSet, current)) {
+          closedSet.push(current);
+        }
+
         // Remove current from openSet
-        openSet = removeFromArr(openSet, current);
+        if (includesCoord(openSet, current)) {
+          openSet = removeFromArr(openSet, current);
+        }
 
         let neighbors = getValidNeighbors(current, mazeInfo);
+
+        if (!Array.isArray(neighbors)) {
+          neighbors = [neighbors];
+        }
 
         if (Array.isArray(neighbors)) {
           neighbors.forEach((neighbor) => {
             if (!includesCoord(closedSet, neighbor)) {
-              let tentG = mazeInfo[current.y][current.x].g + 1;
+              let tentG =
+                mazeInfo[current.y][current.x].g + heuristic(neighbor, current);
 
               if (includesCoord(openSet, neighbor)) {
                 if (tentG < mazeInfo[neighbor.y][neighbor.x].g) {
@@ -338,24 +351,25 @@ const Maze: React.FC<Props> = (props) => {
                 openSet.push(neighbor);
               }
 
-              const end = getEnd(mazeInfo);
               let neighborSpace = newMazeInfo[neighbor.y][neighbor.x];
 
               if (end) {
                 neighborSpace.h = heuristic(neighbor, end);
               }
               neighborSpace.f = neighborSpace.g + neighborSpace.h;
+              console.log("Setting parent of ", neighbor, current);
               neighborSpace.parent = current;
             }
           });
-          progressAstar(openSet, closedSet, newMazeInfo);
+
+          progressAstar(openSet, closedSet, newMazeInfo, end);
         }
       } else {
         console.log("NO SOLUTION");
         handlePauseVisualization();
         return;
       }
-    }, 300);
+    }, 100);
   }
 
   return (

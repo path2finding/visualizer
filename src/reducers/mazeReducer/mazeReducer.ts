@@ -81,6 +81,7 @@ const makeVisited = (coord: Coord, state: Maze) => {
 };
 
 const showShortestPath = (endPoint: Coord, mazeInfo: MazeInfo) => {
+  console.log("PATH");
   let curr = endPoint;
 
   while (
@@ -276,6 +277,17 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
     case PROGRESS_ASTAR:
       // let updatedMaze = updateAstar(payload.coord, state, payload.neighbors);
       let newMazeInfo = payload.newMazeInfo;
+      let openSet = payload.openSet;
+      let closedSet = payload.closedSet;
+      // console.log(includesCoord(payload.openSet, payload.end));
+
+      if (includesCoord(payload.openSet, payload.end)) {
+        console.log("HERE");
+        closedSet.push(payload.end);
+        // _.once(() => showShortestPath(payload.end, newMazeInfo));
+        showShortestPath(payload.end, newMazeInfo);
+        openSet = [];
+      }
 
       payload.closedSet.forEach((coord: Coord) => {
         newMazeInfo[coord.y][coord.x].visited = true;
@@ -284,12 +296,24 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
       return {
         ...state,
         mazeInfo: newMazeInfo,
-        astarOpenSet: payload.openSet,
+        astarOpenSet: openSet,
         astarClosedSet: payload.closedSet,
       };
     default:
       return state;
   }
+};
+
+const includesCoord = (arr: Coord[], coord: Coord) => {
+  let containsElem = false;
+
+  arr.forEach((elem) => {
+    if (_.isEqual(elem, coord)) {
+      containsElem = true;
+    }
+  });
+
+  return containsElem;
 };
 
 const getStart = (mazeInfo: MazeInfo) => {

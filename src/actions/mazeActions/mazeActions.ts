@@ -95,7 +95,8 @@ export const progressBFS = (
 export const progressAstar = (
   openSet: Coord[],
   closedSet: Coord[],
-  newMazeInfo: MazeInfo
+  newMazeInfo: MazeInfo,
+  end: Coord
 ) => {
   return {
     type: PROGRESS_ASTAR,
@@ -103,6 +104,7 @@ export const progressAstar = (
       openSet,
       closedSet,
       newMazeInfo,
+      end,
     },
   };
 };
