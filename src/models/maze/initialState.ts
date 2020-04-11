@@ -1,4 +1,4 @@
-import { Maze, MazeInfo, Coord } from "./";
+import { Maze, MazeInfo } from "./";
 import { SpaceTypes } from "../../components/Space/types";
 
 // TODO - Limit Maze Size to 20 x 20
@@ -47,8 +47,8 @@ export const generateMaze = (
 };
 
 export const initialState: Maze = {
-  mazeInfo: generateMaze(5, 5),
-  clearMaze: generateMaze(5, 5, true),
+  mazeInfo: generateMaze(20, 20),
+  clearMaze: generateMaze(20, 20, true),
   bfsQueue: [],
   astarOpenSet: [],
   astarClosedSet: [],

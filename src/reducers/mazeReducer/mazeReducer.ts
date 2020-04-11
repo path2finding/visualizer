@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { SpaceTypes } from "../../components/Space/types";
 import { initialState, generateMaze } from "../../models/maze/initialState";
-import { Maze, MazeInfo, Coord, Space, IAStar } from "../../models/maze/index";
+import { Maze, MazeInfo, Coord, Space } from "../../models/maze/index";
 import { CLEAR_GRID } from "../../actions/menuActions/menuActions";
 import {
   CHANGE_START,
@@ -13,6 +13,7 @@ import {
   PROGRESS_BFS,
   PROGRESS_ASTAR,
   MAKE_VISITED,
+  RANDOMIZE_WALLS,
 } from "../../actions/mazeActions/mazeActions";
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
@@ -125,86 +126,32 @@ const updateSpaceProp = (
   return newMaze;
 };
 
-const heuristic = (a: Coord, b: Coord): number => {
-  // Manhattan distance formula
-  console.log(a, b);
-  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+const randomizeWalls = (mazeInfo: MazeInfo) => {
+  let newMaze: MazeInfo = mazeInfo;
+
+  newMaze = Object.keys(newMaze).map((key: string) => {
+    return newMaze[+key].map((space: Space) => {
+      if (space.type === SpaceTypes.start || space.type === SpaceTypes.end) {
+        return space;
+      }
+      return {
+        ...space,
+        type: Math.random() < 0.3 ? SpaceTypes.wall : SpaceTypes.empty,
+      } as Space;
+    });
+  });
+
+  return newMaze;
 };
-
-// const updateAstar = (coord: Coord, maze: Maze, neighbors: Coord[]) => {
-//   let newMaze = maze.mazeInfo;
-//   let { astarOpenSet, astarClosedSet } = maze;
-
-//   if (
-//     astarOpenSet.length === 0 &&
-//     newMaze[coord.y][coord.x].type === SpaceTypes.start
-//   ) {
-//     let start = getStart(newMaze);
-//     let end = getEnd(newMaze);
-//     if (start && end) {
-//       astarOpenSet.push(start);
-//       return {
-//         ...maze,
-//         astarOpenSet,
-//         astarClosedSet,
-//         mazeInfo: newMaze,
-//       } as Maze;
-//     }
-//   }
-
-//   if (astarOpenSet.includes(coord)) {
-//     astarOpenSet = astarOpenSet.filter((n) => n !== coord);
-//     console.log("TAG", "REMOVING", coord);
-//   }
-
-//   if (!astarClosedSet.includes(coord)) {
-//     astarClosedSet.push(coord);
-//     console.log("TAG", "ADDING", coord);
-//   }
-
-//   if (astarOpenSet.length > 0) {
-//     newMaze[coord.y][coord.x].visited = true;
-//     neighbors.forEach((neighbor) => {
-//       if (!astarClosedSet.includes(neighbor)) {
-//         let tempG = newMaze[coord.y][coord.x].astar.g + 1;
-
-//         let newPath = false;
-//         if (astarOpenSet.includes(neighbor)) {
-//           if (tempG < newMaze[neighbor.y][neighbor.x].astar.g) {
-//             newMaze[neighbor.y][neighbor.x].astar.g = tempG;
-//             newPath = true;
-//           }
-//         } else {
-//           newMaze[neighbor.y][neighbor.x].astar.g = tempG;
-//           newPath = true;
-//           astarOpenSet.push(neighbor);
-//         }
-
-//         if (newPath) {
-//           let tempH = heuristic(neighbor, getEnd(newMaze) as Coord);
-//           console.log("HEURISTIC", tempH);
-//           newMaze[neighbor.y][neighbor.x].astar.h = tempH;
-//           newMaze[neighbor.y][neighbor.x].astar.f =
-//             newMaze[neighbor.y][neighbor.x].astar.g + tempH;
-//           newMaze[neighbor.y][neighbor.x].parent = neighbor;
-//         }
-//       }
-//     });
-//   }
-
-//   return {
-//     ...maze,
-//     astarOpenSet,
-//     astarClosedSet,
-//     mazeInfo: newMaze,
-//   } as Maze;
-// };
 
 export const mazeReducer = (state = initialState, { type, payload }: any) => {
   switch (type) {
     case CLEAR_GRID:
       return {
         ...state,
+        astarOpenSet: [],
+        astarClosedSet: [],
+        bfsQueue: [],
         mazeInfo: generateMaze(
           Object.keys(state.mazeInfo).length,
           state.mazeInfo[0].length,
@@ -236,11 +183,19 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
         ...state,
         mazeInfo: makeVisited(payload, state),
       };
+    case RANDOMIZE_WALLS:
+      return {
+        ...state,
+        mazeInfo: randomizeWalls(state.mazeInfo),
+      };
     case LOAD_MAZE:
       return payload;
     case STOP_VISUALIZATION:
       return {
         ...state,
+        astarOpenSet: [],
+        astarClosedSet: [],
+        bfsQueue: [],
         mazeInfo: Object.keys(state.mazeInfo).map(
           (value: string, i: number) => {
             return state.mazeInfo[+value].map(
@@ -248,7 +203,8 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
                 return {
                   type:
                     value.type === SpaceTypes.start ||
-                    value.type === SpaceTypes.end
+                    value.type === SpaceTypes.end ||
+                    value.type === SpaceTypes.wall
                       ? value.type
                       : SpaceTypes.empty,
                   path: false,
@@ -314,30 +270,4 @@ const includesCoord = (arr: Coord[], coord: Coord) => {
   });
 
   return containsElem;
-};
-
-const getStart = (mazeInfo: MazeInfo) => {
-  const mazeSize = getMazeSize(mazeInfo);
-
-  for (let y = 0; y < mazeSize.y; y++) {
-    for (let x = 0; x < mazeSize.x; x++) {
-      if (mazeInfo[y][x].type === SpaceTypes.start) {
-        return { x, y };
-      }
-    }
-  }
-  return null;
-};
-
-const getEnd = (mazeInfo: MazeInfo) => {
-  const mazeSize = getMazeSize(mazeInfo);
-
-  for (let y = 0; y < mazeSize.y; y++) {
-    for (let x = 0; x < mazeSize.x; x++) {
-      if (mazeInfo[y][x].type === SpaceTypes.end) {
-        return { x, y };
-      }
-    }
-  }
-  return null;
 };

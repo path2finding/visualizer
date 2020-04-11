@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { Coord, MazeInfo, Maze, IAStar } from "../../models/maze";
+import { Coord, MazeInfo, Maze } from "../../models/maze";
 import { generateMaze } from "../../models/maze/initialState";
 import { ButtonProps } from "semantic-ui-react";
 import { PAUSE_VISUALIZATION } from "../menuActions/menuActions";
@@ -14,6 +14,7 @@ export const PROGRESS_BFS = "PROGRESS_BFS";
 export const PROGRESS_ASTAR = "PROGRESS_ASTAR";
 export const UPDATE_OPEN_SET = "UPDATE_OPEN_SET";
 export const UPDATE_CLOSED_SET = "UPDATE_CLOSED_SET";
+export const RANDOMIZE_WALLS = "RANDOMIZE_WALLS";
 
 export const handleChangeStart = (newPos: Coord): AnyAction => {
   return {
@@ -120,5 +121,12 @@ export const handleUpdateClosedSet = (closedSet: Coord[]) => {
   return {
     type: UPDATE_CLOSED_SET,
     payload: closedSet,
+  };
+};
+
+export const randomizeWalls = () => {
+  return {
+    type: RANDOMIZE_WALLS,
+    payload: null,
   };
 };

@@ -23,6 +23,7 @@ const mapStateToProps = (state: RootState) => ({
   canMoveEnd: state.menu.canMoveEnd,
   isPlaying: state.menu.isPlaying,
   selectedAlgo: state.menu.selectedAlgo,
+  currentSpeed: state.menu.currentSpeed,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

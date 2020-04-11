@@ -7,7 +7,7 @@ import _ from "lodash";
 import Space from "../../components/Space/Space";
 
 // Interfaces
-import { Maze as IMaze, MazeInfo, IAStar } from "../../models/maze/index";
+import { Maze as IMaze, MazeInfo } from "../../models/maze/index";
 import { Coord } from "../../models/maze";
 
 import "./Maze.scss";
@@ -43,7 +43,7 @@ const CameraController = () => {
   return null;
 };
 
-const populateMaze = (props: Props) => {
+const populateMaze = (props: Props, openSet: Coord[], closedSet: Coord[]) => {
   const {
     canMoveStart,
     canMoveEnd,
@@ -66,6 +66,8 @@ const populateMaze = (props: Props) => {
           visited={mazeInfo[y][x].visited}
           path={mazeInfo[y][x].path}
           position={[x, 0, y]}
+          inOpenSet={includesCoord(openSet, { x, y } as Coord)}
+          inClosedSet={includesCoord(closedSet, { x, y } as Coord)}
           key={key}
           canMoveStart={canMoveStart}
           canMoveEnd={canMoveEnd}
@@ -143,13 +145,33 @@ const getValidNeighbors = (
       x: coord.x - 1,
       y: coord.y,
     },
+    // {
+    //   x: coord.x + 1,
+    //   y: coord.y + 1,
+    // },
+    // {
+    //   x: coord.x + 1,
+    //   y: coord.y - 1,
+    // },
+    // {
+    //   x: coord.x - 1,
+    //   y: coord.y - 1,
+    // },
+    // {
+    //   x: coord.x - 1,
+    //   y: coord.y + 1,
+    // },
   ];
 
   neighbors.forEach((neighbor) => {
     if (inMazeBoundaries(neighbor, mazeSize)) {
       const neighborSpace = mazeInfo[neighbor.y][neighbor.x];
 
-      if (neighborSpace.type === SpaceTypes.empty && !neighborSpace.visited) {
+      if (
+        neighborSpace.type === SpaceTypes.empty &&
+        // checkCorners(neighbor, mazeInfo) &&
+        !neighborSpace.visited
+      ) {
         validNeighbors.push(neighbor);
       } else if (neighborSpace.type === SpaceTypes.end) {
         endCoord = neighbor;
@@ -164,6 +186,24 @@ const getValidNeighbors = (
 
   return validNeighbors;
 };
+
+// const checkCorners = (cur: Coord, mazeInfo: MazeInfo): boolean => {
+//   const mazeSize = getMazeSize(mazeInfo);
+//   if (
+//     cur.x < mazeSize.x - 1 &&
+//     cur.y < mazeSize.y - 1 &&
+//     cur.x > 0 &&
+//     cur.y > 0
+//   ) {
+//     return !(
+//       (mazeInfo[cur.y + 1][cur.x].type === SpaceTypes.wall &&
+//         mazeInfo[cur.y][cur.x + 1].type === SpaceTypes.wall) ||
+//       (mazeInfo[cur.y - 1][cur.x].type === SpaceTypes.wall &&
+//         mazeInfo[cur.y][cur.x - 1].type === SpaceTypes.wall)
+//     );
+//   }
+//   return true;
+// };
 
 function removeFromArr<T>(arr: T[], ele: T) {
   return arr.filter((n: T) => n !== ele);
@@ -183,8 +223,10 @@ const getLowestFScore = (openSet: Coord[], mazeInfo: MazeInfo): Coord => {
 
 const heuristic = (a: Coord, b: Coord): number => {
   // Manhattan distance formula
-  // console.log(a, b);
   return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+
+  // Diagonal Distance Formula
+  // return Math.sqrt(Math.pow(a.x - b.y, 2) + Math.pow(a.y - b.y, 2));
 };
 
 const includesCoord = (arr: Coord[], coord: Coord) => {
@@ -210,6 +252,7 @@ interface Props {
     | boolean
     | (string | number | boolean)[]
     | undefined;
+  currentSpeed: number;
   handleChangeStart: (newPos: Coord) => void;
   handleChangeEnd: (newPos: Coord) => void;
   makeWall: (coord: Coord) => void;
@@ -235,7 +278,7 @@ const Maze: React.FC<Props> = (props) => {
   const {
     isPlaying,
     selectedAlgo,
-    makeVisited,
+    currentSpeed,
     progressBFS,
     progressAstar,
     handlePauseVisualization,
@@ -289,7 +332,7 @@ const Maze: React.FC<Props> = (props) => {
           progressBFS([], curr, currNeighbors);
         }
       }
-    }, 100);
+    }, 100 / currentSpeed);
   } else if (selectedAlgo === "A*") {
     let openSet = astarOpenSet;
     let closedSet = astarClosedSet;
@@ -369,7 +412,7 @@ const Maze: React.FC<Props> = (props) => {
         handlePauseVisualization();
         return;
       }
-    }, 100);
+    }, 100 / currentSpeed);
   }
 
   return (
@@ -396,7 +439,7 @@ const Maze: React.FC<Props> = (props) => {
         <planeBufferGeometry attach="geometry" args={[100, 100, 100, 100]} />
         <meshPhongMaterial attach="material" wireframe={true} color={"grey"} />
       </mesh>
-      {populateMaze(props)}
+      {populateMaze(props, props.maze.astarOpenSet, props.maze.astarClosedSet)}
     </Canvas>
   );
 };
