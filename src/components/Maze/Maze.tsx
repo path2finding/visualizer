@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Canvas, useThree } from "react-three-fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import _ from "lodash";
 
 // Components
 import Space from "../../components/Space/Space";
@@ -186,6 +187,18 @@ const heuristic = (a: Coord, b: Coord): number => {
   return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 };
 
+const includesCoord = (arr: Coord[], coord: Coord) => {
+  let containsElem = false;
+
+  arr.forEach((elem) => {
+    if (_.isEqual(elem, coord)) {
+      containsElem = true;
+    }
+  });
+
+  return containsElem;
+};
+
 interface Props {
   maze: IMaze;
   canMoveStart: boolean;
@@ -280,11 +293,9 @@ const Maze: React.FC<Props> = (props) => {
     let openSet = astarOpenSet;
     let closedSet = astarClosedSet;
 
-    // console.log(openSet);
-    // console.log(closedSet);
-
     // Run at the beginning
     if (isPlaying && openSet.length === 0) {
+      console.log("Init Astar");
       const start = getStart(mazeInfo);
 
       if (start) {
@@ -294,6 +305,7 @@ const Maze: React.FC<Props> = (props) => {
 
     setTimeout(function () {
       if (isPlaying && openSet.length > 0) {
+        console.log("Running Astar");
         let newMazeInfo = mazeInfo;
         let current = getLowestFScore(openSet, mazeInfo);
 
@@ -308,18 +320,16 @@ const Maze: React.FC<Props> = (props) => {
         // Add current to closedSet
         closedSet.push(current);
         // Remove current from openSet
-        console.log(openSet);
         openSet = removeFromArr(openSet, current);
-        console.log(openSet);
 
         let neighbors = getValidNeighbors(current, mazeInfo);
 
         if (Array.isArray(neighbors)) {
           neighbors.forEach((neighbor) => {
-            if (!closedSet.includes(neighbor)) {
+            if (!includesCoord(closedSet, neighbor)) {
               let tentG = mazeInfo[current.y][current.x].g + 1;
 
-              if (openSet.includes(neighbor)) {
+              if (includesCoord(openSet, neighbor)) {
                 if (tentG < mazeInfo[neighbor.y][neighbor.x].g) {
                   newMazeInfo[neighbor.y][neighbor.x].g = tentG;
                 }
@@ -329,18 +339,13 @@ const Maze: React.FC<Props> = (props) => {
               }
 
               const end = getEnd(mazeInfo);
+              let neighborSpace = newMazeInfo[neighbor.y][neighbor.x];
 
               if (end) {
-                newMazeInfo[neighbor.y][neighbor.x].h = heuristic(
-                  neighbor,
-                  end
-                );
+                neighborSpace.h = heuristic(neighbor, end);
               }
-
-              newMazeInfo[neighbor.y][neighbor.x].f =
-                newMazeInfo[neighbor.y][neighbor.x].g +
-                newMazeInfo[neighbor.y][neighbor.x].h;
-              newMazeInfo[neighbor.y][neighbor.x].parent = current;
+              neighborSpace.f = neighborSpace.g + neighborSpace.h;
+              neighborSpace.parent = current;
             }
           });
           progressAstar(openSet, closedSet, newMazeInfo);
