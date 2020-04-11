@@ -124,21 +124,79 @@ const updateSpaceProp = (
   return newMaze;
 };
 
-const updateAstar = (
-  coord: Coord,
-  mazeInfo: MazeInfo,
-  astar: IAStar,
-  parent?: Coord
-) => {
-  let newMaze = mazeInfo;
+const heuristic = (a: Coord, b: Coord): number => {
+  // Manhattan distance formula
+  console.log(a, b);
+  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+};
 
-  newMaze[coord.y][coord.x].astar = astar;
+const updateAstar = (coord: Coord, maze: Maze, neighbors: Coord[]) => {
+  let newMaze = maze.mazeInfo;
+  let { astarOpenSet, astarClosedSet } = maze;
 
-  if (parent) {
-    newMaze[coord.y][coord.x].parent = parent;
+  if (
+    astarOpenSet.length === 0 &&
+    newMaze[coord.y][coord.x].type === SpaceTypes.start
+  ) {
+    let start = getStart(newMaze);
+    let end = getEnd(newMaze);
+    if (start && end) {
+      astarOpenSet.push(start);
+      return {
+        ...maze,
+        astarOpenSet,
+        astarClosedSet,
+        mazeInfo: newMaze,
+      } as Maze;
+    }
   }
 
-  return newMaze;
+  if (astarOpenSet.includes(coord)) {
+    astarOpenSet = astarOpenSet.filter((n) => n !== coord);
+    console.log("TAG", "REMOVING", coord);
+  }
+
+  if (!astarClosedSet.includes(coord)) {
+    astarClosedSet.push(coord);
+    console.log("TAG", "ADDING", coord);
+  }
+
+  if (astarOpenSet.length > 0) {
+    newMaze[coord.y][coord.x].visited = true;
+    neighbors.forEach((neighbor) => {
+      if (!astarClosedSet.includes(neighbor)) {
+        let tempG = newMaze[coord.y][coord.x].astar.g + 1;
+
+        let newPath = false;
+        if (astarOpenSet.includes(neighbor)) {
+          if (tempG < newMaze[neighbor.y][neighbor.x].astar.g) {
+            newMaze[neighbor.y][neighbor.x].astar.g = tempG;
+            newPath = true;
+          }
+        } else {
+          newMaze[neighbor.y][neighbor.x].astar.g = tempG;
+          newPath = true;
+          astarOpenSet.push(neighbor);
+        }
+
+        if (newPath) {
+          let tempH = heuristic(neighbor, getEnd(newMaze) as Coord);
+          console.log("HEURISTIC", tempH);
+          newMaze[neighbor.y][neighbor.x].astar.h = tempH;
+          newMaze[neighbor.y][neighbor.x].astar.f =
+            newMaze[neighbor.y][neighbor.x].astar.g + tempH;
+          newMaze[neighbor.y][neighbor.x].parent = neighbor;
+        }
+      }
+    });
+  }
+
+  return {
+    ...maze,
+    astarOpenSet,
+    astarClosedSet,
+    mazeInfo: newMaze,
+  } as Maze;
 };
 
 export const mazeReducer = (state = initialState, { type, payload }: any) => {
@@ -220,11 +278,12 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
         bfsQueue: payload.queue,
       };
     case PROGRESS_ASTAR:
+      let updatedMaze = updateAstar(payload.coord, state, payload.neighbors);
       return {
         ...state,
-        mazeInfo: updateAstar(payload.coord, state.mazeInfo, payload.astar),
-        astarOpenSet: payload.openSet || state.astarOpenSet,
-        astarClosedSet: payload.closedSet || state.astarClosedSet,
+        mazeInfo: updatedMaze.mazeInfo,
+        astarOpenSet: updatedMaze.astarOpenSet,
+        astarClosedSet: updatedMaze.astarClosedSet,
       };
     default:
       return state;
@@ -237,6 +296,19 @@ const getStart = (mazeInfo: MazeInfo) => {
   for (let y = 0; y < mazeSize.y; y++) {
     for (let x = 0; x < mazeSize.x; x++) {
       if (mazeInfo[y][x].type === SpaceTypes.start) {
+        return { x, y };
+      }
+    }
+  }
+  return null;
+};
+
+const getEnd = (mazeInfo: MazeInfo) => {
+  const mazeSize = getMazeSize(mazeInfo);
+
+  for (let y = 0; y < mazeSize.y; y++) {
+    for (let x = 0; x < mazeSize.x; x++) {
+      if (mazeInfo[y][x].type === SpaceTypes.end) {
         return { x, y };
       }
     }

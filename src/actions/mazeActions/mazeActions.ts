@@ -92,21 +92,12 @@ export const progressBFS = (
   };
 };
 
-export const progressAstar = (
-  astar: IAStar,
-  coord: Coord,
-  parent?: Coord,
-  openSet?: Coord[],
-  closedSet?: Coord[]
-) => {
+export const progressAstar = (coord: Coord, neighbors: Coord[]) => {
   return {
     type: PROGRESS_ASTAR,
     payload: {
-      astar,
       coord,
-      parent,
-      openSet,
-      closedSet,
+      neighbors,
     },
   };
 };

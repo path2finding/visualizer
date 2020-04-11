@@ -106,11 +106,6 @@ const getEnd = (mazeInfo: MazeInfo): Coord | null => {
   return null;
 };
 
-const heuristic = (a: Coord, b: Coord): number => {
-  // Manhattan distance formula
-  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
-};
-
 const inMazeBoundaries = (coord: Coord, mazeSize: Coord) => {
   if (
     coord.x >= 0 &&
@@ -194,7 +189,7 @@ interface Props {
     coord: Coord,
     neighbors: Coord[] | Coord
   ) => void;
-  progressAstar: (astar: IAStar, coord: Coord, parent?: Coord) => void;
+  progressAstar: (coord: Coord, neighbors: Coord[]) => void;
   handlePauseVisualization: () => void;
   handleUpdateOpenSet: (openSet: Coord[]) => void;
   handleUpdateClosedSet: (closedSet: Coord[]) => void;
@@ -260,110 +255,50 @@ const Maze: React.FC<Props> = (props) => {
     }, 100);
   } else if (selectedAlgo === "A*") {
     let openSet = astarOpenSet;
-    let closedSet = astarClosedSet;
-    let start: Coord | null;
-    let end: Coord | null;
-    // This gets run once at the start
+
     if (isPlaying && openSet.length === 0) {
-      start = getStart(mazeInfo);
-      end = getEnd(mazeInfo);
-      if (start && end) {
-        openSet.push(start);
+      const start = getStart(mazeInfo) as Coord;
+      if (start) {
+        progressAstar(start, getValidNeighbors(start, mazeInfo) as Coord[]);
       }
     }
-    if (isPlaying) {
-      setTimeout(function () {
-        if (openSet.length > 0 && start && end) {
-          let winner = 0;
-          for (let i = 0; i < openSet.length; i++) {
-            let coord: Coord = openSet[i];
-            console.log(coord);
-            makeVisited(coord);
-            // Check if current space has lower fScore than current winning index
-            if (
-              mazeInfo[coord.y][coord.x].astar.f <
-              mazeInfo[openSet[winner].y][openSet[winner].x].astar.f
-            ) {
-              winner = i;
-            }
+
+    setTimeout(function () {
+      if (isPlaying && openSet.length > 0) {
+        let winner = 0;
+        openSet.forEach((neighbor: Coord, i: number) => {
+          if (
+            mazeInfo[neighbor.y][neighbor.x].astar.f <
+            mazeInfo[openSet[winner].y][openSet[winner].x].astar.f
+          ) {
+            winner = i;
           }
+        });
 
-          let current = openSet[winner];
-          console.log("CURRENT", current);
-          if (mazeInfo[current.y][current.x].type === SpaceTypes.end) {
-            console.log("Done");
-            handlePauseVisualization();
-          }
+        let current = openSet[winner];
 
-          openSet = removeFromArr<Coord>(openSet, current);
-          closedSet.push(current);
-          handleUpdateOpenSet(openSet);
-          handleUpdateClosedSet(closedSet);
-
-          let neighbors = getValidNeighbors(current, mazeInfo);
-          if (!Array.isArray(neighbors)) neighbors = [neighbors];
-
-          for (let i = 0; i < neighbors.length; i++) {
-            let neighbor = neighbors[i];
-            console.log("Current Neighbor", neighbor);
-
-            // Verify neighbor hasn't been checked
-            if (!closedSet.includes(neighbor)) {
-              let tempG = mazeInfo[current.y][current.x].astar.g + 1;
-              console.log("TempG", tempG);
-
-              let newPath = false;
-              if (openSet.includes(neighbor)) {
-                console.log("OpenSet includes", neighbor);
-                if (tempG < mazeInfo[neighbor.y][neighbor.x].astar.g) {
-                  // set neighbors new gScore to tempG
-                  console.log("better g score than neighbor");
-                  progressAstar(
-                    {
-                      ...mazeInfo[neighbor.y][neighbor.x].astar,
-                      g: tempG,
-                    },
-                    neighbor
-                  );
-                  newPath = true;
-                  console.log("newpath is true");
-                }
-              } else {
-                // set neighbors new gScore to tempG
-                console.log("setting neighbors score to tempG");
-                progressAstar(
-                  {
-                    ...mazeInfo[neighbor.y][neighbor.x].astar,
-                    g: tempG,
-                  },
-                  neighbor
-                );
-                newPath = true;
-                openSet.push(neighbor);
-                handleUpdateOpenSet(openSet);
-                console.log("After setting g", openSet);
-              }
-
-              if (newPath) {
-                let h = heuristic(neighbor, end);
-                progressAstar(
-                  {
-                    ...mazeInfo[neighbor.y][neighbor.x].astar,
-                    h,
-                    f: mazeInfo[neighbor.y][neighbor.x].astar.g + h,
-                  },
-                  neighbor,
-                  current
-                );
-              }
-            }
-          }
-        } else {
-          console.log("NO SOLUTION");
+        // Check if finished
+        if (mazeInfo[current.y][current.x].type === SpaceTypes.end) {
+          // Find the Path
+          console.log("DONE");
           handlePauseVisualization();
+          return;
         }
-      }, 1000);
-    }
+
+        let neighbors: Coord[] = getValidNeighbors(
+          current,
+          mazeInfo
+        ) as Coord[];
+
+        if (Array.isArray(neighbors)) {
+          progressAstar(current, neighbors);
+        }
+      } else {
+        console.log("NO SOLUTION");
+        handlePauseVisualization();
+        return;
+      }
+    }, 100);
   }
 
   return (
