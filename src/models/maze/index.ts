@@ -18,7 +18,10 @@ export interface Space {
   visited: boolean;
   path: boolean;
   parent: Coord | null | undefined;
-  astar: IAStar;
+  // astar: IAStar;
+  f: number;
+  g: number;
+  h: number;
 }
 
 export interface MazeInfo {

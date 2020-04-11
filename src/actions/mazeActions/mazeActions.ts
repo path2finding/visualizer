@@ -92,12 +92,17 @@ export const progressBFS = (
   };
 };
 
-export const progressAstar = (coord: Coord, neighbors: Coord[]) => {
+export const progressAstar = (
+  openSet: Coord[],
+  closedSet: Coord[],
+  newMazeInfo: MazeInfo
+) => {
   return {
     type: PROGRESS_ASTAR,
     payload: {
-      coord,
-      neighbors,
+      openSet,
+      closedSet,
+      newMazeInfo,
     },
   };
 };

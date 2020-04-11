@@ -130,74 +130,74 @@ const heuristic = (a: Coord, b: Coord): number => {
   return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 };
 
-const updateAstar = (coord: Coord, maze: Maze, neighbors: Coord[]) => {
-  let newMaze = maze.mazeInfo;
-  let { astarOpenSet, astarClosedSet } = maze;
+// const updateAstar = (coord: Coord, maze: Maze, neighbors: Coord[]) => {
+//   let newMaze = maze.mazeInfo;
+//   let { astarOpenSet, astarClosedSet } = maze;
 
-  if (
-    astarOpenSet.length === 0 &&
-    newMaze[coord.y][coord.x].type === SpaceTypes.start
-  ) {
-    let start = getStart(newMaze);
-    let end = getEnd(newMaze);
-    if (start && end) {
-      astarOpenSet.push(start);
-      return {
-        ...maze,
-        astarOpenSet,
-        astarClosedSet,
-        mazeInfo: newMaze,
-      } as Maze;
-    }
-  }
+//   if (
+//     astarOpenSet.length === 0 &&
+//     newMaze[coord.y][coord.x].type === SpaceTypes.start
+//   ) {
+//     let start = getStart(newMaze);
+//     let end = getEnd(newMaze);
+//     if (start && end) {
+//       astarOpenSet.push(start);
+//       return {
+//         ...maze,
+//         astarOpenSet,
+//         astarClosedSet,
+//         mazeInfo: newMaze,
+//       } as Maze;
+//     }
+//   }
 
-  if (astarOpenSet.includes(coord)) {
-    astarOpenSet = astarOpenSet.filter((n) => n !== coord);
-    console.log("TAG", "REMOVING", coord);
-  }
+//   if (astarOpenSet.includes(coord)) {
+//     astarOpenSet = astarOpenSet.filter((n) => n !== coord);
+//     console.log("TAG", "REMOVING", coord);
+//   }
 
-  if (!astarClosedSet.includes(coord)) {
-    astarClosedSet.push(coord);
-    console.log("TAG", "ADDING", coord);
-  }
+//   if (!astarClosedSet.includes(coord)) {
+//     astarClosedSet.push(coord);
+//     console.log("TAG", "ADDING", coord);
+//   }
 
-  if (astarOpenSet.length > 0) {
-    newMaze[coord.y][coord.x].visited = true;
-    neighbors.forEach((neighbor) => {
-      if (!astarClosedSet.includes(neighbor)) {
-        let tempG = newMaze[coord.y][coord.x].astar.g + 1;
+//   if (astarOpenSet.length > 0) {
+//     newMaze[coord.y][coord.x].visited = true;
+//     neighbors.forEach((neighbor) => {
+//       if (!astarClosedSet.includes(neighbor)) {
+//         let tempG = newMaze[coord.y][coord.x].astar.g + 1;
 
-        let newPath = false;
-        if (astarOpenSet.includes(neighbor)) {
-          if (tempG < newMaze[neighbor.y][neighbor.x].astar.g) {
-            newMaze[neighbor.y][neighbor.x].astar.g = tempG;
-            newPath = true;
-          }
-        } else {
-          newMaze[neighbor.y][neighbor.x].astar.g = tempG;
-          newPath = true;
-          astarOpenSet.push(neighbor);
-        }
+//         let newPath = false;
+//         if (astarOpenSet.includes(neighbor)) {
+//           if (tempG < newMaze[neighbor.y][neighbor.x].astar.g) {
+//             newMaze[neighbor.y][neighbor.x].astar.g = tempG;
+//             newPath = true;
+//           }
+//         } else {
+//           newMaze[neighbor.y][neighbor.x].astar.g = tempG;
+//           newPath = true;
+//           astarOpenSet.push(neighbor);
+//         }
 
-        if (newPath) {
-          let tempH = heuristic(neighbor, getEnd(newMaze) as Coord);
-          console.log("HEURISTIC", tempH);
-          newMaze[neighbor.y][neighbor.x].astar.h = tempH;
-          newMaze[neighbor.y][neighbor.x].astar.f =
-            newMaze[neighbor.y][neighbor.x].astar.g + tempH;
-          newMaze[neighbor.y][neighbor.x].parent = neighbor;
-        }
-      }
-    });
-  }
+//         if (newPath) {
+//           let tempH = heuristic(neighbor, getEnd(newMaze) as Coord);
+//           console.log("HEURISTIC", tempH);
+//           newMaze[neighbor.y][neighbor.x].astar.h = tempH;
+//           newMaze[neighbor.y][neighbor.x].astar.f =
+//             newMaze[neighbor.y][neighbor.x].astar.g + tempH;
+//           newMaze[neighbor.y][neighbor.x].parent = neighbor;
+//         }
+//       }
+//     });
+//   }
 
-  return {
-    ...maze,
-    astarOpenSet,
-    astarClosedSet,
-    mazeInfo: newMaze,
-  } as Maze;
-};
+//   return {
+//     ...maze,
+//     astarOpenSet,
+//     astarClosedSet,
+//     mazeInfo: newMaze,
+//   } as Maze;
+// };
 
 export const mazeReducer = (state = initialState, { type, payload }: any) => {
   switch (type) {
@@ -254,13 +254,9 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
                   visited: false,
                   parent:
                     value.type === SpaceTypes.start ? { x: i, y: j } : null,
-                  astar: {
-                    i,
-                    j,
-                    f: 0,
-                    g: 0,
-                    h: 0,
-                  },
+                  f: 0,
+                  g: 0,
+                  h: 0,
                 } as Space;
               }
             );
@@ -278,12 +274,18 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
         bfsQueue: payload.queue,
       };
     case PROGRESS_ASTAR:
-      let updatedMaze = updateAstar(payload.coord, state, payload.neighbors);
+      // let updatedMaze = updateAstar(payload.coord, state, payload.neighbors);
+      let newMazeInfo = payload.newMazeInfo;
+
+      payload.closedSet.forEach((coord: Coord) => {
+        newMazeInfo[coord.y][coord.x].visited = true;
+      });
+
       return {
         ...state,
-        mazeInfo: updatedMaze.mazeInfo,
-        astarOpenSet: updatedMaze.astarOpenSet,
-        astarClosedSet: updatedMaze.astarClosedSet,
+        mazeInfo: newMazeInfo,
+        astarOpenSet: payload.openSet,
+        astarClosedSet: payload.closedSet,
       };
     default:
       return state;

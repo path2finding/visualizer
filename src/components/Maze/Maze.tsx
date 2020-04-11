@@ -168,6 +168,24 @@ function removeFromArr<T>(arr: T[], ele: T) {
   return arr.filter((n: T) => n !== ele);
 }
 
+const getLowestFScore = (openSet: Coord[], mazeInfo: MazeInfo): Coord => {
+  let lowest = openSet[0];
+
+  openSet.forEach((coord) => {
+    if (mazeInfo[coord.y][coord.x] < mazeInfo[lowest.y][lowest.x]) {
+      lowest = coord;
+    }
+  });
+
+  return lowest;
+};
+
+const heuristic = (a: Coord, b: Coord): number => {
+  // Manhattan distance formula
+  // console.log(a, b);
+  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+};
+
 interface Props {
   maze: IMaze;
   canMoveStart: boolean;
@@ -189,10 +207,14 @@ interface Props {
     coord: Coord,
     neighbors: Coord[] | Coord
   ) => void;
-  progressAstar: (coord: Coord, neighbors: Coord[]) => void;
+  progressAstar: (
+    openSet: Coord[],
+    closedSet: Coord[],
+    newMazeInfo: MazeInfo
+  ) => void;
   handlePauseVisualization: () => void;
-  handleUpdateOpenSet: (openSet: Coord[]) => void;
-  handleUpdateClosedSet: (closedSet: Coord[]) => void;
+  // handleUpdateOpenSet: (openSet: Coord[]) => void;
+  // handleUpdateClosedSet: (closedSet: Coord[]) => void;
 }
 
 const Maze: React.FC<Props> = (props) => {
@@ -203,8 +225,8 @@ const Maze: React.FC<Props> = (props) => {
     progressBFS,
     progressAstar,
     handlePauseVisualization,
-    handleUpdateOpenSet,
-    handleUpdateClosedSet,
+    // handleUpdateOpenSet,
+    // handleUpdateClosedSet,
   } = props;
   const { mazeInfo, bfsQueue, astarOpenSet, astarClosedSet } = props.maze;
 
@@ -215,11 +237,12 @@ const Maze: React.FC<Props> = (props) => {
     if (isPlaying && queue.length === 0) {
       console.log("Init BFS");
       const start = getStart(mazeInfo);
-      console.log("Start BFS");
+
       if (start) {
         queue.push(start);
       }
     }
+
     setTimeout(function () {
       if (queue.length > 0 && isPlaying) {
         console.log("Going through BFS", queue);
@@ -255,27 +278,24 @@ const Maze: React.FC<Props> = (props) => {
     }, 100);
   } else if (selectedAlgo === "A*") {
     let openSet = astarOpenSet;
+    let closedSet = astarClosedSet;
 
+    // console.log(openSet);
+    // console.log(closedSet);
+
+    // Run at the beginning
     if (isPlaying && openSet.length === 0) {
-      const start = getStart(mazeInfo) as Coord;
+      const start = getStart(mazeInfo);
+
       if (start) {
-        progressAstar(start, getValidNeighbors(start, mazeInfo) as Coord[]);
+        openSet.push(start);
       }
     }
 
     setTimeout(function () {
       if (isPlaying && openSet.length > 0) {
-        let winner = 0;
-        openSet.forEach((neighbor: Coord, i: number) => {
-          if (
-            mazeInfo[neighbor.y][neighbor.x].astar.f <
-            mazeInfo[openSet[winner].y][openSet[winner].x].astar.f
-          ) {
-            winner = i;
-          }
-        });
-
-        let current = openSet[winner];
+        let newMazeInfo = mazeInfo;
+        let current = getLowestFScore(openSet, mazeInfo);
 
         // Check if finished
         if (mazeInfo[current.y][current.x].type === SpaceTypes.end) {
@@ -285,20 +305,52 @@ const Maze: React.FC<Props> = (props) => {
           return;
         }
 
-        let neighbors: Coord[] = getValidNeighbors(
-          current,
-          mazeInfo
-        ) as Coord[];
+        // Add current to closedSet
+        closedSet.push(current);
+        // Remove current from openSet
+        console.log(openSet);
+        openSet = removeFromArr(openSet, current);
+        console.log(openSet);
+
+        let neighbors = getValidNeighbors(current, mazeInfo);
 
         if (Array.isArray(neighbors)) {
-          progressAstar(current, neighbors);
+          neighbors.forEach((neighbor) => {
+            if (!closedSet.includes(neighbor)) {
+              let tentG = mazeInfo[current.y][current.x].g + 1;
+
+              if (openSet.includes(neighbor)) {
+                if (tentG < mazeInfo[neighbor.y][neighbor.x].g) {
+                  newMazeInfo[neighbor.y][neighbor.x].g = tentG;
+                }
+              } else {
+                newMazeInfo[neighbor.y][neighbor.x].g = tentG;
+                openSet.push(neighbor);
+              }
+
+              const end = getEnd(mazeInfo);
+
+              if (end) {
+                newMazeInfo[neighbor.y][neighbor.x].h = heuristic(
+                  neighbor,
+                  end
+                );
+              }
+
+              newMazeInfo[neighbor.y][neighbor.x].f =
+                newMazeInfo[neighbor.y][neighbor.x].g +
+                newMazeInfo[neighbor.y][neighbor.x].h;
+              newMazeInfo[neighbor.y][neighbor.x].parent = current;
+            }
+          });
+          progressAstar(openSet, closedSet, newMazeInfo);
         }
       } else {
         console.log("NO SOLUTION");
         handlePauseVisualization();
         return;
       }
-    }, 100);
+    }, 300);
   }
 
   return (
