@@ -18,7 +18,12 @@ describe("Menu Reducer Tests", () => {
     };
 
     const updatedState = menuReducer(initialState, action);
-    const expectedState: MenuState = { ...initialState, isPlaying: true };
+    const expectedState: MenuState = {
+      ...initialState,
+      isPlaying: true,
+      startTime: Date.now(),
+      endTime: undefined,
+    };
 
     expect(updatedState).toEqual(expectedState);
   });
@@ -42,7 +47,11 @@ describe("Menu Reducer Tests", () => {
     };
 
     const updatedState = menuReducer(initialState, action);
-    const expectedState: MenuState = { ...initialState, isPlaying: false };
+    const expectedState: MenuState = {
+      ...initialState,
+      isPlaying: false,
+      endTime: Date.now(),
+    };
 
     expect(updatedState).toEqual(expectedState);
   });
