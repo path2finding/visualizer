@@ -14,8 +14,6 @@ import {
   Input,
 } from "semantic-ui-react";
 import { MazeInfo, Maze } from "../../models/maze";
-import { stateContext } from "react-three-fiber";
-import { handleDropdownSpeed } from "../../actions/menuActions/menuActions";
 import { getMazeSize } from "../Maze/Maze";
 
 import "./Menu.scss";
@@ -59,6 +57,7 @@ export interface MenuProps extends MenuState {
     data: ButtonProps
   ) => void;
   updateGridSize: (cols: number, rows: number) => void;
+  randomizeWalls: () => void;
 }
 
 export interface _MenuState {
@@ -129,6 +128,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
       selectedAlgo,
       algorithms,
       handleDropdownChange,
+      randomizeWalls,
       speed,
       currentSpeed,
       handleDropdownSpeed,
@@ -137,8 +137,8 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
     const { mazeCols, mazeRows } = this.state;
 
     return (
-      <Menu>
-        <Menu.Item style={{ marginRight: "auto" }}>
+      <Menu borderless>
+        <Menu.Item>
           {!isPlaying ? (
             <Button color="green" circular onClick={onStart}>
               <Icon name="play" style={{ marginRight: "0.5rem" }} />
@@ -155,9 +155,12 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             <Icon name="stop" style={{ marginRight: "0.5rem" }} />
             <span>Stop</span>
           </Button>
-          &nbsp; {/* Essentially just a fancy space */}
+        </Menu.Item>
+
+        <Menu.Item style={{ marginRight: "auto" }}>
           <Dropdown
             className="speed-dropdown"
+            disabled={isPlaying}
             onChange={handleDropdownSpeed}
             text={"Playback speed x" + currentSpeed || "Change Speed"}
             value={currentSpeed}
@@ -199,10 +202,23 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           >
             <span>Update Size</span>
           </Button>
+          <Dropdown
+            disabled={isPlaying}
+            onChange={handleDropdownChange}
+            text={(selectedAlgo as string) || "Choose an Algorithm"}
+            value={selectedAlgo}
+            selection
+            options={algorithms}
+          />
         </Menu.Item>
 
         <Menu.Item>
-          <Button color="teal" circular onClick={toggleMoveStart}>
+          <Button
+            color="teal"
+            circular
+            onClick={toggleMoveStart}
+            disabled={isPlaying}
+          >
             <Icon
               name={canMoveStart ? "circle" : "circle outline"}
               style={{ marginRight: "0.5rem" }}
@@ -210,25 +226,49 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             <span>Move Start Point</span>
           </Button>
           &nbsp; {/* Essentially just a fancy space */}
-          <Button color="purple" circular onClick={toggleMoveEnd}>
+          <Button
+            color="purple"
+            circular
+            onClick={toggleMoveEnd}
+            disabled={isPlaying}
+          >
             <Icon
               name={canMoveEnd ? "circle" : "circle outline"}
               style={{ marginRight: "0.5rem" }}
             />
             <span>Move End Point</span>
           </Button>
+        </Menu.Item>
+        <Menu.Item>
+          <Button
+            color="orange"
+            circular
+            onClick={randomizeWalls}
+            disabled={isPlaying}
+          >
+            <Icon name="table" style={{ marginRight: "0.5rem" }} />
+            <span>Randomize Walls</span>
+          </Button>
           &nbsp; {/* Essentially just a fancy space */}
-          <Button color="orange" circular onClick={onClear}>
+          <Button
+            color="orange"
+            circular
+            onClick={onClear}
+            disabled={isPlaying}
+          >
             <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
             <span>Clear Grid</span>
           </Button>
           &nbsp; {/* Essentially just a fancy space */}
+        </Menu.Item>
+        <Menu.Item>
           <Modal
             trigger={
               <Button
                 color="blue"
                 circular
                 onClick={() => saveMaze(maze.mazeInfo)}
+                disabled={isPlaying}
               >
                 <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
                 <span>Save Maze</span>
@@ -253,7 +293,12 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             </Modal.Content>
           </Modal>
           &nbsp; {/* Essentially just a fancy space */}
-          <Button color="blue" circular onClick={this.handleClick.bind(this)}>
+          <Button
+            color="blue"
+            circular
+            onClick={this.handleClick.bind(this)}
+            disabled={isPlaying}
+          >
             <Icon name="upload" style={{ marginRight: "0.5rem" }} />
             <span>Load Maze</span>
           </Button>
@@ -280,16 +325,6 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               </Modal.Description>
             </Modal.Content>
           </Modal>
-          &nbsp; {/* Essentially just a fancy space */}
-          <Dropdown
-            className="algo-dropdown"
-            onChange={handleDropdownChange}
-            text={(selectedAlgo as string) || "Choose an Algorithm"}
-            value={selectedAlgo}
-            selection
-            options={algorithms}
-            fluid={true}
-          />
         </Menu.Item>
       </Menu>
     );

@@ -1,7 +1,7 @@
 import { MenuState } from "./";
 
 export const initialState: MenuState = {
-  selectedAlgo: undefined,
+  selectedAlgo: "A*",
   algorithms: [
     { value: "A*", text: "A*" },
     { value: "Djikstras", text: "Djikstras" },
@@ -12,10 +12,10 @@ export const initialState: MenuState = {
   canMoveStart: false,
   canMoveEnd: false,
   speed: [
-    {value: 0.5, text: "x0.5"},
-    {value: 1, text: "x1"},
-    {value: 1.5, text: "x1.5"},
-    {value: 2, text: "x2"},
+    { value: 0.5, text: "x0.5" },
+    { value: 1, text: "x1" },
+    { value: 1.5, text: "x1.5" },
+    { value: 2, text: "x2" },
   ],
-  currentSpeed: 1
+  currentSpeed: 1,
 };

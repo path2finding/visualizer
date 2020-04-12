@@ -11,6 +11,8 @@ interface Props {
   path: Boolean;
   canMoveStart: boolean;
   canMoveEnd: boolean;
+  inOpenSet: boolean;
+  inClosedSet: boolean;
   onChangeStart: () => void;
   onChangeEnd: () => void;
   onSetWall: () => void;
@@ -46,6 +48,8 @@ const Space: React.FC<Props> = (props) => {
         type={props.type}
         visited={props.visited}
         path={props.path}
+        inOpenSet={props.inOpenSet}
+        inClosedSet={props.inClosedSet}
       />
       {hovered && (
         <mesh>

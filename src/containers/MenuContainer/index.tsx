@@ -14,6 +14,7 @@ import {
   loadMaze,
   handleStopVisualization,
   updateGridSize,
+  randomizeWalls,
 } from "../../actions/mazeActions/mazeActions";
 import MenuBar from "../../components/Menu";
 
@@ -35,6 +36,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     {
       handleDropdownChange,
       handleDropdownSpeed,
+      randomizeWalls,
       onStart: handleStartVisualization,
       onPause: handlePauseVisualization,
       onStop: handleStopVisualization,

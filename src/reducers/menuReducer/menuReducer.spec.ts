@@ -1,12 +1,12 @@
 import { menuReducer } from "./menuReducer";
 import {
   START_VISUALIZATION,
-  STOP_VISUALIZATION,
   PAUSE_VISUALIZATION,
   CHANGE_ALGO,
   TOGGLE_MOVE_START,
-  TOGGLE_MOVE_END
+  TOGGLE_MOVE_END,
 } from "../../actions/menuActions/menuActions";
+import { STOP_VISUALIZATION } from "../../actions/mazeActions/mazeActions";
 import { initialState } from "../../models/menu/initialState";
 import { MenuState } from "../../models/menu";
 
@@ -14,7 +14,7 @@ describe("Menu Reducer Tests", () => {
   it("Start Visualization Expected State", () => {
     const action = {
       type: START_VISUALIZATION,
-      payload: null
+      payload: null,
     };
 
     const updatedState = menuReducer(initialState, action);
@@ -26,7 +26,7 @@ describe("Menu Reducer Tests", () => {
   it("Stop Visualization Expected State", () => {
     const action = {
       type: STOP_VISUALIZATION,
-      payload: null
+      payload: null,
     };
 
     const updatedState = menuReducer(initialState, action);
@@ -38,7 +38,7 @@ describe("Menu Reducer Tests", () => {
   it("Pause Visualization Expected State", () => {
     const action = {
       type: PAUSE_VISUALIZATION,
-      payload: null
+      payload: null,
     };
 
     const updatedState = menuReducer(initialState, action);
@@ -50,7 +50,7 @@ describe("Menu Reducer Tests", () => {
   it("Toggle Move Start Point Expected State", () => {
     const action = {
       type: TOGGLE_MOVE_START,
-      payload: null
+      payload: null,
     };
 
     const updatedState = menuReducer(initialState, action);
@@ -62,7 +62,7 @@ describe("Menu Reducer Tests", () => {
   it("Toggle Move End Point Expected State", () => {
     const action = {
       type: TOGGLE_MOVE_END,
-      payload: null
+      payload: null,
     };
 
     const updatedState = menuReducer(initialState, action);
@@ -74,7 +74,7 @@ describe("Menu Reducer Tests", () => {
   it("Change Algorithm Expected State", () => {
     const action = {
       type: CHANGE_ALGO,
-      payload: "A*"
+      payload: "A*",
     };
 
     const updatedState = menuReducer(initialState, action);
