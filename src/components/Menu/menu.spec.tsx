@@ -63,7 +63,7 @@ describe("<Menu />", () => {
 
   it("Buttons render", () => {
     expect(wrapper.find(SemanticButton)).toBeDefined();
-    expect(wrapper.find(SemanticButton)).toHaveLength(7);
+    expect(wrapper.find(SemanticButton)).toHaveLength(8);
   });
 
   it("Play button calls action", () => {
