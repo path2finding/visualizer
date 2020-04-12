@@ -293,7 +293,7 @@ const Maze: React.FC<Props> = (props) => {
     // handleUpdateOpenSet,
     // handleUpdateClosedSet,
   } = props;
-  const { mazeInfo, bfsQueue, astarOpenSet, astarClosedSet } = props.maze;
+  const { mazeInfo, bfsQueue, astarOpenSet, astarClosedSet, dfsStack } = props.maze;
 
   // console.log(selectedAlgo);
   if (selectedAlgo === "BFS") {
@@ -341,7 +341,30 @@ const Maze: React.FC<Props> = (props) => {
         }
       }
     }, 100 / currentSpeed);
-  } else if (selectedAlgo === "A*") {
+  } 
+  else if (selectedAlgo === "DFS") {
+    console.log('dfs selected!');
+    let stack = dfsStack;
+
+    if (isPlaying && stack.length === 0) {
+      console.log('init dfs');
+
+      const start = getStart(mazeInfo);
+
+      if (start) {
+        // stack.push(start);
+      }
+    }
+
+    setTimeout(function () {
+      if (stack.length > 0 && isPlaying) {
+        console.log("Going through DFS", stack);
+
+
+      }
+    })
+  }
+  else if (selectedAlgo === "A*") {
     let openSet = astarOpenSet;
     let closedSet = astarClosedSet;
 
@@ -421,7 +444,8 @@ const Maze: React.FC<Props> = (props) => {
         return;
       }
     }, 100 / currentSpeed);
-    }else if (selectedAlgo === "Djikstras") {
+    }
+    else if (selectedAlgo === "Djikstras") {
       let openSet = astarOpenSet;
       let closedSet = astarClosedSet;
   

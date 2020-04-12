@@ -12,8 +12,12 @@ import {
   TextAreaProps,
   Message,
 } from "semantic-ui-react";
-import { MazeInfo } from "../../models/maze";
-//import { loadMaze } from "../../actions/mazeActions/mazeActions";
+
+import { MazeInfo, Maze } from "../../models/maze";
+// import { stateContext } from "react-three-fiber";
+// import { handleDropdownSpeed } from "../../actions/menuActions/menuActions";
+// import { loadMaze } from "../../actions/mazeActions/mazeActions";
+// import { Console } from "inspector";
 
 export interface MenuProps extends MenuState {
   canMoveStart: boolean;
@@ -244,6 +248,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             <Icon name="upload" style={{ marginRight: "0.5rem" }} />
             <span>Load Maze</span>
           </Button>
+
           <Modal centered={false} open={this.state.showModal}>
             <Modal.Header>Paste your maze in the text box</Modal.Header>
             <Modal.Content>
