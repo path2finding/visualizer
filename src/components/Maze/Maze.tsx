@@ -65,7 +65,7 @@ const populateMaze = (props: Props, openSet: Coord[], closedSet: Coord[]) => {
           type={mazeInfo[y][x].type}
           visited={mazeInfo[y][x].visited}
           path={mazeInfo[y][x].path}
-          position={{ x, z: 0, y }}
+          position={{ x: x - mazeSize.x / 2, z: 0, y: y - mazeSize.y / 2 }}
           inOpenSet={includesCoord(openSet, { x, y } as Coord)}
           inClosedSet={includesCoord(closedSet, { x, y } as Coord)}
           key={key}
@@ -575,7 +575,7 @@ const Maze: React.FC<Props> = (props) => {
       //   top: 10
       // }}
       camera={{
-        position: new Vector3(0, 10, 0),
+        position: new Vector3(0, getMazeSize(mazeInfo).x, 0),
       }}
     >
       <CameraController />
