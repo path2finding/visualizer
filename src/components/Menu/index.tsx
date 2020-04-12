@@ -169,50 +169,62 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             fluid={true}
           />
           &nbsp; {/* Essentially just a fancy space */}
-          <div className="grid-size-inputs">
-            <Input
-              size="small"
-              type="number"
-              label="Cols"
-              fluid={true}
-              value={mazeCols}
-              onChange={(e) => this.setState({ mazeCols: +e.target.value })}
-              onBlur={() =>
-                mazeCols < 20 ? this.setState({ mazeCols: 20 }) : null
-              }
-            />
-            &nbsp; {/* Essentially just a fancy space */}
-            <Input
-              size="small"
-              type="number"
-              label="Rows"
-              fluid={true}
-              value={mazeRows}
-              onChange={(e) => this.setState({ mazeRows: +e.target.value })}
-              onBlur={() =>
-                mazeRows < 20 ? this.setState({ mazeRows: 20 }) : null
-              }
-            />
-          </div>
-          &nbsp; {/* Essentially just a fancy space */}
-          <Button
-            color="yellow"
-            circular
-            onClick={() => updateGridSize(mazeCols, mazeRows)}
-          >
-            <span>Update Size</span>
-          </Button>
           <Dropdown
+            className="algo-dropdown"
             disabled={isPlaying}
             onChange={handleDropdownChange}
             text={(selectedAlgo as string) || "Choose an Algorithm"}
             value={selectedAlgo}
             selection
             options={algorithms}
+            fluid={true}
           />
         </Menu.Item>
 
         <Menu.Item>
+          <Dropdown
+            className="grid-size-dropdown"
+            button
+            disabled={isPlaying}
+            text="Change Grid Size"
+            fluid={true}
+            color="pink"
+          >
+            <Dropdown.Menu>
+              <Input
+                onClick={(e: any) => e.stopPropagation()}
+                size="small"
+                type="number"
+                label="Cols"
+                fluid={true}
+                value={mazeCols}
+                onChange={(e) => this.setState({ mazeCols: +e.target.value })}
+                onBlur={() =>
+                  mazeCols < 20 ? this.setState({ mazeCols: 20 }) : null
+                }
+              />
+              <Input
+                onClick={(e: any) => e.stopPropagation()}
+                size="small"
+                type="number"
+                label="Rows"
+                fluid={true}
+                value={mazeRows}
+                onChange={(e) => this.setState({ mazeRows: +e.target.value })}
+                onBlur={() =>
+                  mazeRows < 20 ? this.setState({ mazeRows: 20 }) : null
+                }
+              />
+              <Button
+                color="yellow"
+                circular
+                onClick={() => updateGridSize(mazeCols, mazeRows)}
+              >
+                <span>Update Size</span>
+              </Button>
+            </Dropdown.Menu>
+          </Dropdown>
+          &nbsp; {/* Essentially just a fancy space */}
           <Button
             color="teal"
             circular
