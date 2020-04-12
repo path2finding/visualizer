@@ -1,5 +1,6 @@
 import * as React from "react";
 import { MenuState } from "../../models/menu";
+import ReactMarkdown from "react-markdown";
 import {
   Menu,
   DropdownProps,
@@ -9,14 +10,14 @@ import {
   ButtonProps,
   Modal,
   Form,
-  TextAreaProps
+  TextAreaProps,
 } from "semantic-ui-react";
 import { MazeInfo, Space } from "../../models/maze";
 import * as yup from "yup";
 import { Maze } from "../../models/maze";
 import { SpaceTypes } from "../Space/types";
 import { stateContext } from "react-three-fiber";
-import algos from '../../algos';
+import algos from "../../algos";
 
 export interface MenuProps extends MenuState {
   canMoveStart: boolean;
@@ -67,7 +68,7 @@ export const yupSpaceSchema = yup.object({
     .oneOf(["wall", "empty", "startpoint", "endpoint"])
     .required(),
   visited: yup.bool().required(),
-  path: yup.bool().required()
+  path: yup.bool().required(),
 });
 
 class MenuBar extends React.Component<MenuProps, _MenuState> {
@@ -75,15 +76,12 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
     value: "",
     showModal: false,
     hasError: false,
-    errorMessage: ""
+    errorMessage: "",
   };
 
   checkDynamicKeys = (keys: any[]): boolean => {
     for (let i = 0; i < keys.length; i++) {
-      const keyIsValid = yup
-        .number()
-        .required()
-        .isValidSync(keys[i]);
+      const keyIsValid = yup.number().required().isValidSync(keys[i]);
       if (!keyIsValid) {
         return false;
       }
@@ -138,7 +136,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
         this.setState({
           ...this.state,
           hasError: true,
-          errorMessage: "Object should have keys!"
+          errorMessage: "Object should have keys!",
         });
       } else {
         const keysAreValid = this.checkDynamicKeys(keys);
@@ -146,7 +144,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           this.setState({
             ...this.state,
             hasError: true,
-            errorMessage: "Object keys must be numeric!"
+            errorMessage: "Object keys must be numeric!",
           });
         } else {
           const spacesAreValid = this.checkSpace(keys, maze);
@@ -155,7 +153,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               ...this.state,
               hasError: true,
               errorMessage:
-                "Spaces required parameters type, visited, and path!"
+                "Spaces required parameters type, visited, and path!",
             });
           } else {
             const startEndPointsValid = this.checkStartEndPoints(maze);
@@ -164,7 +162,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
                 ...this.state,
                 hasError: true,
                 errorMessage:
-                  "Maze can only have one start point and one end point"
+                  "Maze can only have one start point and one end point",
               });
             } else {
               this.props.loadMaze(maze);
@@ -177,7 +175,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
       this.setState({
         ...this.state,
         hasError: true,
-        errorMessage: "Maze data must be in JSON format!"
+        errorMessage: "Maze data must be in JSON format!",
       });
       console.log(e);
     }
@@ -192,20 +190,20 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
   };
 
   getInfo = () => {
-    let al = this.props.selectedAlgo
-    if(al==null){
-      al = "Select an algorithm"
-    }else if(al=="A*"){ 
+    let al = this.props.selectedAlgo;
+    if (al == null) {
+      al = "Select an algorithm";
+    } else if (al == "A*") {
       al = algos.a;
-    }else if(al=="BFS"){
-      al = algos.BFS
-    }else if(al=="DFS"){
-      al = algos.DFS
-    }else if(al=="Djikstras"){
-      al = algos.Djikstras
+    } else if (al == "BFS") {
+      al = algos.BFS;
+    } else if (al == "DFS") {
+      al = algos.DFS;
+    } else if (al == "Djikstras") {
+      al = algos.Djikstras;
     }
-    return al as string
-  }
+    return al as string;
+  };
 
   render() {
     const {
@@ -222,7 +220,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
       toggleMoveStart,
       selectedAlgo,
       algorithms,
-      handleDropdownChange
+      handleDropdownChange,
     } = this.props;
     const { mazeInfo } = this.props.maze;
 
@@ -271,7 +269,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           &nbsp; {/* Essentially just a fancy space */}
           <Modal
             trigger={
-              <Button color="blue" circular onClick={e => saveMaze(mazeInfo)}>
+              <Button color="blue" circular onClick={(e) => saveMaze(mazeInfo)}>
                 <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
                 <span>Save Maze</span>
               </Button>
@@ -313,7 +311,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
                       this.state.hasError
                         ? {
                             content: this.state.errorMessage,
-                            pointing: "below"
+                            pointing: "below",
                           }
                         : false
                     }
@@ -334,17 +332,17 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           &nbsp; {/* Essentially just a fancy space */}
           <Modal
             trigger={
-              <Button color="blue" circular >
+              <Button color="blue" circular>
                 <Icon name="info" />
               </Button>
             }
             centered={false}
             closeIcon
           >
-            <Modal.Header>Algorithm Info</Modal.Header>
+            <Modal.Header>{selectedAlgo} Algorithm Info</Modal.Header>
             <Modal.Content>
               <Modal.Description>
-                {this.getInfo()}
+                <ReactMarkdown source={this.getInfo()} />
               </Modal.Description>
             </Modal.Content>
           </Modal>
