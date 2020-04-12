@@ -7,9 +7,14 @@ export const CHANGE_START = "CHANGE_START";
 export const CHANGE_END = "CHANGE_END";
 export const MAKE_WALL = "MAKE_WALL";
 export const MAKE_EMPTY = "MAKE_EMPTY";
+export const MAKE_VISITED = "MAKE_VISITED";
 export const LOAD_MAZE = "LOAD_MAZE";
 export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const PROGRESS_BFS = "PROGRESS_BFS";
+export const PROGRESS_ASTAR = "PROGRESS_ASTAR";
+export const UPDATE_OPEN_SET = "UPDATE_OPEN_SET";
+export const UPDATE_CLOSED_SET = "UPDATE_CLOSED_SET";
+export const RANDOMIZE_WALLS = "RANDOMIZE_WALLS";
 
 export const handleChangeStart = (newPos: Coord): AnyAction => {
   return {
@@ -35,6 +40,13 @@ export const makeWall = (coord: Coord): AnyAction => {
 export const makeEmpty = (coord: Coord): AnyAction => {
   return {
     type: MAKE_EMPTY,
+    payload: coord,
+  };
+};
+
+export const makeVisited = (coord: Coord): AnyAction => {
+  return {
+    type: MAKE_VISITED,
     payload: coord,
   };
 };
@@ -78,5 +90,43 @@ export const progressBFS = (
       coord: coord,
       neighbors: neighbors,
     },
+  };
+};
+
+export const progressAstar = (
+  openSet: Coord[],
+  closedSet: Coord[],
+  newMazeInfo: MazeInfo,
+  end: Coord
+) => {
+  return {
+    type: PROGRESS_ASTAR,
+    payload: {
+      openSet,
+      closedSet,
+      newMazeInfo,
+      end,
+    },
+  };
+};
+
+export const handleUpdateOpenSet = (openSet: Coord[]) => {
+  return {
+    type: UPDATE_OPEN_SET,
+    payload: openSet,
+  };
+};
+
+export const handleUpdateClosedSet = (closedSet: Coord[]) => {
+  return {
+    type: UPDATE_CLOSED_SET,
+    payload: closedSet,
+  };
+};
+
+export const randomizeWalls = () => {
+  return {
+    type: RANDOMIZE_WALLS,
+    payload: null,
   };
 };

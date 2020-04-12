@@ -1,4 +1,4 @@
-import { Maze, MazeInfo, Coord } from "./";
+import { Maze, MazeInfo } from "./";
 import { SpaceTypes } from "../../components/Space/types";
 
 // TODO - Limit Maze Size to 20 x 20
@@ -17,6 +17,9 @@ export const generateMaze = (
           visited: false,
           path: false,
           parent: { x: i, y: j },
+          f: 0,
+          g: 0,
+          h: 0,
         });
       else if (i === x - 1 && j === y - 1 && !clear)
         maze[i].push({
@@ -24,6 +27,9 @@ export const generateMaze = (
           visited: false,
           path: false,
           parent: null,
+          f: 0,
+          g: 0,
+          h: 0,
         });
       else
         maze[i].push({
@@ -31,6 +37,9 @@ export const generateMaze = (
           visited: false,
           path: false,
           parent: null,
+          f: 0,
+          g: 0,
+          h: 0,
         });
     }
   }
@@ -38,7 +47,9 @@ export const generateMaze = (
 };
 
 export const initialState: Maze = {
-  mazeInfo: generateMaze(5, 5),
-  clearMaze: generateMaze(5, 5, true),
+  mazeInfo: generateMaze(20, 20),
+  clearMaze: generateMaze(20, 20, true),
   bfsQueue: [],
+  astarOpenSet: [],
+  astarClosedSet: [],
 };
