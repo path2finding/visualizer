@@ -68,6 +68,7 @@ const populateMaze = (props: Props) => {
           visited={mazeInfo[y][x].visited}
           path={mazeInfo[y][x].path}
           distanceFromStart={mazeInfo[y][x].distanceFromStart}
+          prev={null}
           position={[x, 0, y]}
           key={key}
           canMoveStart={canMoveStart}
