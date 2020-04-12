@@ -10,7 +10,8 @@ import {
   Modal,
   Form,
   TextAreaProps,
-  Message
+  Message,
+  Input,
 } from "semantic-ui-react";
 import { MazeInfo, Maze } from "../../models/maze";
 import { stateContext } from "react-three-fiber";
@@ -45,12 +46,8 @@ export interface MenuProps extends MenuState {
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
   ) => void;
-  saveMaze: (
-    maze: MazeInfo
-  ) => void;
-  loadMaze: (
-    maze: MazeInfo
-  ) => void;
+  saveMaze: (maze: MazeInfo) => void;
+  loadMaze: (maze: MazeInfo) => void;
   toggleMoveStart: (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
@@ -61,7 +58,7 @@ export interface MenuProps extends MenuState {
   ) => void;
 }
 
-export interface _MenuState{
+export interface _MenuState {
   value: string;
   showModal: boolean;
   jsonError: boolean;
@@ -71,30 +68,42 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
   state = {
     value: "",
     showModal: false,
-    jsonError: false
-  }
+    jsonError: false,
+  };
 
   //event: React.FormEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
-  handleChange = (event: React.FormEvent<HTMLTextAreaElement>, data: TextAreaProps): void => {
+  handleChange = (
+    event: React.FormEvent<HTMLTextAreaElement>,
+    data: TextAreaProps
+  ): void => {
     try {
       var json = JSON.parse(data.value as string);
-        this.setState({...this.state, jsonError: false, value: data.value as string})
+      this.setState({
+        ...this.state,
+        jsonError: false,
+        value: data.value as string,
+      });
     } catch (e) {
-      this.setState({...this.state, jsonError: true, value: data.value as string})
+      this.setState({
+        ...this.state,
+        jsonError: true,
+        value: data.value as string,
+      });
     }
-  }
+  };
 
   handleSubmit = () => {
-    const maze: MazeInfo = JSON.parse(this.state.value).then(() => {
-      this.props.loadMaze(maze)
-      this.setState({value:"", showModal:false})
-    }).catch((err: any) => console.log(err))
-    
-  }
+    const maze: MazeInfo = JSON.parse(this.state.value)
+      .then(() => {
+        this.props.loadMaze(maze);
+        this.setState({ value: "", showModal: false });
+      })
+      .catch((err: any) => console.log(err));
+  };
 
   handleClick = () => {
-    this.setState({...this.state, showModal: true})
-  }
+    this.setState({ ...this.state, showModal: true });
+  };
 
   render() {
     const {
@@ -114,7 +123,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
       handleDropdownChange,
       speed,
       currentSpeed,
-      handleDropdownSpeed
+      handleDropdownSpeed,
     } = this.props;
 
     return (
@@ -139,7 +148,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           &nbsp; {/* Essentially just a fancy space */}
           <Dropdown
             onChange={handleDropdownSpeed}
-            text={"Playback speed x"+(currentSpeed) || "Change Speed"}
+            text={"Playback speed x" + currentSpeed || "Change Speed"}
             value={currentSpeed}
             selection
             options={speed}
@@ -147,6 +156,14 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
         </Menu.Item>
 
         <Menu.Item>
+          <div className="col-input">
+            <Input size="small" type="number" label="Cols"></Input>
+          </div>
+          &nbsp; {/* Essentially just a fancy space */}
+          <div className="row-input">
+            <Input size="small" type="number" label="Rows"></Input>
+          </div>
+          &nbsp; {/* Essentially just a fancy space */}
           <Button color="teal" circular onClick={toggleMoveStart}>
             <Icon
               name={canMoveStart ? "circle" : "circle outline"}
@@ -168,42 +185,48 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             <span>Clear Grid</span>
           </Button>
           &nbsp; {/* Essentially just a fancy space */}
-          <Modal trigger={<Button color="blue" circular onClick={() => saveMaze(maze)}> 
-            <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
-            <span>Save Maze</span>
-          </Button>} centered={false}>
+          <Modal
+            trigger={
+              <Button color="blue" circular onClick={() => saveMaze(maze)}>
+                <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
+                <span>Save Maze</span>
+              </Button>
+            }
+            centered={false}
+          >
             <Modal.Header>Copy this text to save your maze</Modal.Header>
-              <Modal.Content>
-                  <Modal.Description>
-                      {JSON.stringify(maze)}
-                  </Modal.Description>
-              </Modal.Content>
-            </Modal>
+            <Modal.Content>
+              <Modal.Description>{JSON.stringify(maze)}</Modal.Description>
+            </Modal.Content>
+          </Modal>
           &nbsp; {/* Essentially just a fancy space */}
-          <Button color="blue" circular onClick={this.handleClick.bind(this)}> 
+          <Button color="blue" circular onClick={this.handleClick.bind(this)}>
             <Icon name="upload" style={{ marginRight: "0.5rem" }} />
             <span>Load Maze</span>
           </Button>
           <Modal centered={false} open={this.state.showModal}>
             <Modal.Header>Paste your maze in the text box</Modal.Header>
-              <Modal.Content>
-                  <Modal.Description>
-                    {/* Trying to hook up this textarea to capture maze info
-                    inspration, https://react.semantic-ui.com/collections/form/#usage-capture-values */ }
-                    <Form onSubmit={this.handleSubmit.bind(this)}>
-                        <label>Maze Text</label>
-                        <Form.TextArea style={{ minHeight:500 , minWidth: 800}} placeholder='Maze Text'
-                        name="name"
-                        value={this.state.value}
-                        onChange = {this.handleChange.bind(this)}/>
-                        <Message visible={this.state.jsonError}>
-                            Enter properly formatted json
-                        </Message>
-                        <Form.Button content='Submit' />
-                    </Form>
-                  </Modal.Description>
-              </Modal.Content>
-            </Modal>
+            <Modal.Content>
+              <Modal.Description>
+                {/* Trying to hook up this textarea to capture maze info
+                    inspration, https://react.semantic-ui.com/collections/form/#usage-capture-values */}
+                <Form onSubmit={this.handleSubmit.bind(this)}>
+                  <label>Maze Text</label>
+                  <Form.TextArea
+                    style={{ minHeight: 500, minWidth: 800 }}
+                    placeholder="Maze Text"
+                    name="name"
+                    value={this.state.value}
+                    onChange={this.handleChange.bind(this)}
+                  />
+                  <Message visible={this.state.jsonError}>
+                    Enter properly formatted json
+                  </Message>
+                  <Form.Button content="Submit" />
+                </Form>
+              </Modal.Description>
+            </Modal.Content>
+          </Modal>
           &nbsp; {/* Essentially just a fancy space */}
           <Dropdown
             onChange={handleDropdownChange}
