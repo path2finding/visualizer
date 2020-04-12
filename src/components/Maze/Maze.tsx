@@ -231,7 +231,7 @@ const heuristic = (a: Coord, b: Coord): number => {
 
 const heuristic_djikstras = (a: Coord, b: Coord): number => {
   // Manhattan distance formula
-  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+  return 0;
 
   // Diagonal Distance Formula
   // return Math.sqrt(Math.pow(a.x - b.y, 2) + Math.pow(a.y - b.y, 2));
