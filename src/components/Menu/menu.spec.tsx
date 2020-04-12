@@ -28,7 +28,7 @@ describe("<Menu />", () => {
       { value: "DFS", text: "DFS" },
     ],
     isPlaying: false,
-    maze: initialState.mazeInfo,
+    maze: initialState,
     handleDropdownChange: jest.fn(),
     onStart: jest.fn(),
     onPause: jest.fn(),
@@ -42,6 +42,7 @@ describe("<Menu />", () => {
     randomizeWalls: jest.fn(),
     speed: MenuInitialState.speed,
     currentSpeed: 1,
+    updateGridSize: jest.fn(),
   };
 
   it("defines the component", () => {
