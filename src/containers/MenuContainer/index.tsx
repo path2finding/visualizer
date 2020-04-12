@@ -28,6 +28,8 @@ const mapStateToProps = (state: RootState) => ({
   isPlaying: state.menu.isPlaying,
   canMoveStart: state.menu.canMoveStart,
   canMoveEnd: state.menu.canMoveEnd,
+  startTime: state.menu.startTime,
+  endTime: state.menu.endTime,
   maze: state.maze,
 });
 

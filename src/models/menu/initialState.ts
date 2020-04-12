@@ -18,4 +18,6 @@ export const initialState: MenuState = {
     { value: 2, text: "x2" },
   ],
   currentSpeed: 1,
+  startTime: undefined,
+  endTime: undefined,
 };

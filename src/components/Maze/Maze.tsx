@@ -335,7 +335,7 @@ const Maze: React.FC<Props> = (props) => {
 
           // If we end up removing the last space we end BFS
           if (queue.length === 0) {
-            handlePauseVisualization();
+            if (isPlaying) handlePauseVisualization();
             return;
           }
         }
@@ -353,7 +353,7 @@ const Maze: React.FC<Props> = (props) => {
           // Update bfsQueue and set curr to visited
           progressBFS(queue, curr, currNeighbors);
         } else {
-          handlePauseVisualization();
+          if (isPlaying) handlePauseVisualization();
           progressBFS([], curr, currNeighbors);
         }
       }
@@ -475,7 +475,7 @@ const Maze: React.FC<Props> = (props) => {
         }
       } else {
         console.log("NO SOLUTION");
-        handlePauseVisualization();
+        if (isPlaying) handlePauseVisualization();
         return;
       }
     }, 100 / currentSpeed);
@@ -556,7 +556,7 @@ const Maze: React.FC<Props> = (props) => {
         }
       } else {
         console.log("NO SOLUTION");
-        handlePauseVisualization();
+        if (isPlaying) handlePauseVisualization();
         return;
       }
     }, 100 / currentSpeed);

@@ -30,16 +30,20 @@ export const menuReducer = (
       return {
         ...state,
         isPlaying: true,
+        startTime: Date.now(),
       };
     case PAUSE_VISUALIZATION:
       return {
         ...state,
         isPlaying: false,
+        endTime: state.endTime ? state.endTime : Date.now(),
       };
     case STOP_VISUALIZATION:
       return {
         ...state,
         isPlaying: false,
+        startTime: undefined,
+        endTime: undefined,
       };
     case TOGGLE_MOVE_START:
       // Check for making `canMoveEnd` false if setting
