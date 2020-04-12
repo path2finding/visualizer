@@ -13,6 +13,7 @@ import {
 import {
   loadMaze,
   handleStopVisualization,
+  updateGridSize,
 } from "../../actions/mazeActions/mazeActions";
 import MenuBar from "../../components/Menu";
 
@@ -42,6 +43,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       toggleMoveEnd,
       loadMaze,
       saveMaze,
+      updateGridSize,
     },
     dispatch
   );

@@ -10,6 +10,7 @@ export const MAKE_EMPTY = "MAKE_EMPTY";
 export const LOAD_MAZE = "LOAD_MAZE";
 export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const PROGRESS_BFS = "PROGRESS_BFS";
+export const UPDATE_GRID_SIZE = "UPDATE_GRID_SIZE";
 
 export const handleChangeStart = (newPos: Coord): AnyAction => {
   return {
@@ -39,10 +40,10 @@ export const makeEmpty = (coord: Coord): AnyAction => {
   };
 };
 
-export const loadMaze = (maze: MazeInfo): AnyAction => {
+export const loadMaze = (mazeInfo: MazeInfo): AnyAction => {
   return {
     type: LOAD_MAZE,
-    payload: { mazeInfo: maze, clearMaze: generateMaze(5, 5, true) } as Maze,
+    payload: { mazeInfo: mazeInfo },
   };
 };
 
@@ -77,6 +78,16 @@ export const progressBFS = (
       queue: queue,
       coord: coord,
       neighbors: neighbors,
+    },
+  };
+};
+
+export const updateGridSize = (cols: number, rows: number) => {
+  return {
+    type: UPDATE_GRID_SIZE,
+    payload: {
+      cols: cols,
+      rows: rows,
     },
   };
 };

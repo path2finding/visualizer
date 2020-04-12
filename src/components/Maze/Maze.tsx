@@ -14,7 +14,7 @@ import { Vector3, MOUSE } from "three";
 import { SpaceTypes } from "../Space/types";
 
 // Helper functions
-const getMazeSize = (mazeInfo: MazeInfo) => {
+export const getMazeSize = (mazeInfo: MazeInfo) => {
   return {
     x: mazeInfo[0].length,
     y: Object.keys(mazeInfo).length,

@@ -11,6 +11,7 @@ import {
   LOAD_MAZE,
   STOP_VISUALIZATION,
   PROGRESS_BFS,
+  UPDATE_GRID_SIZE,
 } from "../../actions/mazeActions/mazeActions";
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
@@ -126,6 +127,11 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
           true
         ),
       };
+    case UPDATE_GRID_SIZE:
+      return {
+        ...state,
+        mazeInfo: generateMaze(payload.rows, payload.cols, true),
+      };
     case CHANGE_START:
       return {
         ...state,
@@ -147,7 +153,10 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
         mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty),
       };
     case LOAD_MAZE:
-      return payload;
+      return {
+        ...state,
+        mazeInfo: payload.mazeInfo,
+      };
     case STOP_VISUALIZATION:
       return {
         ...state,
