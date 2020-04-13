@@ -91,7 +91,7 @@ describe("Maze Action Tests", () => {
       const expectedActions = [
         {
           type: LOAD_MAZE,
-          payload: { mazeInfo: maze, clearMaze: generateMaze(5, 5, true) },
+          payload: { mazeInfo: maze },
         },
       ];
       reduxStore.dispatch(loadMaze(maze));

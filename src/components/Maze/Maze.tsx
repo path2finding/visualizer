@@ -15,7 +15,7 @@ import { Vector3 } from "three";
 import { SpaceTypes } from "../Space/types";
 
 // Helper functions
-const getMazeSize = (mazeInfo: MazeInfo) => {
+export const getMazeSize = (mazeInfo: MazeInfo) => {
   return {
     x: mazeInfo[0].length,
     y: Object.keys(mazeInfo).length,
@@ -65,7 +65,7 @@ const populateMaze = (props: Props, openSet: Coord[], closedSet: Coord[]) => {
           type={mazeInfo[y][x].type}
           visited={mazeInfo[y][x].visited}
           path={mazeInfo[y][x].path}
-          position={[x, 0, y]}
+          position={{ x, z: 0, y }}
           inOpenSet={includesCoord(openSet, { x, y } as Coord)}
           inClosedSet={includesCoord(closedSet, { x, y } as Coord)}
           key={key}
@@ -293,7 +293,13 @@ const Maze: React.FC<Props> = (props) => {
     // handleUpdateOpenSet,
     // handleUpdateClosedSet,
   } = props;
-  const { mazeInfo, bfsQueue, astarOpenSet, astarClosedSet, dfsStack } = props.maze;
+  const {
+    mazeInfo,
+    bfsQueue,
+    astarOpenSet,
+    astarClosedSet,
+    dfsStack,
+  } = props.maze;
 
   // console.log(selectedAlgo);
   if (selectedAlgo === "BFS") {
@@ -341,13 +347,12 @@ const Maze: React.FC<Props> = (props) => {
         }
       }
     }, 100 / currentSpeed);
-  } 
-  else if (selectedAlgo === "DFS") {
-    console.log('dfs selected!');
+  } else if (selectedAlgo === "DFS") {
+    console.log("dfs selected!");
     let stack = dfsStack;
 
     if (isPlaying && stack.length === 0) {
-      console.log('init dfs');
+      console.log("init dfs");
 
       const start = getStart(mazeInfo);
 
@@ -359,12 +364,9 @@ const Maze: React.FC<Props> = (props) => {
     setTimeout(function () {
       if (stack.length > 0 && isPlaying) {
         console.log("Going through DFS", stack);
-
-
       }
-    })
-  }
-  else if (selectedAlgo === "A*") {
+    });
+  } else if (selectedAlgo === "A*") {
     let openSet = astarOpenSet;
     let closedSet = astarClosedSet;
 
@@ -444,87 +446,87 @@ const Maze: React.FC<Props> = (props) => {
         return;
       }
     }, 100 / currentSpeed);
-    }
-    else if (selectedAlgo === "Djikstras") {
-      let openSet = astarOpenSet;
-      let closedSet = astarClosedSet;
-  
-      // Run at the beginning
-      if (isPlaying && openSet.length === 0) {
-        console.log("Init Astar");
-        const start = getStart(mazeInfo);
-  
-        if (start) {
-          openSet.push(start);
-        }
+  } else if (selectedAlgo === "Djikstras") {
+    let openSet = astarOpenSet;
+    let closedSet = astarClosedSet;
+
+    // Run at the beginning
+    if (isPlaying && openSet.length === 0) {
+      console.log("Init Astar");
+      const start = getStart(mazeInfo);
+
+      if (start) {
+        openSet.push(start);
       }
-  
-      setTimeout(function () {
-        if (isPlaying && openSet.length > 0) {
-          console.log("Running Astar");
-          let newMazeInfo = mazeInfo;
-          let current = getLowestFScore(openSet, mazeInfo);
-          const end = getEnd(mazeInfo) as Coord;
-  
-          // Check if finished
-          if (includesCoord(closedSet, end)) {
-            // Find the Path
-            console.log("DONE");
-            handlePauseVisualization();
-            // openSet = [];
-            return;
-          }
-  
-          // Add current to closedSet
-          if (!includesCoord(closedSet, current)) {
-            closedSet.push(current);
-          }
-  
-          // Remove current from openSet
-          if (includesCoord(openSet, current)) {
-            openSet = removeFromArr(openSet, current);
-          }
-  
-          let neighbors = getValidNeighbors(current, mazeInfo);
-  
-          if (!Array.isArray(neighbors)) {
-            neighbors = [neighbors];
-          }
-  
-          if (Array.isArray(neighbors)) {
-            neighbors.forEach((neighbor) => {
-              if (!includesCoord(closedSet, neighbor)) {
-                let tentG =
-                  mazeInfo[current.y][current.x].g + heuristic_djikstras(neighbor, current);
-  
-                if (includesCoord(openSet, neighbor)) {
-                  if (tentG < mazeInfo[neighbor.y][neighbor.x].g) {
-                    newMazeInfo[neighbor.y][neighbor.x].g = tentG;
-                  }
-                } else {
-                  newMazeInfo[neighbor.y][neighbor.x].g = tentG;
-                  openSet.push(neighbor);
-                }
-  
-                let neighborSpace = newMazeInfo[neighbor.y][neighbor.x];
-  
-                if (end) {
-                  neighborSpace.h = heuristic_djikstras(neighbor, end);
-                }
-                neighborSpace.f = neighborSpace.g + neighborSpace.h;
-                console.log("Setting parent of ", neighbor, current);
-                neighborSpace.parent = current;
-              }
-            });
-  
-            progressAstar(openSet, closedSet, newMazeInfo, end);
-          }
-        } else {
-          console.log("NO SOLUTION");
+    }
+
+    setTimeout(function () {
+      if (isPlaying && openSet.length > 0) {
+        console.log("Running Astar");
+        let newMazeInfo = mazeInfo;
+        let current = getLowestFScore(openSet, mazeInfo);
+        const end = getEnd(mazeInfo) as Coord;
+
+        // Check if finished
+        if (includesCoord(closedSet, end)) {
+          // Find the Path
+          console.log("DONE");
           handlePauseVisualization();
+          // openSet = [];
           return;
         }
-      }, 100 / currentSpeed);
+
+        // Add current to closedSet
+        if (!includesCoord(closedSet, current)) {
+          closedSet.push(current);
+        }
+
+        // Remove current from openSet
+        if (includesCoord(openSet, current)) {
+          openSet = removeFromArr(openSet, current);
+        }
+
+        let neighbors = getValidNeighbors(current, mazeInfo);
+
+        if (!Array.isArray(neighbors)) {
+          neighbors = [neighbors];
+        }
+
+        if (Array.isArray(neighbors)) {
+          neighbors.forEach((neighbor) => {
+            if (!includesCoord(closedSet, neighbor)) {
+              let tentG =
+                mazeInfo[current.y][current.x].g +
+                heuristic_djikstras(neighbor, current);
+
+              if (includesCoord(openSet, neighbor)) {
+                if (tentG < mazeInfo[neighbor.y][neighbor.x].g) {
+                  newMazeInfo[neighbor.y][neighbor.x].g = tentG;
+                }
+              } else {
+                newMazeInfo[neighbor.y][neighbor.x].g = tentG;
+                openSet.push(neighbor);
+              }
+
+              let neighborSpace = newMazeInfo[neighbor.y][neighbor.x];
+
+              if (end) {
+                neighborSpace.h = heuristic_djikstras(neighbor, end);
+              }
+              neighborSpace.f = neighborSpace.g + neighborSpace.h;
+              console.log("Setting parent of ", neighbor, current);
+              neighborSpace.parent = current;
+            }
+          });
+
+          progressAstar(openSet, closedSet, newMazeInfo, end);
+        }
+      } else {
+        console.log("NO SOLUTION");
+        handlePauseVisualization();
+        return;
+      }
+    }, 100 / currentSpeed);
   }
 
   return (
