@@ -11,6 +11,7 @@ import {
   LOAD_MAZE,
   STOP_VISUALIZATION,
   PROGRESS_BFS,
+  PROGRESS_DFS,
   PROGRESS_ASTAR,
   MAKE_VISITED,
   RANDOMIZE_WALLS,
@@ -229,6 +230,16 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
           payload.neighbors
         ),
         bfsQueue: payload.queue,
+      };
+    case PROGRESS_DFS:
+      return {
+        ...state,
+        mazeInfo: updateSpaceProp(
+          payload.coord,
+          state.mazeInfo,
+          payload.neighbors
+        ),
+        dfsStack: payload.stack,
       };
     case PROGRESS_ASTAR:
       // let updatedMaze = updateAstar(payload.coord, state, payload.neighbors);
