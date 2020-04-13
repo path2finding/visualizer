@@ -11,6 +11,8 @@ import {
   Modal,
   Form,
   TextAreaProps,
+  Sidebar,
+  Segment
 } from "semantic-ui-react";
 import { MazeInfo, Space } from "../../models/maze";
 import * as yup from "yup";
@@ -60,6 +62,7 @@ export interface _MenuState {
   showModal: boolean;
   hasError: boolean;
   errorMessage: string;
+  sidebar: boolean;
 }
 
 export const yupSpaceSchema = yup.object({
@@ -77,6 +80,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
     showModal: false,
     hasError: false,
     errorMessage: "",
+    sidebar: false
   };
 
   checkDynamicKeys = (keys: any[]): boolean => {
@@ -205,6 +209,10 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
     return al as string;
   };
 
+  setVisible = (b: boolean) => {
+    this.setState({ ...this.state, sidebar: b });
+  }
+
   render() {
     const {
       canMoveStart,
@@ -330,22 +338,28 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             options={algorithms}
           />
           &nbsp; {/* Essentially just a fancy space */}
-          <Modal
-            trigger={
-              <Button color="blue" circular>
-                <Icon name="info" />
-              </Button>
-            }
-            centered={false}
-            closeIcon
+          <Button color="blue" circular onClick = {() => this.setVisible(true)}>
+            <Icon name="info" />
+          </Button>
+          <Sidebar
+            as={Menu}
+            animation='push'
+            overlay
+            icon='labeled'
+            direction='right'
+            onHide={() => this.setVisible(false)}
+            vertical
+            visible={this.state.sidebar}
+            width='very wide'
           >
-            <Modal.Header>{selectedAlgo} Algorithm Info</Modal.Header>
-            <Modal.Content>
-              <Modal.Description>
-                <ReactMarkdown source={this.getInfo()} />
-              </Modal.Description>
-            </Modal.Content>
-          </Modal>
+          <Segment textAlign='left' padded='very'>
+           <ReactMarkdown source={this.getInfo()} text-color = "white" />
+          </Segment>
+          
+          </Sidebar>
+          
+            
+            
         </Menu.Item>
       </Menu>
     );
