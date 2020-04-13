@@ -11,6 +11,7 @@ import {
   LOAD_MAZE,
   STOP_VISUALIZATION,
   PROGRESS_BFS,
+  UPDATE_GRID_SIZE,
   PROGRESS_ASTAR,
   MAKE_VISITED,
   RANDOMIZE_WALLS,
@@ -158,6 +159,11 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
           true
         ),
       };
+    case UPDATE_GRID_SIZE:
+      return {
+        ...state,
+        mazeInfo: generateMaze(payload.rows, payload.cols, true),
+      };
     case CHANGE_START:
       return {
         ...state,
@@ -189,7 +195,10 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
         mazeInfo: randomizeWalls(state.mazeInfo),
       };
     case LOAD_MAZE:
-      return payload;
+      return {
+        ...state,
+        mazeInfo: payload.mazeInfo,
+      };
     case STOP_VISUALIZATION:
       return {
         ...state,

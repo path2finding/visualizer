@@ -11,6 +11,7 @@ export const MAKE_VISITED = "MAKE_VISITED";
 export const LOAD_MAZE = "LOAD_MAZE";
 export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const PROGRESS_BFS = "PROGRESS_BFS";
+export const UPDATE_GRID_SIZE = "UPDATE_GRID_SIZE";
 export const PROGRESS_ASTAR = "PROGRESS_ASTAR";
 export const UPDATE_OPEN_SET = "UPDATE_OPEN_SET";
 export const UPDATE_CLOSED_SET = "UPDATE_CLOSED_SET";
@@ -51,10 +52,10 @@ export const makeVisited = (coord: Coord): AnyAction => {
   };
 };
 
-export const loadMaze = (maze: MazeInfo): AnyAction => {
+export const loadMaze = (mazeInfo: MazeInfo): AnyAction => {
   return {
     type: LOAD_MAZE,
-    payload: { mazeInfo: maze, clearMaze: generateMaze(5, 5, true) } as Maze,
+    payload: { mazeInfo: mazeInfo },
   };
 };
 
@@ -93,6 +94,15 @@ export const progressBFS = (
   };
 };
 
+export const updateGridSize = (cols: number, rows: number) => {
+  return {
+    type: UPDATE_GRID_SIZE,
+    payload: {
+      cols: cols,
+      rows: rows,
+    },
+  };
+};
 export const progressAstar = (
   openSet: Coord[],
   closedSet: Coord[],

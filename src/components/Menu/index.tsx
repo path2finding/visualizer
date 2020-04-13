@@ -11,14 +11,17 @@ import {
   Form,
   TextAreaProps,
   Message,
+  Input,
 } from "semantic-ui-react";
-import { MazeInfo } from "../../models/maze";
-//import { loadMaze } from "../../actions/mazeActions/mazeActions";
+import { MazeInfo, Maze } from "../../models/maze";
+import { getMazeSize } from "../Maze/Maze";
+
+import "./Menu.scss";
 
 export interface MenuProps extends MenuState {
   canMoveStart: boolean;
   canMoveEnd: boolean;
-  maze: MazeInfo;
+  maze: Maze;
   handleDropdownChange: (
     _: React.SyntheticEvent<HTMLElement, Event>,
     { value }: DropdownProps
@@ -53,6 +56,7 @@ export interface MenuProps extends MenuState {
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
   ) => void;
+  updateGridSize: (cols: number, rows: number) => void;
   randomizeWalls: () => void;
 }
 
@@ -60,6 +64,8 @@ export interface _MenuState {
   value: string;
   showModal: boolean;
   jsonError: boolean;
+  mazeCols: number;
+  mazeRows: number;
 }
 
 class MenuBar extends React.Component<MenuProps, _MenuState> {
@@ -67,6 +73,8 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
     value: "",
     showModal: false,
     jsonError: false,
+    mazeCols: getMazeSize(this.props.maze.mazeInfo).x,
+    mazeRows: getMazeSize(this.props.maze.mazeInfo).y,
   };
 
   //event: React.FormEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
@@ -91,12 +99,13 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
   };
 
   handleSubmit = () => {
-    const maze: MazeInfo = JSON.parse(this.state.value)
-      .then(() => {
-        this.props.loadMaze(maze);
-        this.setState({ value: "", showModal: false });
-      })
-      .catch((err: any) => console.log(err));
+    try {
+      const maze: MazeInfo = JSON.parse(this.state.value);
+      this.props.loadMaze(maze);
+      this.setState({ value: "", showModal: false });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   handleClick = () => {
@@ -123,7 +132,9 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
       speed,
       currentSpeed,
       handleDropdownSpeed,
+      updateGridSize,
     } = this.props;
+    const { mazeCols, mazeRows } = this.state;
 
     return (
       <Menu borderless>
@@ -148,25 +159,72 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
 
         <Menu.Item style={{ marginRight: "auto" }}>
           <Dropdown
+            className="speed-dropdown"
             disabled={isPlaying}
             onChange={handleDropdownSpeed}
             text={"Playback speed x" + currentSpeed || "Change Speed"}
             value={currentSpeed}
             selection
             options={speed}
+            fluid={true}
           />
           &nbsp; {/* Essentially just a fancy space */}
           <Dropdown
+            className="algo-dropdown"
             disabled={isPlaying}
             onChange={handleDropdownChange}
             text={(selectedAlgo as string) || "Choose an Algorithm"}
             value={selectedAlgo}
             selection
             options={algorithms}
+            fluid={true}
           />
         </Menu.Item>
 
         <Menu.Item>
+          <Dropdown
+            className="grid-size-dropdown"
+            button
+            disabled={isPlaying}
+            text="Change Grid Size"
+            fluid={true}
+            color="pink"
+          >
+            <Dropdown.Menu>
+              <Input
+                onClick={(e: any) => e.stopPropagation()}
+                size="small"
+                type="number"
+                label="Cols"
+                fluid={true}
+                value={mazeCols}
+                onChange={(e) => this.setState({ mazeCols: +e.target.value })}
+                onBlur={() =>
+                  mazeCols < 20 ? this.setState({ mazeCols: 20 }) : null
+                }
+              />
+              <Input
+                onClick={(e: any) => e.stopPropagation()}
+                size="small"
+                type="number"
+                label="Rows"
+                fluid={true}
+                value={mazeRows}
+                onChange={(e) => this.setState({ mazeRows: +e.target.value })}
+                onBlur={() =>
+                  mazeRows < 20 ? this.setState({ mazeRows: 20 }) : null
+                }
+              />
+              <Button
+                color="yellow"
+                circular
+                onClick={() => updateGridSize(mazeCols, mazeRows)}
+              >
+                <span>Update Size</span>
+              </Button>
+            </Dropdown.Menu>
+          </Dropdown>
+          &nbsp; {/* Essentially just a fancy space */}
           <Button
             color="teal"
             circular
@@ -213,6 +271,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
             <span>Clear Grid</span>
           </Button>
+          &nbsp; {/* Essentially just a fancy space */}
         </Menu.Item>
         <Menu.Item>
           <Modal
@@ -220,7 +279,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               <Button
                 color="blue"
                 circular
-                onClick={() => saveMaze(maze)}
+                onClick={() => saveMaze(maze.mazeInfo)}
                 disabled={isPlaying}
               >
                 <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
@@ -231,7 +290,18 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           >
             <Modal.Header>Copy this text to save your maze</Modal.Header>
             <Modal.Content>
-              <Modal.Description>{JSON.stringify(maze)}</Modal.Description>
+              <button
+                style={{ marginBottom: "10px" }}
+                onClick={() =>
+                  navigator.clipboard.writeText(JSON.stringify(maze.mazeInfo))
+                }
+              >
+                <Icon name="copy outline" style={{ marginRight: "0.5rem" }} />
+                Copy
+              </button>
+              <Modal.Description>
+                {JSON.stringify(maze.mazeInfo)}
+              </Modal.Description>
             </Modal.Content>
           </Modal>
           &nbsp; {/* Essentially just a fancy space */}
