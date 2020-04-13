@@ -65,7 +65,7 @@ const populateMaze = (props: Props, openSet: Coord[], closedSet: Coord[]) => {
           type={mazeInfo[y][x].type}
           visited={mazeInfo[y][x].visited}
           path={mazeInfo[y][x].path}
-          position={[x, 0, y]}
+          position={{ x, z: 0, y }}
           inOpenSet={includesCoord(openSet, { x, y } as Coord)}
           inClosedSet={includesCoord(closedSet, { x, y } as Coord)}
           key={key}
