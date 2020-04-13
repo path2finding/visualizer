@@ -12,6 +12,7 @@ export const LOAD_MAZE = "LOAD_MAZE";
 export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const PROGRESS_BFS = "PROGRESS_BFS";
 export const UPDATE_GRID_SIZE = "UPDATE_GRID_SIZE";
+export const PROGRESS_DFS = "PROGRESS_DFS";
 export const PROGRESS_ASTAR = "PROGRESS_ASTAR";
 export const UPDATE_OPEN_SET = "UPDATE_OPEN_SET";
 export const UPDATE_CLOSED_SET = "UPDATE_CLOSED_SET";
@@ -95,14 +96,14 @@ export const progressBFS = (
 };
 
 export const progressDFS = (
-  queue: Coord[],
+  stack: Coord[],
   coord: Coord,
   neighbors: Coord[] | Coord
 ) => {
   return {
-    type: PROGRESS_BFS,
+    type: PROGRESS_DFS,
     payload: {
-      queue: queue,
+      stack: stack,
       coord: coord,
       neighbors: neighbors,
     },

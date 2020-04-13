@@ -265,18 +265,28 @@ interface Props {
   handleChangeEnd: (newPos: Coord) => void;
   makeWall: (coord: Coord) => void;
   makeEmpty: (coord: Coord) => void;
+
   makeVisited: (coord: Coord) => void;
+
   progressBFS: (
     queue: Coord[],
     coord: Coord,
     neighbors: Coord[] | Coord
   ) => void;
+
+  progressDFS: (
+    stack: Coord[],
+    coord: Coord,
+    neighbors: Coord[] | Coord
+  ) => void;
+
   progressAstar: (
     openSet: Coord[],
     closedSet: Coord[],
     newMazeInfo: MazeInfo,
     end: Coord
   ) => void;
+
   handlePauseVisualization: () => void;
   // handleUpdateOpenSet: (openSet: Coord[]) => void;
   // handleUpdateClosedSet: (closedSet: Coord[]) => void;
@@ -288,6 +298,7 @@ const Maze: React.FC<Props> = (props) => {
     selectedAlgo,
     currentSpeed,
     progressBFS,
+    progressDFS,
     progressAstar,
     handlePauseVisualization,
     // handleUpdateOpenSet,
@@ -348,16 +359,15 @@ const Maze: React.FC<Props> = (props) => {
       }
     }, 100 / currentSpeed);
   } else if (selectedAlgo === "DFS") {
-    console.log("dfs selected!");
     let stack = dfsStack;
-
+    // This gets run once at the start
     if (isPlaying && stack.length === 0) {
       console.log("init dfs");
 
       const start = getStart(mazeInfo);
 
       if (start) {
-        // stack.push(start);
+        stack.push(start);
       }
     }
 
