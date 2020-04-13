@@ -34,4 +34,5 @@ export interface Maze {
   bfsQueue: Coord[];
   astarOpenSet: Coord[];
   astarClosedSet: Coord[];
+  dfsStack: [];
 }

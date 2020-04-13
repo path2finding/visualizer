@@ -65,7 +65,7 @@ const populateMaze = (props: Props, openSet: Coord[], closedSet: Coord[]) => {
           type={mazeInfo[y][x].type}
           visited={mazeInfo[y][x].visited}
           path={mazeInfo[y][x].path}
-          position={[x, 0, y]}
+          position={{ x, z: 0, y }}
           inOpenSet={includesCoord(openSet, { x, y } as Coord)}
           inClosedSet={includesCoord(closedSet, { x, y } as Coord)}
           key={key}
@@ -293,7 +293,13 @@ const Maze: React.FC<Props> = (props) => {
     // handleUpdateOpenSet,
     // handleUpdateClosedSet,
   } = props;
-  const { mazeInfo, bfsQueue, astarOpenSet, astarClosedSet } = props.maze;
+  const {
+    mazeInfo,
+    bfsQueue,
+    astarOpenSet,
+    astarClosedSet,
+    dfsStack,
+  } = props.maze;
 
   // console.log(selectedAlgo);
   if (selectedAlgo === "BFS") {
@@ -341,6 +347,25 @@ const Maze: React.FC<Props> = (props) => {
         }
       }
     }, 100 / currentSpeed);
+  } else if (selectedAlgo === "DFS") {
+    console.log("dfs selected!");
+    let stack = dfsStack;
+
+    if (isPlaying && stack.length === 0) {
+      console.log("init dfs");
+
+      const start = getStart(mazeInfo);
+
+      if (start) {
+        // stack.push(start);
+      }
+    }
+
+    setTimeout(function () {
+      if (stack.length > 0 && isPlaying) {
+        console.log("Going through DFS", stack);
+      }
+    });
   } else if (selectedAlgo === "A*") {
     let openSet = astarOpenSet;
     let closedSet = astarClosedSet;

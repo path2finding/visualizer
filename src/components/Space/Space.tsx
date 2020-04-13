@@ -5,7 +5,7 @@ import { SpaceTypes } from "./types";
 
 interface Props {
   type: SpaceTypes;
-  position: number[];
+  position: { x: number; z: number; y: number };
   key: number;
   visited: Boolean;
   path: Boolean;
@@ -39,7 +39,7 @@ const Space: React.FC<Props> = (props) => {
 
   return (
     <mesh
-      position={props.position}
+      position={[props.position.x, props.position.z, props.position.y]}
       onClick={(e) => spaceClicked()}
       onPointerOver={(e) => setHover(true)}
       onPointerOut={(e) => setHover(false)}

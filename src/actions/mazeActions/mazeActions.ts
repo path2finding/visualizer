@@ -94,6 +94,21 @@ export const progressBFS = (
   };
 };
 
+export const progressDFS = (
+  queue: Coord[],
+  coord: Coord,
+  neighbors: Coord[] | Coord
+) => {
+  return {
+    type: PROGRESS_BFS,
+    payload: {
+      queue: queue,
+      coord: coord,
+      neighbors: neighbors,
+    },
+  };
+};
+
 export const updateGridSize = (cols: number, rows: number) => {
   return {
     type: UPDATE_GRID_SIZE,

@@ -35,6 +35,7 @@ export const handleStartVisualization = (
   _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   data: ButtonProps
 ) => {
+  console.log('starting visualization');
   return {
     type: START_VISUALIZATION,
     payload: null,
