@@ -362,8 +362,7 @@ const Maze: React.FC<Props> = (props) => {
     let stack = dfsStack;
     // This gets run once at the start
     if (isPlaying && stack.length === 0) {
-      console.log("init dfs");
-
+      console.log("Init DFS");
       const start = getStart(mazeInfo);
 
       if (start) {
@@ -372,10 +371,34 @@ const Maze: React.FC<Props> = (props) => {
     }
 
     setTimeout(function () {
-      if (stack.length > 0 && isPlaying) {
-        console.log("Going through DFS", stack);
+      // peek the last index in the stack
+      var curr = stack[stack.length - 1];
+      // if the stack is not empty
+      if (curr && isPlaying) {
+        // get neighbors
+        const currNeighbors = getValidNeighbors(curr, mazeInfo);
+
+        // If currNeighbors is an array then we keep going.
+        // If it's a single object then we've found our end
+        if (Array.isArray(currNeighbors)) {
+          // if a cell has neighbors, push them to the stack
+          if (currNeighbors.length > 0) {
+            currNeighbors.forEach((n) => {
+              stack.push(n);
+            });
+          }
+          // if no neighbors, pop to backtrack to other cells
+          else {
+            var tempcurr = stack.pop();
+            if (tempcurr) curr = tempcurr;
+          }
+          progressDFS(stack, curr, currNeighbors);
+        } else {
+          handlePauseVisualization();
+          progressDFS([], curr, currNeighbors);
+        }
       }
-    });
+    }, 100 / currentSpeed);
   } else if (selectedAlgo === "A*") {
     let openSet = astarOpenSet;
     let closedSet = astarClosedSet;

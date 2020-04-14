@@ -11,11 +11,11 @@ import {
   LOAD_MAZE,
   STOP_VISUALIZATION,
   PROGRESS_BFS,
-  UPDATE_GRID_SIZE,
   PROGRESS_DFS,
   PROGRESS_ASTAR,
   MAKE_VISITED,
   RANDOMIZE_WALLS,
+  UPDATE_GRID_SIZE,
 } from "../../actions/mazeActions/mazeActions";
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
