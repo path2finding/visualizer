@@ -194,58 +194,6 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           </Menu.Item>
 
           <Menu.Item>
-            <Button
-              color="teal"
-              circular
-              onClick={toggleMoveStart}
-              disabled={isPlaying}
-            >
-              <Icon
-                name={canMoveStart ? "circle" : "circle outline"}
-                style={{ marginRight: "0.5rem" }}
-              />
-              <span>Move Start Point</span>
-            </Button>
-            &nbsp; {/* Essentially just a fancy space */}
-            <Button
-              color="purple"
-              circular
-              onClick={toggleMoveEnd}
-              disabled={isPlaying}
-            >
-              <Icon
-                name={canMoveEnd ? "circle" : "circle outline"}
-                style={{ marginRight: "0.5rem" }}
-              />
-              <span>Move End Point</span>
-            </Button>
-          </Menu.Item>
-
-          <Menu.Item style={{ marginRight: "auto" }}>
-            <Dropdown
-              className="speed-dropdown"
-              disabled={isPlaying}
-              onChange={handleDropdownSpeed}
-              text={"Playback speed x" + currentSpeed || "Change Speed"}
-              value={currentSpeed}
-              selection
-              options={speed}
-              fluid={true}
-            />
-            &nbsp; {/* Essentially just a fancy space */}
-            <Dropdown
-              className="algo-dropdown"
-              disabled={isPlaying}
-              onChange={handleDropdownChange}
-              text={(selectedAlgo as string) || "Choose an Algorithm"}
-              value={selectedAlgo}
-              selection
-              options={algorithms}
-              fluid={true}
-            />
-          </Menu.Item>
-
-          <Menu.Item>
             <Dropdown
               className="grid-size-dropdown"
               button
@@ -290,7 +238,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             </Dropdown>
             &nbsp; {/* Essentially just a fancy space */}
             <Button
-              color="teal"
+              color="purple"
               circular
               onClick={toggleMoveStart}
               disabled={isPlaying}
@@ -299,84 +247,21 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
                 name={canMoveStart ? "circle" : "circle outline"}
                 style={{ marginRight: "0.5rem" }}
               />
+              <span>Move Start Point</span>
+            </Button>
+            &nbsp;
+            <Button
+              color="teal"
+              circular
+              onClick={toggleMoveEnd}
+              disabled={isPlaying}
+            >
+              <Icon
+                name={canMoveStart ? "circle" : "circle outline"}
+                style={{ marginRight: "0.5rem" }}
+              />
               <span>Move End Point</span>
             </Button>
-          </Menu.Item>
-          <Menu.Item>
-            <Button
-              color="orange"
-              circular
-              onClick={randomizeWalls}
-              disabled={isPlaying}
-            >
-              <Icon name="table" style={{ marginRight: "0.5rem" }} />
-              <span>Randomize Walls</span>
-            </Button>
-            &nbsp; {/* Essentially just a fancy space */}
-            <Button
-              color="orange"
-              circular
-              onClick={onClear}
-              disabled={isPlaying}
-            >
-              <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
-              <span>Clear Grid</span>
-            </Button>
-          </Menu.Item>
-
-          <Menu.Item>
-            <Modal
-              trigger={
-                <Button
-                  color="blue"
-                  circular
-                  onClick={() => saveMaze(maze.mazeInfo)}
-                  disabled={isPlaying}
-                >
-                  <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
-                  <span>Save Maze</span>
-                </Button>
-              }
-              centered={false}
-            >
-              <Modal.Header>Copy this text to save your maze</Modal.Header>
-              <Modal.Content>
-                <Modal.Description>{JSON.stringify(maze)}</Modal.Description>
-              </Modal.Content>
-            </Modal>
-            &nbsp; {/* Essentially just a fancy space */}
-            <Button
-              color="blue"
-              circular
-              onClick={this.handleClick.bind(this)}
-              disabled={isPlaying}
-            >
-              <Icon name="upload" style={{ marginRight: "0.5rem" }} />
-              <span>Load Maze</span>
-            </Button>
-            <Modal centered={false} open={this.state.showModal}>
-              <Modal.Header>Paste your maze in the text box</Modal.Header>
-              <Modal.Content>
-                <Modal.Description>
-                  {/* Trying to hook up this textarea to capture maze info
-                    inspration, https://react.semantic-ui.com/collections/form/#usage-capture-values */}
-                  <Form onSubmit={this.handleSubmit.bind(this)}>
-                    <label>Maze Text</label>
-                    <Form.TextArea
-                      style={{ minHeight: 500, minWidth: 800 }}
-                      placeholder="Maze Text"
-                      name="name"
-                      value={this.state.value}
-                      onChange={this.handleChange.bind(this)}
-                    />
-                    <Message visible={this.state.jsonError}>
-                      Enter properly formatted json
-                    </Message>
-                    <Form.Button content="Submit" />
-                  </Form>
-                </Modal.Description>
-              </Modal.Content>
-            </Modal>
           </Menu.Item>
 
           <Menu.Item>
@@ -482,6 +367,21 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               alt="endpoint tag"
             />
             End Point
+          </Label>
+          <Label image>
+            <img src={process.env.PUBLIC_URL + "./wall.png"} alt="wall tag" />
+            Wall
+          </Label>
+          <Label image>
+            <img
+              src={process.env.PUBLIC_URL + "./visted.png"}
+              alt="visited tag"
+            />
+            Visited Point
+          </Label>
+          <Label image>
+            <img src={process.env.PUBLIC_URL + "./lava.png"} alt="path tag" />
+            Path
           </Label>
         </Message>
       </div>
