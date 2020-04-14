@@ -13,4 +13,6 @@ export interface MenuState {
   canMoveEnd: boolean;
   speed: DropdownItemProps[];
   currentSpeed: number;
+  startTime: Date | number | undefined;
+  endTime: Date | number | undefined;
 }

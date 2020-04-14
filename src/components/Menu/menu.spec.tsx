@@ -41,6 +41,8 @@ describe("<Menu />", () => {
     handleDropdownSpeed: jest.fn(),
     randomizeWalls: jest.fn(),
     speed: MenuInitialState.speed,
+    startTime: undefined,
+    endTime: undefined,
     currentSpeed: 1,
     updateGridSize: jest.fn(),
   };
