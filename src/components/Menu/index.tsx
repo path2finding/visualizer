@@ -257,7 +257,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               disabled={isPlaying}
             >
               <Icon
-                name={canMoveStart ? "circle" : "circle outline"}
+                name={canMoveEnd ? "circle" : "circle outline"}
                 style={{ marginRight: "0.5rem" }}
               />
               <span>Move End Point</span>

@@ -312,12 +312,11 @@ const Maze: React.FC<Props> = (props) => {
     dfsStack,
   } = props.maze;
 
-  // console.log(selectedAlgo);
   if (selectedAlgo === "BFS") {
     let queue = bfsQueue;
     // This gets run once at the start
     if (isPlaying && queue.length === 0) {
-      console.log("Init BFS");
+      // console.log("Init BFS");
       const start = getStart(mazeInfo);
 
       if (start) {
@@ -327,7 +326,7 @@ const Maze: React.FC<Props> = (props) => {
 
     setTimeout(function () {
       if (queue.length > 0 && isPlaying) {
-        console.log("Going through BFS", queue);
+        // console.log("Going through BFS", queue);
 
         // Removes any queued spaces that were previously visited
         while (mazeInfo[queue[0].y][queue[0].x].visited) {
@@ -362,7 +361,7 @@ const Maze: React.FC<Props> = (props) => {
     let stack = dfsStack;
     // This gets run once at the start
     if (isPlaying && stack.length === 0) {
-      console.log("Init DFS");
+      // console.log("Init DFS");
       const start = getStart(mazeInfo);
 
       if (start) {
@@ -405,7 +404,7 @@ const Maze: React.FC<Props> = (props) => {
 
     // Run at the beginning
     if (isPlaying && openSet.length === 0) {
-      console.log("Init Astar");
+      // console.log("Init Astar");
       const start = getStart(mazeInfo);
 
       if (start) {
@@ -415,7 +414,7 @@ const Maze: React.FC<Props> = (props) => {
 
     setTimeout(function () {
       if (isPlaying && openSet.length > 0) {
-        console.log("Running Astar");
+        // console.log("Running Astar");
         let newMazeInfo = mazeInfo;
         let current = getLowestFScore(openSet, mazeInfo);
         const end = getEnd(mazeInfo) as Coord;
@@ -423,7 +422,6 @@ const Maze: React.FC<Props> = (props) => {
         // Check if finished
         if (includesCoord(closedSet, end)) {
           // Find the Path
-          console.log("DONE");
           handlePauseVisualization();
           // openSet = [];
           return;
@@ -466,7 +464,6 @@ const Maze: React.FC<Props> = (props) => {
                 neighborSpace.h = heuristic(neighbor, end);
               }
               neighborSpace.f = neighborSpace.g + neighborSpace.h;
-              console.log("Setting parent of ", neighbor, current);
               neighborSpace.parent = current;
             }
           });
@@ -474,7 +471,6 @@ const Maze: React.FC<Props> = (props) => {
           progressAstar(openSet, closedSet, newMazeInfo, end);
         }
       } else {
-        console.log("NO SOLUTION");
         if (isPlaying) handlePauseVisualization();
         return;
       }
@@ -485,7 +481,7 @@ const Maze: React.FC<Props> = (props) => {
 
     // Run at the beginning
     if (isPlaying && openSet.length === 0) {
-      console.log("Init Djikstras");
+      // console.log("Init Djikstras");
       const start = getStart(mazeInfo);
 
       if (start) {
@@ -495,7 +491,7 @@ const Maze: React.FC<Props> = (props) => {
 
     setTimeout(function () {
       if (isPlaying && openSet.length > 0) {
-        console.log("Running Djikstras");
+        // console.log("Running Djikstras");
         let newMazeInfo = mazeInfo;
         let current = getLowestFScore(openSet, mazeInfo);
         const end = getEnd(mazeInfo) as Coord;
@@ -503,7 +499,6 @@ const Maze: React.FC<Props> = (props) => {
         // Check if finished
         if (includesCoord(closedSet, end)) {
           // Find the Path
-          console.log("DONE");
           handlePauseVisualization();
           // openSet = [];
           return;
@@ -547,7 +542,6 @@ const Maze: React.FC<Props> = (props) => {
                 neighborSpace.h = heuristic_djikstras(neighbor, end);
               }
               neighborSpace.f = neighborSpace.g + neighborSpace.h;
-              console.log("Setting parent of ", neighbor, current);
               neighborSpace.parent = current;
             }
           });
@@ -555,7 +549,6 @@ const Maze: React.FC<Props> = (props) => {
           progressAstar(openSet, closedSet, newMazeInfo, end);
         }
       } else {
-        console.log("NO SOLUTION");
         if (isPlaying) handlePauseVisualization();
         return;
       }

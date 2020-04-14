@@ -8,8 +8,6 @@ export const generateMaze = (
   clear?: boolean
 ): MazeInfo => {
   let maze: MazeInfo = {};
-  if(x > 20) x = 20;
-  if(y > 20) y = 20;
 
   for (let i = 0; i < x; i++) {
     maze[i] = [];
@@ -55,5 +53,5 @@ export const initialState: Maze = {
   bfsQueue: [],
   astarOpenSet: [],
   astarClosedSet: [],
-  dfsStack: []
+  dfsStack: [],
 };
