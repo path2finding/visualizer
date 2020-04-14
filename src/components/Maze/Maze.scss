@@ -1,5 +1,4 @@
 .Maze {
-  height: 90vh !important;
+  height: calc(100vh - 119px) !important;
   // Tempt style for debugging
-  border: 1px solid orangered;
 }

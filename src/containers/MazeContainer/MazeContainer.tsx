@@ -8,14 +8,23 @@ import {
   handleChangeEnd,
   makeWall,
   makeEmpty,
-  setPath,
-  setVisited,
+  makeVisited,
+  progressBFS,
+  progressDFS,
+  progressAstar,
+  handleStopVisualization,
+  handlePauseVisualization,
+  // handleUpdateOpenSet,
+  // handleUpdateClosedSet,
 } from "../../actions/mazeActions/mazeActions";
 
 const mapStateToProps = (state: RootState) => ({
   maze: state.maze,
   canMoveStart: state.menu.canMoveStart,
   canMoveEnd: state.menu.canMoveEnd,
+  isPlaying: state.menu.isPlaying,
+  selectedAlgo: state.menu.selectedAlgo,
+  currentSpeed: state.menu.currentSpeed,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
@@ -25,8 +34,14 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       handleChangeEnd,
       makeWall,
       makeEmpty,
-      setPath,
-      setVisited,
+      makeVisited,
+      progressBFS,
+      progressDFS,
+      progressAstar,
+      handleStopVisualization,
+      handlePauseVisualization,
+      // handleUpdateOpenSet,
+      // handleUpdateClosedSet,
     },
     dispatch
   );

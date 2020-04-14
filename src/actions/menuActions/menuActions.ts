@@ -9,6 +9,7 @@ export const TOGGLE_MOVE_START = "TOGGLE_MOVE_START";
 export const TOGGLE_MOVE_END = "TOGGLE_MOVE_END";
 export const LOAD_MAZE = "LOAD_MAZE";
 export const SAVE_MAZE = "SAVE_MAZE";
+export const CHANGE_SPEED = "CHANGE_SPEED";
 
 export const handleDropdownChange = (
   _: React.SyntheticEvent<HTMLElement, Event>,
@@ -20,10 +21,21 @@ export const handleDropdownChange = (
   };
 };
 
+export const handleDropdownSpeed = (
+  _: React.SyntheticEvent<HTMLElement, Event>,
+  data: DropdownProps
+) => {
+  return {
+    type: CHANGE_SPEED,
+    payload: data.value,
+  };
+};
+
 export const handleStartVisualization = (
   _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   data: ButtonProps
 ) => {
+  console.log('starting visualization');
   return {
     type: START_VISUALIZATION,
     payload: null,

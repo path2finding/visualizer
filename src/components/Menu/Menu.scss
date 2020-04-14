@@ -1,0 +1,27 @@
+.speed-dropdown {
+  width: 160px !important;
+}
+
+.algo-dropdown {
+  width: 100px !important;
+}
+
+.grid-size-dropdown {
+  width: 164px !important;
+  text-align: center !important;
+  background-color: #e03997 !important;
+  color: white !important;
+
+  i {
+    display: none;
+  }
+
+  .input {
+    width: 120px !important;
+  }
+
+  button {
+    margin: 10px !important;
+    width: calc(100% - 20px);
+  }
+}

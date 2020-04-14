@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { SpaceTypes } from "../../components/Space/types";
 import { initialState, generateMaze } from "../../models/maze/initialState";
 import { Maze, MazeInfo, Coord, Space } from "../../models/maze/index";
@@ -8,15 +9,14 @@ import {
   MAKE_WALL,
   MAKE_EMPTY,
   LOAD_MAZE,
-  SET_PATH,
-  SET_VISITED,
   STOP_VISUALIZATION,
+  PROGRESS_BFS,
+  PROGRESS_DFS,
+  PROGRESS_ASTAR,
+  MAKE_VISITED,
+  RANDOMIZE_WALLS,
+  UPDATE_GRID_SIZE,
 } from "../../actions/mazeActions/mazeActions";
-
-enum SpaceProps {
-  path = "path",
-  visited = "visited",
-}
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
   return {
@@ -55,12 +55,20 @@ const changeSpaceType = (
   let newMaze = mazeInfo;
 
   // If the space we are updating is the start of end point we need to get rid of the old one
-  if (spaceType === SpaceTypes.start || spaceType === SpaceTypes.end) {
+  if (spaceType === SpaceTypes.end) {
     const oldCoord = getCoord(mazeInfo, spaceType);
 
     if (oldCoord) {
       newMaze[oldCoord.y][oldCoord.x].type = SpaceTypes.empty;
     }
+  } else if (spaceType === SpaceTypes.start) {
+    const oldCoord = getCoord(mazeInfo, spaceType);
+
+    if (oldCoord) {
+      newMaze[oldCoord.y][oldCoord.x].type = SpaceTypes.empty;
+      newMaze[oldCoord.y][oldCoord.x].parent = null;
+    }
+    newMaze[coord.y][coord.x].parent = coord;
   }
 
   newMaze[coord.y][coord.x].type = spaceType;
@@ -68,14 +76,72 @@ const changeSpaceType = (
   return newMaze;
 };
 
+const makeVisited = (coord: Coord, state: Maze) => {
+  const { mazeInfo } = state;
+  const newMaze = mazeInfo;
+  newMaze[coord.y][coord.x].visited = true;
+  return newMaze;
+};
+
+const showShortestPath = (endPoint: Coord, mazeInfo: MazeInfo) => {
+  console.log("PATH");
+  let curr = endPoint;
+
+  while (
+    !_.isEqual(mazeInfo[curr.y][curr.x].parent, { x: curr.x, y: curr.y })
+  ) {
+    const currSpace = mazeInfo[curr.y][curr.x];
+    currSpace.path = true;
+
+    if (currSpace.parent) {
+      curr = currSpace.parent;
+    }
+  }
+};
+
 const updateSpaceProp = (
   coord: Coord,
   mazeInfo: MazeInfo,
-  prop: SpaceProps
+  neighbors: Coord[] | Coord | null
 ) => {
   let newMaze = mazeInfo;
 
-  newMaze[coord.y][coord.x][prop] = !mazeInfo[coord.y][coord.x][prop];
+  // Sets the current space to visited
+  newMaze[coord.y][coord.x].visited = true;
+
+  if (neighbors) {
+    // If neighbors is an array we keep going with BFS
+    // Else if neighbors is a single object we've found the end and can show the path
+    if (Array.isArray(neighbors)) {
+      // Sets the parent of each neighbor
+      neighbors.forEach((neighbor) => {
+        newMaze[neighbor.y][neighbor.x].parent = coord;
+      });
+    } else {
+      // Sets the parent of the end point
+      newMaze[neighbors.y][neighbors.x].parent = coord;
+
+      showShortestPath(neighbors, newMaze);
+    }
+  }
+
+  return newMaze;
+};
+
+const randomizeWalls = (mazeInfo: MazeInfo) => {
+  let newMaze: MazeInfo = mazeInfo;
+
+  newMaze = Object.keys(newMaze).map((key: string) => {
+    return newMaze[+key].map((space: Space) => {
+      if (space.type === SpaceTypes.start || space.type === SpaceTypes.end) {
+        return space;
+      }
+      return {
+        ...space,
+        type: Math.random() < 0.3 ? SpaceTypes.wall : SpaceTypes.empty,
+      } as Space;
+    });
+  });
 
   return newMaze;
 };
@@ -85,11 +151,19 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
     case CLEAR_GRID:
       return {
         ...state,
+        astarOpenSet: [],
+        astarClosedSet: [],
+        bfsQueue: [],
         mazeInfo: generateMaze(
           Object.keys(state.mazeInfo).length,
           state.mazeInfo[0].length,
           true
         ),
+      };
+    case UPDATE_GRID_SIZE:
+      return {
+        ...state,
+        mazeInfo: generateMaze(payload.rows, payload.cols, true),
       };
     case CHANGE_START:
       return {
@@ -111,34 +185,109 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
         ...state,
         mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty),
       };
-    case LOAD_MAZE:
-      console.log(payload);
-      return payload;
-    case SET_PATH:
+    case MAKE_VISITED:
       return {
         ...state,
-        mazeInfo: updateSpaceProp(payload, state.mazeInfo, SpaceProps.path),
+        mazeInfo: makeVisited(payload, state),
       };
-    case SET_VISITED:
+    case RANDOMIZE_WALLS:
       return {
         ...state,
-        mazeInfo: updateSpaceProp(payload, state.mazeInfo, SpaceProps.visited),
+        mazeInfo: randomizeWalls(state.mazeInfo),
+      };
+    case LOAD_MAZE:
+      return {
+        ...state,
+        mazeInfo: payload.mazeInfo,
       };
     case STOP_VISUALIZATION:
       return {
         ...state,
-        mazeInfo: Object.keys(state.mazeInfo).map((value: string) => {
-          return state.mazeInfo[+value].map(
-            (value: Space): Space => {
-              return {
-                ...value,
-                path: false,
-              } as Space;
-            }
-          );
-        }) as MazeInfo,
+        astarOpenSet: [],
+        astarClosedSet: [],
+        bfsQueue: [],
+        mazeInfo: Object.keys(state.mazeInfo).map(
+          (value: string, i: number) => {
+            return state.mazeInfo[+value].map(
+              (value: Space, j: number): Space => {
+                return {
+                  type:
+                    value.type === SpaceTypes.start ||
+                    value.type === SpaceTypes.end ||
+                    value.type === SpaceTypes.wall
+                      ? value.type
+                      : SpaceTypes.empty,
+                  path: false,
+                  visited: false,
+                  parent:
+                    value.type === SpaceTypes.start ? { x: i, y: j } : null,
+                  f: 0,
+                  g: 0,
+                  h: 0,
+                } as Space;
+              }
+            );
+          }
+        ) as MazeInfo,
+      };
+    case PROGRESS_BFS:
+      return {
+        ...state,
+        mazeInfo: updateSpaceProp(
+          payload.coord,
+          state.mazeInfo,
+          payload.neighbors
+        ),
+        bfsQueue: payload.queue,
+      };
+    case PROGRESS_DFS:
+      return {
+        ...state,
+        mazeInfo: updateSpaceProp(
+          payload.coord,
+          state.mazeInfo,
+          payload.neighbors
+        ),
+        dfsStack: payload.stack,
+      };
+    case PROGRESS_ASTAR:
+      // let updatedMaze = updateAstar(payload.coord, state, payload.neighbors);
+      let newMazeInfo = payload.newMazeInfo;
+      let openSet = payload.openSet;
+      let closedSet = payload.closedSet;
+      // console.log(includesCoord(payload.openSet, payload.end));
+
+      if (includesCoord(payload.openSet, payload.end)) {
+        console.log("HERE");
+        closedSet.push(payload.end);
+        // _.once(() => showShortestPath(payload.end, newMazeInfo));
+        showShortestPath(payload.end, newMazeInfo);
+        openSet = [];
+      }
+
+      payload.closedSet.forEach((coord: Coord) => {
+        newMazeInfo[coord.y][coord.x].visited = true;
+      });
+
+      return {
+        ...state,
+        mazeInfo: newMazeInfo,
+        astarOpenSet: openSet,
+        astarClosedSet: payload.closedSet,
       };
     default:
       return state;
   }
+};
+
+const includesCoord = (arr: Coord[], coord: Coord) => {
+  let containsElem = false;
+
+  arr.forEach((elem) => {
+    if (_.isEqual(elem, coord)) {
+      containsElem = true;
+    }
+  });
+
+  return containsElem;
 };
