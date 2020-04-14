@@ -265,18 +265,28 @@ interface Props {
   handleChangeEnd: (newPos: Coord) => void;
   makeWall: (coord: Coord) => void;
   makeEmpty: (coord: Coord) => void;
+
   makeVisited: (coord: Coord) => void;
+
   progressBFS: (
     queue: Coord[],
     coord: Coord,
     neighbors: Coord[] | Coord
   ) => void;
+
+  progressDFS: (
+    stack: Coord[],
+    coord: Coord,
+    neighbors: Coord[] | Coord
+  ) => void;
+
   progressAstar: (
     openSet: Coord[],
     closedSet: Coord[],
     newMazeInfo: MazeInfo,
     end: Coord
   ) => void;
+
   handlePauseVisualization: () => void;
   // handleUpdateOpenSet: (openSet: Coord[]) => void;
   // handleUpdateClosedSet: (closedSet: Coord[]) => void;
@@ -288,6 +298,7 @@ const Maze: React.FC<Props> = (props) => {
     selectedAlgo,
     currentSpeed,
     progressBFS,
+    progressDFS,
     progressAstar,
     handlePauseVisualization,
     // handleUpdateOpenSet,
@@ -348,24 +359,46 @@ const Maze: React.FC<Props> = (props) => {
       }
     }, 100 / currentSpeed);
   } else if (selectedAlgo === "DFS") {
-    console.log("dfs selected!");
     let stack = dfsStack;
-
+    // This gets run once at the start
     if (isPlaying && stack.length === 0) {
-      console.log("init dfs");
-
+      console.log("Init DFS");
       const start = getStart(mazeInfo);
 
       if (start) {
-        // stack.push(start);
+        stack.push(start);
       }
     }
 
     setTimeout(function () {
-      if (stack.length > 0 && isPlaying) {
-        console.log("Going through DFS", stack);
+      // peek the last index in the stack
+      var curr = stack[stack.length - 1];
+      // if the stack is not empty
+      if (curr && isPlaying) {
+        // get neighbors
+        const currNeighbors = getValidNeighbors(curr, mazeInfo);
+
+        // If currNeighbors is an array then we keep going.
+        // If it's a single object then we've found our end
+        if (Array.isArray(currNeighbors)) {
+          // if a cell has neighbors, push them to the stack
+          if (currNeighbors.length > 0) {
+            currNeighbors.forEach((n) => {
+              stack.push(n);
+            });
+          }
+          // if no neighbors, pop to backtrack to other cells
+          else {
+            var tempcurr = stack.pop();
+            if (tempcurr) curr = tempcurr;
+          }
+          progressDFS(stack, curr, currNeighbors);
+        } else {
+          handlePauseVisualization();
+          progressDFS([], curr, currNeighbors);
+        }
       }
-    });
+    }, 100 / currentSpeed);
   } else if (selectedAlgo === "A*") {
     let openSet = astarOpenSet;
     let closedSet = astarClosedSet;
@@ -452,7 +485,7 @@ const Maze: React.FC<Props> = (props) => {
 
     // Run at the beginning
     if (isPlaying && openSet.length === 0) {
-      console.log("Init Astar");
+      console.log("Init Djikstras");
       const start = getStart(mazeInfo);
 
       if (start) {
@@ -462,7 +495,7 @@ const Maze: React.FC<Props> = (props) => {
 
     setTimeout(function () {
       if (isPlaying && openSet.length > 0) {
-        console.log("Running Astar");
+        console.log("Running Djikstras");
         let newMazeInfo = mazeInfo;
         let current = getLowestFScore(openSet, mazeInfo);
         const end = getEnd(mazeInfo) as Coord;
