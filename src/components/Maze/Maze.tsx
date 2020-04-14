@@ -485,7 +485,7 @@ const Maze: React.FC<Props> = (props) => {
 
     // Run at the beginning
     if (isPlaying && openSet.length === 0) {
-      console.log("Init Astar");
+      console.log("Init Djikstras");
       const start = getStart(mazeInfo);
 
       if (start) {
@@ -495,7 +495,7 @@ const Maze: React.FC<Props> = (props) => {
 
     setTimeout(function () {
       if (isPlaying && openSet.length > 0) {
-        console.log("Running Astar");
+        console.log("Running Djikstras");
         let newMazeInfo = mazeInfo;
         let current = getLowestFScore(openSet, mazeInfo);
         const end = getEnd(mazeInfo) as Coord;
