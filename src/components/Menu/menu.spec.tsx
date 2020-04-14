@@ -62,7 +62,7 @@ describe("<Menu />", () => {
     expect(wrapper.find(SemanticMenu.Item)).toBeDefined();
     expect(wrapper.find(SemanticMenu.Item)).toHaveLength(5);
     expect(wrapper.find(SemanticIcon)).toBeDefined();
-    expect(wrapper.find(SemanticIcon)).toHaveLength(11);
+    expect(wrapper.find(SemanticIcon)).toHaveLength(12);
   });
 
   it("Dropdown renders", () => {
@@ -71,7 +71,7 @@ describe("<Menu />", () => {
 
   it("Buttons render", () => {
     expect(wrapper.find(SemanticButton)).toBeDefined();
-    expect(wrapper.find(SemanticButton)).toHaveLength(9);
+    expect(wrapper.find(SemanticButton)).toHaveLength(10);
   });
 
   it("Play button calls action", () => {
