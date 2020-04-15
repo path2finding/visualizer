@@ -65,7 +65,7 @@ export interface MenuProps extends MenuState {
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
   ) => void;
-  updateGridSize: (cols: number, rows: number) => void;
+  handleChangeGridSize: (cols: number, rows: number) => void;
   randomizeWalls: () => void;
 }
 
@@ -254,7 +254,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
       speed,
       currentSpeed,
       handleDropdownSpeed,
-      updateGridSize,
+      handleChangeGridSize,
       startTime,
       endTime,
     } = this.props;
@@ -306,7 +306,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             <Dropdown
               disabled={isPlaying}
               onChange={handleDropdownChange}
-              text={(selectedAlgo as string) || "Choose an Algorithm"}
+              text={selectedAlgo || "Choose an Algorithm"}
               value={selectedAlgo}
               selection
               options={algorithms}
@@ -350,7 +350,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
                 <Button
                   color="yellow"
                   circular
-                  onClick={() => updateGridSize(mazeCols, mazeRows)}
+                  onClick={() => handleChangeGridSize(mazeCols, mazeRows)}
                 >
                   <span>Update Size</span>
                 </Button>

@@ -46,7 +46,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       toggleMoveEnd,
       loadMaze,
       saveMaze,
-      updateGridSize: handleChangeGridSize,
+      handleChangeGridSize,
     },
     dispatch
   );

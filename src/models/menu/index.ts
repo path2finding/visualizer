@@ -1,12 +1,7 @@
 import { DropdownItemProps } from "semantic-ui-react";
 
 export interface MenuState {
-  selectedAlgo:
-    | string
-    | number
-    | boolean
-    | (string | number | boolean)[]
-    | undefined;
+  selectedAlgo: string;
   algorithms: DropdownItemProps[];
   isPlaying: boolean;
   canMoveStart: boolean;

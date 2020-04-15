@@ -1,7 +1,6 @@
 import { Maze, MazeInfo } from "./";
 import { SpaceTypes } from "../../components/Space/types";
 
-// TODO - Limit Maze Size to 20 x 20
 export const generateMaze = (
   x: number,
   y: number,
