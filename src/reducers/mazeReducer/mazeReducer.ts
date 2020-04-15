@@ -2,6 +2,8 @@ import _ from "lodash";
 import { SpaceTypes } from "../../components/Space/types";
 import { initialState, generateMaze } from "../../models/maze/initialState";
 import { Maze, MazeInfo, Coord, Space } from "../../models/maze/index";
+import { includesCoord } from "../../components/Maze/algorithms/";
+import { getCoord } from "../../components/Maze/algorithms/";
 import {
   CLEAR_GRID,
   STOP_VISUALIZATION,
@@ -18,43 +20,6 @@ import {
   PROGRESS_DFS,
   PROGRESS_ASTAR,
 } from "../../actions/mazeActions/mazeActions";
-
-const getMazeSize = (mazeInfo: MazeInfo): Coord => {
-  return {
-    x: mazeInfo[0].length,
-    y: Object.keys(mazeInfo).length,
-  };
-};
-
-// Gets the coordinate of either the start or end points
-const getCoord = (
-  mazeInfo: MazeInfo,
-  spaceType: SpaceTypes.start | SpaceTypes.end
-) => {
-  const mazeSize = getMazeSize(mazeInfo);
-
-  for (let y = 0; y < mazeSize.y; y++) {
-    for (let x = 0; x < mazeSize.x; x++) {
-      if (mazeInfo[y][x].type === spaceType) {
-        return { x, y };
-      }
-    }
-  }
-  return null;
-};
-
-// Checks if a coordinate is in a array of coordinates
-const includesCoord = (arr: Coord[], coord: Coord) => {
-  let containsElem = false;
-
-  arr.forEach((elem) => {
-    if (_.isEqual(elem, coord)) {
-      containsElem = true;
-    }
-  });
-
-  return containsElem;
-};
 
 const changeSpaceType = (
   state: Maze,

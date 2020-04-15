@@ -5,7 +5,6 @@ import MenuBarContainer from "../containers/MenuContainer";
 import Maze from "../containers/MazeContainer/MazeContainer";
 
 import "./index.scss";
-import { Message } from "semantic-ui-react";
 
 class App extends React.Component {
   render() {

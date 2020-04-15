@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
 import Wall from "./Wall";
 import Empty from "./Empty";
-import { Vector3 } from "three";
-import { SpaceTypes } from "./types";
+// import { Vector3 } from "three";
+// import { SpaceTypes } from "./types";
 
 interface GenericSpace {
   type: string;
@@ -12,7 +12,8 @@ interface GenericSpace {
   inClosedSet: boolean;
 }
 
-// <<<<<<< Updated upstream
+// Code for texturing spaces in the open and closed sets if we want to pursue that
+// in the future
 // const GenericSpace: React.FC<GenericSpace> = (props) => {
 //   if (
 //     props.inOpenSet &&
@@ -53,14 +54,17 @@ interface GenericSpace {
 //       </Suspense>
 //     );
 //   }
-// =======
-const GenericSpace: React.FC<GenericSpace> = props => {
-  return(
+
+const GenericSpace: React.FC<GenericSpace> = (props) => {
+  return (
     <Suspense fallback="none">
-      {props.type === 'empty' ? <Empty visited={props.visited} path={props.path} /> : <Wall type={props.type} />}
+      {props.type === "empty" ? (
+        <Empty visited={props.visited} path={props.path} />
+      ) : (
+        <Wall type={props.type} />
+      )}
     </Suspense>
   );
-// >>>>>>> Stashed changes
 };
 
 export default GenericSpace;

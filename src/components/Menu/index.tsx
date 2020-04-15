@@ -216,15 +216,15 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
 
   getInfo = () => {
     let al = this.props.selectedAlgo;
-    if (al == null) {
+    if (al === null) {
       al = "Select an algorithm";
-    } else if (al == "A*") {
+    } else if (al === "A*") {
       al = algos.a;
-    } else if (al == "BFS") {
+    } else if (al === "BFS") {
       al = algos.BFS;
-    } else if (al == "DFS") {
+    } else if (al === "DFS") {
       al = algos.DFS;
-    } else if (al == "Djikstras") {
+    } else if (al === "Djikstras") {
       al = algos.Djikstras;
     }
     return al as string;
