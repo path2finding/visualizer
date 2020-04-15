@@ -1,27 +1,51 @@
+import { AnyAction } from "redux";
 import { DropdownProps, ButtonProps } from "semantic-ui-react";
 import { MazeInfo } from "../../models/maze";
 
 export const CHANGE_ALGO = "CHANGE_ALGO";
 export const START_VISUALIZATION = "START_VISUALIZATION";
 export const PAUSE_VISUALIZATION = "PAUSE_VISUALIZATION";
+export const STOP_VISUALIZATION = "STOP_VISUALIZATION";
 export const CLEAR_GRID = "CLEAR_GRID";
 export const TOGGLE_MOVE_START = "TOGGLE_MOVE_START";
 export const TOGGLE_MOVE_END = "TOGGLE_MOVE_END";
 export const LOAD_MAZE = "LOAD_MAZE";
 export const SAVE_MAZE = "SAVE_MAZE";
 export const CHANGE_SPEED = "CHANGE_SPEED";
+export const RANDOMIZE_WALLS = "RANDOMIZE_WALLS";
+export const UPDATE_GRID_SIZE = "UPDATE_GRID_SIZE";
 
-export const handleDropdownChange = (
-  _: React.SyntheticEvent<HTMLElement, Event>,
-  data: DropdownProps
+export const handleStartVisualization = (
+  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  data: ButtonProps
 ) => {
   return {
-    type: CHANGE_ALGO,
-    payload: data.value,
+    type: START_VISUALIZATION,
+    payload: null,
   };
 };
 
-export const handleDropdownSpeed = (
+export const handlePauseVisualization = (
+  _?: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  data?: ButtonProps
+) => {
+  return {
+    type: PAUSE_VISUALIZATION,
+    payload: null,
+  };
+};
+
+export const handleStopVisualization = (
+  _?: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  data?: ButtonProps
+) => {
+  return {
+    type: STOP_VISUALIZATION,
+    payload: null,
+  };
+};
+
+export const handleChangeSpeed = (
   _: React.SyntheticEvent<HTMLElement, Event>,
   data: DropdownProps
 ) => {
@@ -31,34 +55,23 @@ export const handleDropdownSpeed = (
   };
 };
 
-export const handleStartVisualization = (
-  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  data: ButtonProps
+export const handleChangeAlgo = (
+  _: React.SyntheticEvent<HTMLElement, Event>,
+  data: DropdownProps
 ) => {
-  console.log('starting visualization');
   return {
-    type: START_VISUALIZATION,
-    payload: null,
+    type: CHANGE_ALGO,
+    payload: data.value,
   };
 };
 
-export const handlePauseVisualization = (
-  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  data: ButtonProps
-) => {
+export const handleChangeGridSize = (cols: number, rows: number) => {
   return {
-    type: PAUSE_VISUALIZATION,
-    payload: null,
-  };
-};
-
-export const handleClearGrid = (
-  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  data: ButtonProps
-) => {
-  return {
-    type: CLEAR_GRID,
-    payload: null,
+    type: UPDATE_GRID_SIZE,
+    payload: {
+      cols: cols,
+      rows: rows,
+    },
   };
 };
 
@@ -82,10 +95,19 @@ export const toggleMoveEnd = (
   };
 };
 
-export const loadMaze = (maze: MazeInfo) => {
-  console.log("load maze");
+export const randomizeWalls = () => {
   return {
-    type: LOAD_MAZE,
+    type: RANDOMIZE_WALLS,
+    payload: null,
+  };
+};
+
+export const handleClearGrid = (
+  _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  data: ButtonProps
+) => {
+  return {
+    type: CLEAR_GRID,
     payload: null,
   };
 };
@@ -96,5 +118,12 @@ export const saveMaze = (maze: MazeInfo) => {
   return {
     type: SAVE_MAZE,
     payload: JSON.stringify(maze),
+  };
+};
+
+export const loadMaze = (mazeInfo: MazeInfo): AnyAction => {
+  return {
+    type: LOAD_MAZE,
+    payload: { mazeInfo: mazeInfo },
   };
 };

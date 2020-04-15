@@ -2,19 +2,24 @@ import configureStore from "redux-mock-store";
 import {
   handleStartVisualization,
   handlePauseVisualization,
+  handleStopVisualization,
   handleClearGrid,
   START_VISUALIZATION,
   PAUSE_VISUALIZATION,
+  STOP_VISUALIZATION,
   CLEAR_GRID,
   CHANGE_ALGO,
   TOGGLE_MOVE_START,
   TOGGLE_MOVE_END,
   toggleMoveStart,
   toggleMoveEnd,
-  handleDropdownChange,
+  handleChangeAlgo,
+  loadMaze,
+  LOAD_MAZE,
 } from "./menuActions";
 import { ButtonProps, DropdownProps } from "semantic-ui-react";
 import { initialState } from "../../models/menu/initialState";
+import { generateMaze } from "../../models/maze/initialState";
 
 describe("Navbar Action Tests", () => {
   const mockStore = configureStore();
@@ -60,6 +65,47 @@ describe("Navbar Action Tests", () => {
     });
   });
 
+  describe("Stop Visualization Test", () => {
+    it("Should dispatch correct action", () => {
+      const expectedActions = [
+        {
+          type: STOP_VISUALIZATION,
+          payload: null,
+        },
+      ];
+
+      reduxStore.dispatch(
+        handleStopVisualization(
+          { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
+          {} as ButtonProps
+        )
+      );
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  // TODO: change speed
+
+  describe("Change Algorithm Test", () => {
+    it("Should dispatch correct action", () => {
+      const expectedActions = [
+        {
+          type: CHANGE_ALGO,
+          payload: undefined,
+        },
+      ];
+      reduxStore.dispatch(
+        handleChangeAlgo(
+          { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
+          {} as DropdownProps
+        )
+      );
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  // TODO: change grid size
+
   describe("Move Start Point Test", () => {
     it("Should modify redux store", () => {
       const expectedActions = [
@@ -96,6 +142,8 @@ describe("Navbar Action Tests", () => {
     });
   });
 
+  // TODO: randomize walls
+
   describe("Clear Grid Test", () => {
     it("Should dispatch correct action", () => {
       const expectedActions = [
@@ -114,20 +162,19 @@ describe("Navbar Action Tests", () => {
     });
   });
 
-  describe("Change Algorithm Test", () => {
-    it("Should dispatch correct action", () => {
+  // TODO: save maze
+
+  describe("Load Maze Test", () => {
+    it("Should call LOAD_MAZE action", () => {
+      const maze = generateMaze(5, 5, false);
+
       const expectedActions = [
         {
-          type: CHANGE_ALGO,
-          payload: undefined,
+          type: LOAD_MAZE,
+          payload: { mazeInfo: maze },
         },
       ];
-      reduxStore.dispatch(
-        handleDropdownChange(
-          { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
-          {} as DropdownProps
-        )
-      );
+      reduxStore.dispatch(loadMaze(maze));
       expect(reduxStore.getActions()).toEqual(expectedActions);
     });
   });

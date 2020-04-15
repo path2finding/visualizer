@@ -2,12 +2,13 @@ import {
   CHANGE_ALGO,
   START_VISUALIZATION,
   PAUSE_VISUALIZATION,
+  STOP_VISUALIZATION,
   TOGGLE_MOVE_START,
   TOGGLE_MOVE_END,
   LOAD_MAZE,
   CHANGE_SPEED,
 } from "../../actions/menuActions/menuActions";
-import { STOP_VISUALIZATION } from "../../actions/mazeActions/mazeActions";
+// import { STOP_VISUALIZATION } from "../../actions/mazeActions/mazeActions";
 import { MenuState } from "../../models/menu";
 import { initialState } from "../../models/menu/initialState";
 

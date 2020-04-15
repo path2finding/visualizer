@@ -4,16 +4,19 @@ import Maze from "../../components/Maze/Maze";
 import { RootState } from "typesafe-actions";
 
 import {
+  handleStopVisualization,
+  handlePauseVisualization,
+} from "../../actions/menuActions/menuActions";
+
+import {
   handleChangeStart,
   handleChangeEnd,
   makeWall,
   makeEmpty,
-  makeVisited,
+  // makeVisited,
   progressBFS,
   progressDFS,
   progressAstar,
-  handleStopVisualization,
-  handlePauseVisualization,
   // handleUpdateOpenSet,
   // handleUpdateClosedSet,
 } from "../../actions/mazeActions/mazeActions";
@@ -34,7 +37,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       handleChangeEnd,
       makeWall,
       makeEmpty,
-      makeVisited,
+      // makeVisited,
       progressBFS,
       progressDFS,
       progressAstar,

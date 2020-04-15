@@ -4,17 +4,12 @@ import {
   handleChangeEnd,
   makeWall,
   makeEmpty,
-  loadMaze,
   CHANGE_START,
   CHANGE_END,
   MAKE_WALL,
   MAKE_EMPTY,
-  LOAD_MAZE,
-  STOP_VISUALIZATION,
-  handleStopVisualization,
 } from "./mazeActions";
-import { initialState, generateMaze } from "../../models/maze/initialState";
-import { ButtonProps } from "semantic-ui-react";
+import { initialState } from "../../models/maze/initialState";
 
 describe("Maze Action Tests", () => {
   const mockStore = configureStore();
@@ -84,37 +79,9 @@ describe("Maze Action Tests", () => {
     });
   });
 
-  describe("Load Maze Test", () => {
-    it("Should call LOAD_MAZE action", () => {
-      const maze = generateMaze(5, 5, false);
+  // TODO: progressBFS
 
-      const expectedActions = [
-        {
-          type: LOAD_MAZE,
-          payload: { mazeInfo: maze },
-        },
-      ];
-      reduxStore.dispatch(loadMaze(maze));
-      expect(reduxStore.getActions()).toEqual(expectedActions);
-    });
-  });
+  // TODO: progressDFS
 
-  describe("Stop Visualization Test", () => {
-    it("Should dispatch correct action", () => {
-      const expectedActions = [
-        {
-          type: STOP_VISUALIZATION,
-          payload: null,
-        },
-      ];
-
-      reduxStore.dispatch(
-        handleStopVisualization(
-          { target: {} } as React.MouseEvent<HTMLButtonElement, MouseEvent>,
-          {} as ButtonProps
-        )
-      );
-      expect(reduxStore.getActions()).toEqual(expectedActions);
-    });
-  });
+  // TODO: progressASTAR
 });

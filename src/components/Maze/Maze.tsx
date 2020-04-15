@@ -266,7 +266,7 @@ interface Props {
   makeWall: (coord: Coord) => void;
   makeEmpty: (coord: Coord) => void;
 
-  makeVisited: (coord: Coord) => void;
+  // makeVisited: (coord: Coord) => void;
 
   progressBFS: (
     queue: Coord[],

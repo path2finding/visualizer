@@ -1,21 +1,20 @@
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import {
-  handleDropdownChange,
-  handleDropdownSpeed,
+  handleChangeAlgo,
+  handleChangeSpeed,
   handleStartVisualization,
+  handleStopVisualization,
   handleClearGrid,
   handlePauseVisualization,
   toggleMoveStart,
   toggleMoveEnd,
   saveMaze,
-} from "../../actions/menuActions/menuActions";
-import {
   loadMaze,
-  handleStopVisualization,
-  updateGridSize,
   randomizeWalls,
-} from "../../actions/mazeActions/mazeActions";
+  handleChangeGridSize,
+} from "../../actions/menuActions/menuActions";
+
 import MenuBar from "../../components/Menu";
 
 import { RootState } from "typesafe-actions";
@@ -36,8 +35,8 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators(
     {
-      handleDropdownChange,
-      handleDropdownSpeed,
+      handleDropdownChange: handleChangeAlgo,
+      handleDropdownSpeed: handleChangeSpeed,
       randomizeWalls,
       onStart: handleStartVisualization,
       onPause: handlePauseVisualization,
@@ -47,7 +46,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       toggleMoveEnd,
       loadMaze,
       saveMaze,
-      updateGridSize,
+      updateGridSize: handleChangeGridSize,
     },
     dispatch
   );

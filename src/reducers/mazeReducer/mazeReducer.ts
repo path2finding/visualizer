@@ -2,20 +2,22 @@ import _ from "lodash";
 import { SpaceTypes } from "../../components/Space/types";
 import { initialState, generateMaze } from "../../models/maze/initialState";
 import { Maze, MazeInfo, Coord, Space } from "../../models/maze/index";
-import { CLEAR_GRID } from "../../actions/menuActions/menuActions";
+import {
+  CLEAR_GRID,
+  START_VISUALIZATION,
+  STOP_VISUALIZATION,
+  RANDOMIZE_WALLS,
+  UPDATE_GRID_SIZE,
+  LOAD_MAZE,
+} from "../../actions/menuActions/menuActions";
 import {
   CHANGE_START,
   CHANGE_END,
   MAKE_WALL,
   MAKE_EMPTY,
-  LOAD_MAZE,
-  STOP_VISUALIZATION,
   PROGRESS_BFS,
   PROGRESS_DFS,
   PROGRESS_ASTAR,
-  MAKE_VISITED,
-  RANDOMIZE_WALLS,
-  UPDATE_GRID_SIZE,
 } from "../../actions/mazeActions/mazeActions";
 
 const getMazeSize = (mazeInfo: MazeInfo): Coord => {
@@ -185,11 +187,11 @@ export const mazeReducer = (state = initialState, { type, payload }: any) => {
         ...state,
         mazeInfo: changeSpaceType(state, payload, SpaceTypes.empty),
       };
-    case MAKE_VISITED:
-      return {
-        ...state,
-        mazeInfo: makeVisited(payload, state),
-      };
+    // case MAKE_VISITED:
+    //   return {
+    //     ...state,
+    //     mazeInfo: makeVisited(payload, state),
+    //   };
     case RANDOMIZE_WALLS:
       return {
         ...state,
