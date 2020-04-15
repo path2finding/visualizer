@@ -5,10 +5,8 @@ import {
   STOP_VISUALIZATION,
   TOGGLE_MOVE_START,
   TOGGLE_MOVE_END,
-  LOAD_MAZE,
   CHANGE_SPEED,
 } from "../../actions/menuActions/menuActions";
-// import { STOP_VISUALIZATION } from "../../actions/mazeActions/mazeActions";
 import { MenuState } from "../../models/menu";
 import { initialState } from "../../models/menu/initialState";
 
@@ -17,16 +15,6 @@ export const menuReducer = (
   { type, payload }: any
 ) => {
   switch (type) {
-    case CHANGE_ALGO:
-      return {
-        ...state,
-        selectedAlgo: payload,
-      };
-    case CHANGE_SPEED:
-      return {
-        ...state,
-        currentSpeed: payload,
-      };
     case START_VISUALIZATION:
       return {
         ...state,
@@ -46,6 +34,16 @@ export const menuReducer = (
         startTime: undefined,
         endTime: undefined,
       };
+    case CHANGE_SPEED:
+      return {
+        ...state,
+        currentSpeed: payload,
+      };
+    case CHANGE_ALGO:
+      return {
+        ...state,
+        selectedAlgo: payload,
+      };
     case TOGGLE_MOVE_START:
       // Check for making `canMoveEnd` false if setting
       // `canMoveStart` to true
@@ -56,7 +54,6 @@ export const menuReducer = (
           canMoveEnd: false,
         };
       }
-
       return {
         ...state,
         canMoveStart: !state.canMoveStart,

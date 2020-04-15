@@ -107,4 +107,18 @@ describe("Maze Reducer Tests", () => {
 
     expect(updatedState).toEqual(expectedState);
   });
+
+  // TODO: progressBFS
+
+  // TODO: progressDFS
+
+  // TODO: progressAstar
+
+  // TODO: stopVis
+
+  // TODO: randomizeWalls
+
+  // TODO: updateGridSize
+
+  // TODO: loadMaze
 });
