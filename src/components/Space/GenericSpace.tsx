@@ -56,12 +56,14 @@ interface GenericSpace {
 //   }
 
 const GenericSpace: React.FC<GenericSpace> = (props) => {
+  const { type, path, visited } = props;
+
   return (
     <Suspense fallback="none">
-      {props.type === "empty" ? (
-        <Empty visited={props.visited} path={props.path} />
+      {type === "empty" ? (
+        <Empty visited={visited} path={path} />
       ) : (
-        <Wall type={props.type} />
+        <Wall type={type} />
       )}
     </Suspense>
   );

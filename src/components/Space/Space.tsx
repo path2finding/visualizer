@@ -21,35 +21,49 @@ interface Props {
 
 const Space: React.FC<Props> = (props) => {
   const [hovered, setHover] = useState(false);
+  const {
+    position,
+    type,
+    visited,
+    path,
+    inOpenSet,
+    inClosedSet,
+    onChangeStart,
+    onChangeEnd,
+    onSetEmpty,
+    onSetWall,
+    canMoveEnd,
+    canMoveStart,
+  } = props;
 
   const spaceClicked = () => {
-    if (props.canMoveStart) {
-      props.onChangeStart();
-    } else if (props.canMoveEnd) {
-      props.onChangeEnd();
+    if (canMoveStart) {
+      onChangeStart();
+    } else if (canMoveEnd) {
+      onChangeEnd();
     } else {
-      if (props.type === SpaceTypes.wall) {
-        props.onSetEmpty();
+      if (type === SpaceTypes.wall) {
+        onSetEmpty();
       }
-      if (props.type === SpaceTypes.empty) {
-        props.onSetWall();
+      if (type === SpaceTypes.empty) {
+        onSetWall();
       }
     }
   };
 
   return (
     <mesh
-      position={[props.position.x, props.position.z, props.position.y]}
+      position={[position.x, position.z, position.y]}
       onClick={(e) => spaceClicked()}
       onPointerOver={(e) => setHover(true)}
       onPointerOut={(e) => setHover(false)}
     >
       <GenericSpace
-        type={props.type}
-        visited={props.visited}
-        path={props.path}
-        inOpenSet={props.inOpenSet}
-        inClosedSet={props.inClosedSet}
+        type={type}
+        visited={visited}
+        path={path}
+        inOpenSet={inOpenSet}
+        inClosedSet={inClosedSet}
       />
       {hovered && (
         <mesh>
