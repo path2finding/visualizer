@@ -444,7 +444,17 @@ class MenuBar extends React.Component<Props, State> {
               visible={sidebarOpen}
               width="very wide"
             >
-              <Segment textAlign="left" padded="very">
+              <Button
+                className="side-bar-close-btn"
+                circular
+                icon="close"
+                onClick={() => this.setState({ sidebarOpen: false })}
+              />
+              <Segment
+                className="side-bar-content"
+                textAlign="left"
+                padded="very"
+              >
                 <ReactMarkdown source={this.getInfo()} text-color="white" />
               </Segment>
             </Sidebar>
