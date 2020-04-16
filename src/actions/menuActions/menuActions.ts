@@ -10,7 +10,6 @@ export const CLEAR_GRID = "CLEAR_GRID";
 export const TOGGLE_MOVE_START = "TOGGLE_MOVE_START";
 export const TOGGLE_MOVE_END = "TOGGLE_MOVE_END";
 export const LOAD_MAZE = "LOAD_MAZE";
-export const SAVE_MAZE = "SAVE_MAZE";
 export const CHANGE_SPEED = "CHANGE_SPEED";
 export const RANDOMIZE_WALLS = "RANDOMIZE_WALLS";
 export const UPDATE_GRID_SIZE = "UPDATE_GRID_SIZE";
@@ -109,15 +108,6 @@ export const handleClearGrid = (
   return {
     type: CLEAR_GRID,
     payload: null,
-  };
-};
-
-export const saveMaze = (maze: MazeInfo) => {
-  console.log("This is not hooked up to a reducer");
-  console.log(JSON.stringify(maze));
-  return {
-    type: SAVE_MAZE,
-    payload: JSON.stringify(maze),
   };
 };
 

@@ -25,3 +25,13 @@
     width: calc(100% - 20px);
   }
 }
+
+.save-modal {
+  width: 70%;
+
+  .save-modal-content {
+    height: 70vh;
+    overflow-y: overlay;
+    padding-right: 15px;
+  }
+}

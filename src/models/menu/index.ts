@@ -6,7 +6,7 @@ export interface MenuState {
   isPlaying: boolean;
   canMoveStart: boolean;
   canMoveEnd: boolean;
-  speed: DropdownItemProps[];
+  playSpeeds: DropdownItemProps[];
   currentSpeed: number;
   startTime: Date | number | undefined;
   endTime: Date | number | undefined;
