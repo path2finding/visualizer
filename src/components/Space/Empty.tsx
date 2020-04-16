@@ -2,6 +2,7 @@ import React from "react";
 import { Vector3 } from "three";
 import { useLoader, useFrame } from "react-three-fiber";
 import * as THREE from "three";
+import { SpaceTypes } from "./types";
 
 interface Empty {
   visited: Boolean;
@@ -12,8 +13,8 @@ const Empty: React.FC<Empty> = (props) => {
   const currentState = props.visited
     ? props.path
       ? "path"
-      : "visted"
-    : "empty";
+      : "visited"
+    : SpaceTypes.empty;
 
   const texture = useLoader(
     THREE.TextureLoader,
