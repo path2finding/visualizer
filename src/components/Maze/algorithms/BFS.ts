@@ -70,14 +70,13 @@ const runBFS = (props: Props) => {
   return;
 };
 
-const bfsDesc =
-  "### BFS Info\
+const bfsDesc = `### BFS Info\
 \nBreadth-First Search is a graph or tree traversing algorithm that looks at all nodes at the current level \
 before moving onto the next deepest set of nodes. It was created by Konrad Zuse in 1945 and later reinvented by Edward F. Moore in 1959. \
 \n### Runtime:\
 \nO( | V | + | E |) where V is the number of nodes and E the number of edges.\
 \n### Helpful links: \
 \n[TheHippieCat (video)] (https://www.youtube.com/watch?v=WvR9voi0y2I)\
-\n[Nesbox (README)] (https://github.com/nesbox/TIC-80/wiki/Pathfinding%EA%9E%89-BFS-Algorithm)";
+\n[Nesbox (README)] (https://github.com/nesbox/TIC-80/wiki/Pathfinding%EA%9E%89-BFS-Algorithm)`;
 
 export { runBFS, bfsDesc };

@@ -225,19 +225,21 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
   };
 
   getInfo = () => {
-    let al = this.props.selectedAlgo;
-    if (al === null) {
-      al = "Select an algorithm";
-    } else if (al === Algorithms.astar) {
-      al = aStarDesc;
-    } else if (al === Algorithms.bfs) {
-      al = bfsDesc;
-    } else if (al === Algorithms.dfs) {
-      al = dfsDesc;
-    } else if (al === Algorithms.djikstras) {
-      al = djikstrasDesc;
+    const { selectedAlgo } = this.props;
+    let algoDesc = "";
+
+    if (selectedAlgo === null) {
+      algoDesc = "Select an algorithm";
+    } else if (selectedAlgo === Algorithms.astar) {
+      algoDesc = aStarDesc;
+    } else if (selectedAlgo === Algorithms.bfs) {
+      algoDesc = bfsDesc;
+    } else if (selectedAlgo === Algorithms.dfs) {
+      algoDesc = dfsDesc;
+    } else if (selectedAlgo === Algorithms.djikstras) {
+      algoDesc = djikstrasDesc;
     }
-    return al as string;
+    return algoDesc;
   };
 
   render() {
