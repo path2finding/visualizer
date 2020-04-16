@@ -23,8 +23,9 @@ import * as yup from "yup";
 import { Maze } from "../../models/maze";
 import { SpaceTypes } from "../Space/types";
 import { Algorithms } from "../Maze/algorithms/types";
-import algos from "../../algos";
 import { getMazeSize } from "../Maze/Maze";
+// Algorithm information
+import { aStarDesc, bfsDesc, dfsDesc, djikstrasDesc } from "../Maze/algorithms";
 
 import "./Menu.scss";
 
@@ -228,13 +229,13 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
     if (al === null) {
       al = "Select an algorithm";
     } else if (al === Algorithms.astar) {
-      al = algos.a;
+      al = aStarDesc;
     } else if (al === Algorithms.bfs) {
-      al = algos.BFS;
+      al = bfsDesc;
     } else if (al === Algorithms.dfs) {
-      al = algos.DFS;
+      al = dfsDesc;
     } else if (al === Algorithms.djikstras) {
-      al = algos.Djikstras;
+      al = djikstrasDesc;
     }
     return al as string;
   };

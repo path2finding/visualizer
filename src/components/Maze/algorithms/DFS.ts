@@ -67,4 +67,14 @@ const runDFS = (props: Props) => {
   }, 100 / currentSpeed);
 };
 
-export default runDFS;
+const dfsDesc =
+  "### DFS Info\
+\nDepth-first search is a pathfinding or tree spanning algorithm that follows one branch to its deepest point before backtracking. \
+It was created in the 19th century by French mathematician Charles Pierre Trémaux. \
+\n### Runtime:\
+\nO( | V | + | E |) where V is the number of nodes and E the number of edges.\
+\n### Helpful links:\
+\n[Brilliant (articel)] (https://brilliant.org/wiki/depth-first-search-dfs)\
+\n[Go GATE IIT (video)](https://www.youtube.com/watch?v=iaBEKo5sM7w)";
+
+export { runDFS, dfsDesc };

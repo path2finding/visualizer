@@ -96,4 +96,15 @@ const runDjikstras = (props: Props) => {
   }, 100 / currentSpeed);
 };
 
-export default runDjikstras;
+const djikstrasDesc =
+  "### Djikstra's Algorithm Info\
+        \nDjikstra's shortest path first Algorithm is a pathfinding algorithm created by Edsger W. Djikstra in 1956. \
+        It uses a min-priority queue to find the shortest path of a weighted graph. \
+        \n### Runtime: \
+        \n(Min-priority queue) O(| V | +| E |log| V |) (where | V | s the number of nodes and | E | is the number of edges)\
+        \n(Array) O(V^2)\
+        \n### Helpful links:\
+        \n[Computerphile (video)](https://www.youtube.com/watch?v=GazC3A4OQTE)\
+        \n[Clément Mihailescu (video)] (https://www.youtube.com/watch?v=msttfIHHkak&t=2826s)";
+
+export { runDjikstras, djikstrasDesc };

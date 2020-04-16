@@ -1,8 +1,8 @@
 import _ from "lodash";
-import runBFS from "./BFS";
-import runDFS from "./DFS";
-import runAstar from "./A*";
-import runDjikstras from "./Djikstras";
+import { runBFS, bfsDesc } from "./BFS";
+import { runDFS, dfsDesc } from "./DFS";
+import { runAstar, aStarDesc } from "./A*";
+import { runDjikstras, djikstrasDesc } from "./Djikstras";
 import { Coord, MazeInfo } from "../../../models/maze";
 import { SpaceTypes } from "../../Space/types";
 import { getMazeSize } from "../Maze";
@@ -159,4 +159,8 @@ export {
   getLowestFScore,
   getValidNeighbors,
   removeFromArr,
+  aStarDesc,
+  bfsDesc,
+  dfsDesc,
+  djikstrasDesc,
 };

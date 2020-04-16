@@ -118,4 +118,17 @@ const runAstar = (props: Props) => {
   }, 100 / currentSpeed);
 };
 
-export default runAstar;
+const aStarDesc =
+  " ### A* Info\
+    \nA* pronounced A-Star was originally created in an attempt to create a general purpose robot as part of the Shakey\
+     project in the 1960’s and 70’s. A* is a best-first search algorithm.\
+     \n### Runtime: \
+    \nThe time complexity is polynomial when the search space is a tree, there is a single goal state,\
+     and the heuristic function h meets the following condition:\
+    \n| h ( x ) − h ∗ ( x ) | = O ( log ⁡ h ∗ ( x ) ) \
+    \nwhere h* is the optimal heuristic, the exact cost to get from x to the goal.\
+    \n### Helpful links:\
+    \n[The Coding Train (video part1)] (https://www.youtube.com/watch?v=aKYlikFAV4k&t=968s) \
+    \n[Computerphile (video)] (https://www.youtube.com/watch?v=ySN5Wnu88nE )";
+
+export { runAstar, aStarDesc };
