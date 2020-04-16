@@ -11,6 +11,7 @@
   text-align: center !important;
   background-color: #e03997 !important;
   color: white !important;
+  margin-right: 0 !important;
 
   i {
     display: none;
@@ -33,5 +34,16 @@
     height: 70vh;
     overflow-y: overlay;
     padding-right: 15px;
+  }
+}
+
+.info {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+@media only screen and (max-width: 1120px) {
+  .hidden-icon {
+    display: none !important;
   }
 }

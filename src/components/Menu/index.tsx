@@ -271,18 +271,30 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           <Menu.Item>
             {!isPlaying ? (
               <Button color="green" circular onClick={onStart}>
-                <Icon name="play" style={{ marginRight: "0.5rem" }} />
+                <Icon
+                  name="play"
+                  style={{ marginRight: "0.5rem" }}
+                  className="hidden-icon"
+                />
                 <span>Play</span>
               </Button>
             ) : (
               <Button circular onClick={onPause}>
-                <Icon name="pause" style={{ marginRight: "0.5rem" }} />
+                <Icon
+                  name="pause"
+                  style={{ marginRight: "0.5rem" }}
+                  className="hidden-icon"
+                />
                 <span>Pause</span>
               </Button>
             )}
             &nbsp; {/* Essentially just a fancy space */}
             <Button color="red" circular onClick={onStop}>
-              <Icon name="stop" style={{ marginRight: "0.5rem" }} />
+              <Icon
+                name="stop"
+                style={{ marginRight: "0.5rem" }}
+                className="hidden-icon"
+              />
               <span>Stop</span>
             </Button>
             {/* TODO: fix */}
@@ -326,7 +338,11 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               onClick={randomizeWalls}
               disabled={isPlaying}
             >
-              <Icon name="table" style={{ marginRight: "0.5rem" }} />
+              <Icon
+                name="table"
+                style={{ marginRight: "0.5rem" }}
+                className="hidden-icon"
+              />
               <span>Randomize Walls</span>
             </Button>
             &nbsp; {/* Essentially just a fancy space */}
@@ -336,7 +352,11 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               onClick={onClear}
               disabled={isPlaying}
             >
-              <Icon name="bomb" style={{ marginRight: "0.5rem" }} />
+              <Icon
+                name="bomb"
+                style={{ marginRight: "0.5rem" }}
+                className="hidden-icon"
+              />
               <span>Clear Grid</span>
             </Button>
             &nbsp; {/* Essentially just a fancy space */}
@@ -347,7 +367,11 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               className="save-modal"
               trigger={
                 <Button color="blue" circular disabled={isPlaying}>
-                  <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
+                  <Icon
+                    name="save outline"
+                    style={{ marginRight: "0.5rem" }}
+                    className="hidden-icon"
+                  />
                   <span>Save Maze</span>
                 </Button>
               }
@@ -374,7 +398,11 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               centered={false}
               trigger={
                 <Button color="blue" circular disabled={isPlaying}>
-                  <Icon name="upload" style={{ marginRight: "0.5rem" }} />
+                  <Icon
+                    name="upload"
+                    style={{ marginRight: "0.5rem" }}
+                    className="hidden-icon"
+                  />
                   <span>Load Maze</span>
                 </Button>
               }
@@ -536,7 +564,6 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               </Button>
             </Dropdown.Menu>
           </Dropdown>
-          &nbsp; {/* Essentially just a fancy space */}
         </Message>
       </div>
     );
