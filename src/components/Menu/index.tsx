@@ -300,95 +300,22 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
 
           <Menu.Item style={{ marginRight: "auto" }}>
             <Dropdown
+              button
               disabled={isPlaying}
               onChange={handleDropdownSpeed}
-              text={`Playback speed x${currentSpeed}` || "Change Speed"}
+              text={`Speed x${currentSpeed}` || "Change Speed"}
               value={currentSpeed}
-              selection
               options={playSpeeds}
             />
             &nbsp; {/* Essentially just a fancy space */}
             <Dropdown
+              button
               disabled={isPlaying}
               onChange={handleDropdownChange}
               text={selectedAlgo || "Choose an Algorithm"}
               value={selectedAlgo}
-              selection
               options={algorithms}
             />
-          </Menu.Item>
-
-          <Menu.Item>
-            <Dropdown
-              className="grid-size-dropdown"
-              button
-              disabled={isPlaying}
-              text="Change Grid Size"
-              fluid={true}
-              color="pink"
-            >
-              <Dropdown.Menu>
-                <Input
-                  onClick={(e: any) => e.stopPropagation()}
-                  size="small"
-                  type="number"
-                  label="Cols"
-                  fluid={true}
-                  value={mazeCols}
-                  onChange={(e) => this.setState({ mazeCols: +e.target.value })}
-                  onBlur={() =>
-                    mazeCols < 20 ? this.setState({ mazeCols: 20 }) : null
-                  }
-                />
-                <Input
-                  onClick={(e: any) => e.stopPropagation()}
-                  size="small"
-                  type="number"
-                  label="Rows"
-                  fluid={true}
-                  value={mazeRows}
-                  onChange={(e) => this.setState({ mazeRows: +e.target.value })}
-                  onBlur={() =>
-                    mazeRows < 20 ? this.setState({ mazeRows: 20 }) : null
-                  }
-                />
-                <Button
-                  color="yellow"
-                  circular
-                  onClick={() => handleChangeGridSize(mazeCols, mazeRows)}
-                >
-                  <span>Update Size</span>
-                </Button>
-              </Dropdown.Menu>
-            </Dropdown>
-            &nbsp; {/* Essentially just a fancy space */}
-            <div className="row1">
-              <Button
-                color="purple"
-                circular
-                onClick={toggleMoveStart}
-                disabled={isPlaying}
-              >
-                <Icon
-                  name={canMoveStart ? "circle" : "circle outline"}
-                  style={{ marginRight: "0.5rem" }}
-                />
-                <span>Move Start Point</span>
-              </Button>
-              &nbsp;
-              <Button
-                color="teal"
-                circular
-                onClick={toggleMoveEnd}
-                disabled={isPlaying}
-              >
-                <Icon
-                  name={canMoveEnd ? "circle" : "circle outline"}
-                  style={{ marginRight: "0.5rem" }}
-                />
-                <span>Move End Point</span>
-              </Button>
-            </div>
           </Menu.Item>
 
           <Menu.Item>
@@ -500,36 +427,115 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           </Menu.Item>
         </Menu>
         {/* Legend */}
-        <Message attached="bottom">
-          <Label image>
-            <img
-              src={process.env.PUBLIC_URL + "./startpoint.png"}
-              alt="startpoint tag"
-            />
-            Start Point
-          </Label>
-          <Label image>
-            <img
-              src={process.env.PUBLIC_URL + "./endpoint.png"}
-              alt="endpoint tag"
-            />
-            End Point
-          </Label>
-          <Label image>
-            <img src={process.env.PUBLIC_URL + "./wall.png"} alt="wall tag" />
-            Wall
-          </Label>
-          <Label image>
-            <img
-              src={process.env.PUBLIC_URL + "./visited.png"}
-              alt="visited tag"
-            />
-            Visited Point
-          </Label>
-          <Label image>
-            <img src={process.env.PUBLIC_URL + "./lava.png"} alt="path tag" />
-            Path
-          </Label>
+        <Message
+          attached="bottom"
+          style={{
+            display: "flex",
+            alignItem: "center",
+          }}
+        >
+          <div>
+            <Label image>
+              <img
+                src={process.env.PUBLIC_URL + "./startpoint.png"}
+                alt="startpoint tag"
+              />
+              Start Point
+            </Label>
+            <Label image>
+              <img
+                src={process.env.PUBLIC_URL + "./endpoint.png"}
+                alt="endpoint tag"
+              />
+              End Point
+            </Label>
+            <Label image>
+              <img src={process.env.PUBLIC_URL + "./wall.png"} alt="wall tag" />
+              Wall
+            </Label>
+            <Label image>
+              <img
+                src={process.env.PUBLIC_URL + "./visited.png"}
+                alt="visited tag"
+              />
+              Visited Point
+            </Label>
+            <Label image>
+              <img src={process.env.PUBLIC_URL + "./lava.png"} alt="path tag" />
+              Path
+            </Label>
+          </div>
+          <div className="row1" style={{ marginLeft: "auto" }}>
+            <Button
+              color="purple"
+              circular
+              onClick={toggleMoveStart}
+              disabled={isPlaying}
+            >
+              <Icon
+                name={canMoveStart ? "circle" : "circle outline"}
+                style={{ marginRight: "0.5rem" }}
+              />
+              <span>Move Start Point</span>
+            </Button>
+            &nbsp;
+            <Button
+              color="teal"
+              circular
+              onClick={toggleMoveEnd}
+              disabled={isPlaying}
+            >
+              <Icon
+                name={canMoveEnd ? "circle" : "circle outline"}
+                style={{ marginRight: "0.5rem" }}
+              />
+              <span>Move End Point</span>
+            </Button>
+          </div>
+          &nbsp;
+          <Dropdown
+            className="grid-size-dropdown"
+            button
+            disabled={isPlaying}
+            text="Change Grid Size"
+            fluid={true}
+            color="pink"
+          >
+            <Dropdown.Menu>
+              <Input
+                onClick={(e: any) => e.stopPropagation()}
+                size="small"
+                type="number"
+                label="Cols"
+                fluid={true}
+                value={mazeCols}
+                onChange={(e) => this.setState({ mazeCols: +e.target.value })}
+                onBlur={() =>
+                  mazeCols < 20 ? this.setState({ mazeCols: 20 }) : null
+                }
+              />
+              <Input
+                onClick={(e: any) => e.stopPropagation()}
+                size="small"
+                type="number"
+                label="Rows"
+                fluid={true}
+                value={mazeRows}
+                onChange={(e) => this.setState({ mazeRows: +e.target.value })}
+                onBlur={() =>
+                  mazeRows < 20 ? this.setState({ mazeRows: 20 }) : null
+                }
+              />
+              <Button
+                color="yellow"
+                circular
+                onClick={() => handleChangeGridSize(mazeCols, mazeRows)}
+              >
+                <span>Update Size</span>
+              </Button>
+            </Dropdown.Menu>
+          </Dropdown>
+          &nbsp; {/* Essentially just a fancy space */}
         </Message>
       </div>
     );
