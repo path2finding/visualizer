@@ -19,7 +19,8 @@ export const menuReducer = (
       return {
         ...state,
         isPlaying: true,
-        startTime: Date.now(),
+        startTime: state.startTime ? state.startTime : Date.now(),
+        endTime: undefined,
       };
     case PAUSE_VISUALIZATION:
       return {
