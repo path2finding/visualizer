@@ -11,7 +11,6 @@ import {
   ButtonProps,
   Modal,
   Form,
-  TextAreaProps,
   Sidebar,
   Segment,
   Message,
@@ -29,7 +28,21 @@ import { aStarDesc, bfsDesc, dfsDesc, djikstrasDesc } from "../Maze/algorithms";
 
 import "./Menu.scss";
 
-export interface MenuProps extends MenuState {
+const SpaceSchema = yup.object({
+  type: yup
+    .mixed()
+    .oneOf([
+      SpaceTypes.wall,
+      SpaceTypes.empty,
+      SpaceTypes.start,
+      SpaceTypes.end,
+    ])
+    .required(),
+  visited: yup.bool().required(),
+  path: yup.bool().required(),
+});
+
+export interface Props extends MenuState {
   canMoveStart: boolean;
   canMoveEnd: boolean;
   maze: Maze;
@@ -70,36 +83,20 @@ export interface MenuProps extends MenuState {
   randomizeWalls: () => void;
 }
 
-export interface _MenuState {
+export interface State {
   pastedMaze: string | number | undefined;
-  showModal: boolean;
-  hasError: boolean;
-  errorMessage: string;
+  errorMessage: string | null;
+  loadModalOpen: boolean;
   sidebarOpen: boolean;
   mazeCols: number;
   mazeRows: number;
 }
 
-export const yupSpaceSchema = yup.object({
-  type: yup
-    .mixed()
-    .oneOf([
-      SpaceTypes.wall,
-      SpaceTypes.empty,
-      SpaceTypes.start,
-      SpaceTypes.end,
-    ])
-    .required(),
-  visited: yup.bool().required(),
-  path: yup.bool().required(),
-});
-
-class MenuBar extends React.Component<MenuProps, _MenuState> {
+class MenuBar extends React.Component<Props, State> {
   state = {
     pastedMaze: "",
-    showModal: false,
-    hasError: false,
-    errorMessage: "",
+    errorMessage: null,
+    loadModalOpen: false,
     sidebarOpen: false,
     mazeCols: getMazeSize(this.props.maze.mazeInfo).x,
     mazeRows: getMazeSize(this.props.maze.mazeInfo).y,
@@ -121,8 +118,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
       if (!isArray) return false;
       if (obj[i].length === 0) return false;
       for (let j = 0; j < obj[i].length; j++) {
-        console.log(obj[keys[i]][j]);
-        const spaceIsValid = yupSpaceSchema.isValidSync(obj[keys[i]][j]);
+        const spaceIsValid = SpaceSchema.isValidSync(obj[keys[i]][j]);
         if (!spaceIsValid) {
           return false;
         }
@@ -134,10 +130,8 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
   checkStartEndPoints = (maze: MazeInfo): boolean => {
     let numStart: number = 0;
     let numEnd: number = 0;
-    // eslint-disable-next-line array-callback-return
-    Object.keys(maze).map((key: string) => {
-      // eslint-disable-next-line array-callback-return
-      maze[+key].map((value: Space) => {
+    Object.keys(maze).forEach((key: string) => {
+      maze[+key].forEach((value: Space) => {
         numStart += value.type === SpaceTypes.start ? 1 : 0;
         numEnd += value.type === SpaceTypes.end ? 1 : 0;
       });
@@ -145,12 +139,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
     return numStart <= 1 && numEnd <= 1;
   };
 
-  //event: React.FormEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
   isValidMaze = (mazeInfo: MazeInfo): boolean => {
-    console.log("validate");
-    // try {
-    // const maze: MazeInfo = JSON.parse(data.value as string);
-    // console.log(maze);
     const keys = Object.keys(mazeInfo);
 
     if (keys.length === 0) {
@@ -184,43 +173,30 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             });
             return false;
           }
-          //  else {
-          //   this.setState({
-          //     hasError: false,
-          //     pastedMaze: data.value as string,
-          //   });
-          // }
         }
       }
     }
-    // } catch (e) {
-    // this.setState({
-    //   ...this.state,
-    //   hasError: true,
-    //   errorMessage: "Maze data must be in JSON format!",
-    // });
-    // }
     return true;
   };
 
   loadMaze = () => {
-    // TODO: move validation here
     const { pastedMaze } = this.state;
-    console.log("Submit", pastedMaze);
 
     try {
       const mazeInfo: MazeInfo = JSON.parse(pastedMaze);
 
       if (this.isValidMaze(mazeInfo)) {
-        // Maze is valid
-        console.log("valid");
-        // this.props.loadMaze(mazeInfo);
-        // this.setState({ pastedMaze: "", showModal: false });
-      } else {
-        console.log("invalid");
+        this.props.loadMaze(mazeInfo);
+        this.setState({
+          pastedMaze: "",
+          errorMessage: null,
+          loadModalOpen: false,
+        });
       }
     } catch (err) {
-      console.error(err);
+      this.setState({
+        errorMessage: "Unable to parse JSON",
+      });
     }
   };
 
@@ -265,7 +241,14 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
       startTime,
       endTime,
     } = this.props;
-    const { mazeCols, mazeRows, pastedMaze, sidebarOpen } = this.state;
+    const {
+      mazeCols,
+      mazeRows,
+      pastedMaze,
+      loadModalOpen,
+      sidebarOpen,
+      errorMessage,
+    } = this.state;
 
     return (
       <div>
@@ -398,8 +381,21 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             &nbsp; {/* Essentially just a fancy space */}
             <Modal
               centered={false}
+              open={loadModalOpen}
+              onClose={() =>
+                this.setState({
+                  pastedMaze: "",
+                  errorMessage: null,
+                  loadModalOpen: false,
+                })
+              }
               trigger={
-                <Button color="blue" circular disabled={isPlaying}>
+                <Button
+                  color="blue"
+                  circular
+                  disabled={isPlaying}
+                  onClick={() => this.setState({ loadModalOpen: true })}
+                >
                   <Icon
                     name="upload"
                     style={{ marginRight: "0.5rem" }}
@@ -412,20 +408,18 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               <Modal.Header>Paste your maze in the text box</Modal.Header>
               <Modal.Content>
                 <Modal.Description>
-                  {/* Trying to hook up this textarea to capture maze info
-                    inspration, https://react.semantic-ui.com/collections/form/#usage-capture-values */}
                   <Form onSubmit={this.loadMaze}>
                     <Form.TextArea
                       style={{ minHeight: 500, minWidth: 800 }}
                       placeholder="Maze Text"
                       name="name"
                       value={pastedMaze}
-                      onChange={(e: TextAreaProps) =>
-                        this.setState({ pastedMaze: e.value })
+                      onChange={(e: any) =>
+                        this.setState({ pastedMaze: e.target.value })
                       }
                     />
-                    <Message visible={this.state.hasError}>
-                      Enter properly formatted json
+                    <Message hidden={errorMessage ? false : true}>
+                      {errorMessage}
                     </Message>
                     <Form.Button content="Submit" />
                   </Form>
@@ -443,7 +437,6 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             <Sidebar
               as={Menu}
               animation="push"
-              overlay
               icon="labeled"
               direction="right"
               onHide={() => this.setState({ sidebarOpen: false })}
@@ -468,20 +461,23 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           <div>
             <Label image>
               <img
-                src={process.env.PUBLIC_URL + "./startpoint.png"}
+                src={`${process.env.PUBLIC_URL}/${SpaceTypes.start}.png`}
                 alt="startpoint tag"
               />
               Start Point
             </Label>
             <Label image>
               <img
-                src={process.env.PUBLIC_URL + "./endpoint.png"}
+                src={`${process.env.PUBLIC_URL}/${SpaceTypes.end}.png`}
                 alt="endpoint tag"
               />
               End Point
             </Label>
             <Label image>
-              <img src={process.env.PUBLIC_URL + "./wall.png"} alt="wall tag" />
+              <img
+                src={`${process.env.PUBLIC_URL}/${SpaceTypes.wall}.png`}
+                alt="wall tag"
+              />
               Wall
             </Label>
             <Label image>
@@ -496,7 +492,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               Path
             </Label>
           </div>
-          <div className="row1" style={{ marginLeft: "auto" }}>
+          <div style={{ marginLeft: "auto" }}>
             <Button
               color="purple"
               circular
