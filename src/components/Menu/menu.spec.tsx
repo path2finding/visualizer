@@ -40,7 +40,7 @@ describe("<Menu />", () => {
     loadMaze: jest.fn(),
     handleDropdownSpeed: jest.fn(),
     randomizeWalls: jest.fn(),
-    speed: MenuInitialState.speed,
+    playSpeeds: MenuInitialState.playSpeeds,
     startTime: undefined,
     endTime: undefined,
     currentSpeed: 1,

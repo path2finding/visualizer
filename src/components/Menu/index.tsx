@@ -22,6 +22,7 @@ import { MazeInfo, Space } from "../../models/maze";
 import * as yup from "yup";
 import { Maze } from "../../models/maze";
 import { SpaceTypes } from "../Space/types";
+import { Algorithms } from "../Maze/algorithms/types";
 import algos from "../../algos";
 import { getMazeSize } from "../Maze/Maze";
 
@@ -55,7 +56,6 @@ export interface MenuProps extends MenuState {
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
   ) => void;
-  saveMaze: (maze: MazeInfo) => void;
   loadMaze: (maze: MazeInfo) => void;
   toggleMoveStart: (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -70,11 +70,11 @@ export interface MenuProps extends MenuState {
 }
 
 export interface _MenuState {
-  value: string;
+  pastedMaze: string | number | undefined;
   showModal: boolean;
   hasError: boolean;
   errorMessage: string;
-  sidebar: boolean;
+  sidebarOpen: boolean;
   mazeCols: number;
   mazeRows: number;
 }
@@ -82,7 +82,12 @@ export interface _MenuState {
 export const yupSpaceSchema = yup.object({
   type: yup
     .mixed()
-    .oneOf(["wall", "empty", "startpoint", "endpoint"])
+    .oneOf([
+      SpaceTypes.wall,
+      SpaceTypes.empty,
+      SpaceTypes.start,
+      SpaceTypes.end,
+    ])
     .required(),
   visited: yup.bool().required(),
   path: yup.bool().required(),
@@ -90,11 +95,11 @@ export const yupSpaceSchema = yup.object({
 
 class MenuBar extends React.Component<MenuProps, _MenuState> {
   state = {
-    value: "",
+    pastedMaze: "",
     showModal: false,
     hasError: false,
     errorMessage: "",
-    sidebar: false,
+    sidebarOpen: false,
     mazeCols: getMazeSize(this.props.maze.mazeInfo).x,
     mazeRows: getMazeSize(this.props.maze.mazeInfo).y,
   };
@@ -110,7 +115,6 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
   };
 
   checkSpace = (keys: any[], obj: any): boolean => {
-    // {key: "value"} =>  [0, 1, 2, 3, 4]
     for (let i = 0; i < keys.length; i++) {
       const isArray = yup.array().isValidSync(obj[i]);
       if (!isArray) return false;
@@ -141,97 +145,98 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
   };
 
   //event: React.FormEvent<HTMLTextAreaElement>, data: TextAreaProps) => void
-  handleChange = (
-    event: React.FormEvent<HTMLTextAreaElement>,
-    data: TextAreaProps
-  ): void => {
-    console.log("here");
-    try {
-      const maze: MazeInfo = JSON.parse(data.value as string);
-      console.log(maze);
-      const keys = Object.keys(maze);
-      if (keys.length === 0) {
+  isValidMaze = (mazeInfo: MazeInfo): boolean => {
+    console.log("validate");
+    // try {
+    // const maze: MazeInfo = JSON.parse(data.value as string);
+    // console.log(maze);
+    const keys = Object.keys(mazeInfo);
+
+    if (keys.length === 0) {
+      this.setState({
+        errorMessage: "Object should have keys!",
+      });
+      return false;
+    } else {
+      const keysAreValid = this.checkDynamicKeys(keys);
+
+      if (!keysAreValid) {
         this.setState({
-          ...this.state,
-          hasError: true,
-          errorMessage: "Object should have keys!",
+          errorMessage: "Object keys must be numeric!",
         });
+        return false;
       } else {
-        const keysAreValid = this.checkDynamicKeys(keys);
-        if (!keysAreValid) {
+        const spacesAreValid = this.checkSpace(keys, mazeInfo);
+
+        if (!spacesAreValid) {
           this.setState({
-            ...this.state,
-            hasError: true,
-            errorMessage: "Object keys must be numeric!",
+            errorMessage: "Spaces required parameters type, visited, and path!",
           });
+          return false;
         } else {
-          const spacesAreValid = this.checkSpace(keys, maze);
-          if (!spacesAreValid) {
+          const startEndPointsValid = this.checkStartEndPoints(mazeInfo);
+
+          if (!startEndPointsValid) {
             this.setState({
-              ...this.state,
-              hasError: true,
               errorMessage:
-                "Spaces required parameters type, visited, and path!",
+                "Maze can only have one start point and one end point",
             });
-          } else {
-            const startEndPointsValid = this.checkStartEndPoints(maze);
-            if (!startEndPointsValid) {
-              this.setState({
-                ...this.state,
-                hasError: true,
-                errorMessage:
-                  "Maze can only have one start point and one end point",
-              });
-            } else {
-              this.setState({
-                hasError: false,
-                value: data.value as string,
-              });
-            }
+            return false;
           }
+          //  else {
+          //   this.setState({
+          //     hasError: false,
+          //     pastedMaze: data.value as string,
+          //   });
+          // }
         }
       }
-    } catch (e) {
-      this.setState({
-        ...this.state,
-        hasError: true,
-        errorMessage: "Maze data must be in JSON format!",
-      });
     }
+    // } catch (e) {
+    // this.setState({
+    //   ...this.state,
+    //   hasError: true,
+    //   errorMessage: "Maze data must be in JSON format!",
+    // });
+    // }
+    return true;
   };
 
-  handleSubmit = () => {
+  loadMaze = () => {
+    // TODO: move validation here
+    const { pastedMaze } = this.state;
+    console.log("Submit", pastedMaze);
+
     try {
-      const maze: MazeInfo = JSON.parse(this.state.value);
-      this.props.loadMaze(maze);
-      this.setState({ value: "", showModal: false });
+      const mazeInfo: MazeInfo = JSON.parse(pastedMaze);
+
+      if (this.isValidMaze(mazeInfo)) {
+        // Maze is valid
+        console.log("valid");
+        // this.props.loadMaze(mazeInfo);
+        // this.setState({ pastedMaze: "", showModal: false });
+      } else {
+        console.log("invalid");
+      }
     } catch (err) {
       console.error(err);
     }
-  };
-
-  handleClick = () => {
-    this.setState({ ...this.state, showModal: true });
   };
 
   getInfo = () => {
     let al = this.props.selectedAlgo;
     if (al === null) {
       al = "Select an algorithm";
-    } else if (al === "A*") {
+    } else if (al === Algorithms.astar) {
       al = algos.a;
-    } else if (al === "BFS") {
+    } else if (al === Algorithms.bfs) {
       al = algos.BFS;
-    } else if (al === "DFS") {
+    } else if (al === Algorithms.dfs) {
       al = algos.DFS;
-    } else if (al === "Djikstras") {
+    } else if (al === Algorithms.djikstras) {
       al = algos.Djikstras;
     }
     return al as string;
-  };
-
-  setVisible = (b: boolean) => {
-    this.setState({ ...this.state, sidebar: b });
   };
 
   render() {
@@ -244,21 +249,20 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
       onPause,
       onStart,
       onStop,
-      saveMaze,
       toggleMoveEnd,
       toggleMoveStart,
       selectedAlgo,
       algorithms,
       handleDropdownChange,
       randomizeWalls,
-      speed,
+      playSpeeds,
       currentSpeed,
       handleDropdownSpeed,
       handleChangeGridSize,
       startTime,
       endTime,
     } = this.props;
-    const { mazeCols, mazeRows } = this.state;
+    const { mazeCols, mazeRows, pastedMaze, sidebarOpen } = this.state;
 
     return (
       <div>
@@ -280,6 +284,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               <Icon name="stop" style={{ marginRight: "0.5rem" }} />
               <span>Stop</span>
             </Button>
+            {/* TODO: fix */}
             {isPlaying && startTime && !endTime ? (
               <Menu.Item>
                 <Moment date={startTime} durationFromNow></Moment>
@@ -297,10 +302,10 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             <Dropdown
               disabled={isPlaying}
               onChange={handleDropdownSpeed}
-              text={"Playback speed x" + currentSpeed || "Change Speed"}
+              text={`Playback speed x${currentSpeed}` || "Change Speed"}
               value={currentSpeed}
               selection
-              options={speed}
+              options={playSpeeds}
             />
             &nbsp; {/* Essentially just a fancy space */}
             <Dropdown
@@ -357,31 +362,33 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               </Dropdown.Menu>
             </Dropdown>
             &nbsp; {/* Essentially just a fancy space */}
-            <Button
-              color="purple"
-              circular
-              onClick={toggleMoveStart}
-              disabled={isPlaying}
-            >
-              <Icon
-                name={canMoveStart ? "circle" : "circle outline"}
-                style={{ marginRight: "0.5rem" }}
-              />
-              <span>Move Start Point</span>
-            </Button>
-            &nbsp;
-            <Button
-              color="teal"
-              circular
-              onClick={toggleMoveEnd}
-              disabled={isPlaying}
-            >
-              <Icon
-                name={canMoveEnd ? "circle" : "circle outline"}
-                style={{ marginRight: "0.5rem" }}
-              />
-              <span>Move End Point</span>
-            </Button>
+            <div className="row1">
+              <Button
+                color="purple"
+                circular
+                onClick={toggleMoveStart}
+                disabled={isPlaying}
+              >
+                <Icon
+                  name={canMoveStart ? "circle" : "circle outline"}
+                  style={{ marginRight: "0.5rem" }}
+                />
+                <span>Move Start Point</span>
+              </Button>
+              &nbsp;
+              <Button
+                color="teal"
+                circular
+                onClick={toggleMoveEnd}
+                disabled={isPlaying}
+              >
+                <Icon
+                  name={canMoveEnd ? "circle" : "circle outline"}
+                  style={{ marginRight: "0.5rem" }}
+                />
+                <span>Move End Point</span>
+              </Button>
+            </div>
           </Menu.Item>
 
           <Menu.Item>
@@ -409,13 +416,9 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
 
           <Menu.Item>
             <Modal
+              className="save-modal"
               trigger={
-                <Button
-                  color="blue"
-                  circular
-                  onClick={() => saveMaze(maze.mazeInfo)}
-                  disabled={isPlaying}
-                >
+                <Button color="blue" circular disabled={isPlaying}>
                   <Icon name="save outline" style={{ marginRight: "0.5rem" }} />
                   <span>Save Maze</span>
                 </Button>
@@ -433,35 +436,35 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
                   <Icon name="copy outline" style={{ marginRight: "0.5rem" }} />
                   Copy
                 </button>
-                <Modal.Description>
+                <Modal.Description className="save-modal-content">
                   {JSON.stringify(maze.mazeInfo)}
                 </Modal.Description>
               </Modal.Content>
             </Modal>
             &nbsp; {/* Essentially just a fancy space */}
-            <Button
-              color="blue"
-              circular
-              onClick={this.handleClick.bind(this)}
-              disabled={isPlaying}
+            <Modal
+              centered={false}
+              trigger={
+                <Button color="blue" circular disabled={isPlaying}>
+                  <Icon name="upload" style={{ marginRight: "0.5rem" }} />
+                  <span>Load Maze</span>
+                </Button>
+              }
             >
-              <Icon name="upload" style={{ marginRight: "0.5rem" }} />
-              <span>Load Maze</span>
-            </Button>
-            <Modal centered={false} open={this.state.showModal}>
               <Modal.Header>Paste your maze in the text box</Modal.Header>
               <Modal.Content>
                 <Modal.Description>
                   {/* Trying to hook up this textarea to capture maze info
                     inspration, https://react.semantic-ui.com/collections/form/#usage-capture-values */}
-                  <Form onSubmit={this.handleSubmit.bind(this)}>
-                    <label>Maze Text</label>
+                  <Form onSubmit={this.loadMaze}>
                     <Form.TextArea
                       style={{ minHeight: 500, minWidth: 800 }}
                       placeholder="Maze Text"
                       name="name"
-                      value={this.state.value}
-                      onChange={this.handleChange.bind(this)}
+                      value={pastedMaze}
+                      onChange={(e: TextAreaProps) =>
+                        this.setState({ pastedMaze: e.value })
+                      }
                     />
                     <Message visible={this.state.hasError}>
                       Enter properly formatted json
@@ -472,7 +475,11 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               </Modal.Content>
             </Modal>
             &nbsp; {/* Essentially just a fancy space */}
-            <Button color="blue" circular onClick={() => this.setVisible(true)}>
+            <Button
+              color="blue"
+              circular
+              onClick={() => this.setState({ sidebarOpen: true })}
+            >
               <Icon name="info" />
             </Button>
             <Sidebar
@@ -481,9 +488,9 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
               overlay
               icon="labeled"
               direction="right"
-              onHide={() => this.setVisible(false)}
+              onHide={() => this.setState({ sidebarOpen: false })}
               vertical
-              visible={this.state.sidebar}
+              visible={sidebarOpen}
               width="very wide"
             >
               <Segment textAlign="left" padded="very">
@@ -492,6 +499,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
             </Sidebar>
           </Menu.Item>
         </Menu>
+        {/* Legend */}
         <Message attached="bottom">
           <Label image>
             <img
@@ -513,7 +521,7 @@ class MenuBar extends React.Component<MenuProps, _MenuState> {
           </Label>
           <Label image>
             <img
-              src={process.env.PUBLIC_URL + "./visted.png"}
+              src={process.env.PUBLIC_URL + "./visited.png"}
               alt="visited tag"
             />
             Visited Point

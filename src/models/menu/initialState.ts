@@ -11,7 +11,7 @@ export const initialState: MenuState = {
   isPlaying: false,
   canMoveStart: false,
   canMoveEnd: false,
-  speed: [
+  playSpeeds: [
     { value: 0.5, text: "x0.5" },
     { value: 1, text: "x1" },
     { value: 1.5, text: "x1.5" },
