@@ -1,10 +1,55 @@
 # Path2Finding Visualizer
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 ## A Pathfinding Algorithm Visualization Tool
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Path2Finding is a pathfinding algorithm visualizer that focuses on teaching the user how pathfinding algorithm work. It allows the user to modify the maze, change the algorithm, and see how each of them perform. We also offer quick information about each algorithm to try and give a deeper understanding of the logic behind them.
+
+## Features
+
+- Start/stop the visualization
+- Select an algorithm (BFS, DFS, A\*, Dijkstra's)
+- Set a visualization speed (x0.5, x1, x1.5, x2)
+- Change the grid size (minimum 20 x 20)
+- Move start and end points
+- Randomize wall placement
+- Place/remove walls
+- Clear the grid
+- Save and load a maze
+- View information about each algorithm
+
+## Getting Started
+
+### Setup
+
+1. Install [Node.js](https://nodejs.org/en/) and [Yarn](https://classic.yarnpkg.com/en/docs/install)
+
+2. Clone this repository to your local computer and install its dependencies
+
+   ```bash
+   > git clone https://github.com/path2finding/visualizer.git
+   > cd visualizer
+   > yarn
+   ```
+
+### Run
+
+1. From the root project directory, start the application
+
+   ```bash
+   > yarn start
+   ```
+
+2. A browser window should open once started but if not you can access it here: [http://localhost:3000/](http://localhost:3000/)
+
+## Demo Video
+
+https://youtu.be/6Yoa2gQcspA
 
 ## Available Scripts
 
@@ -38,22 +83,6 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -72,6 +101,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
