@@ -2,7 +2,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import { mount } from "../../setupTests";
-import Menu, { MenuProps } from ".";
+import Menu, { Props } from ".";
 import { initialState } from "../../models/maze/initialState";
 import { initialState as MenuInitialState } from "../../models/menu/initialState";
 import {
@@ -17,10 +17,10 @@ const mockStore = configureStore();
 describe("<Menu />", () => {
   let wrapper: any;
 
-  const props: MenuProps = {
+  const props: Props = {
     canMoveStart: false,
     canMoveEnd: false,
-    selectedAlgo: undefined,
+    selectedAlgo: "A*",
     algorithms: [
       { value: "A*", text: "A*" },
       { value: "Djikstras", text: "Djikstras" },
@@ -36,15 +36,14 @@ describe("<Menu />", () => {
     onClear: jest.fn(),
     toggleMoveStart: jest.fn(),
     toggleMoveEnd: jest.fn(),
-    saveMaze: jest.fn(),
     loadMaze: jest.fn(),
     handleDropdownSpeed: jest.fn(),
     randomizeWalls: jest.fn(),
-    speed: MenuInitialState.speed,
+    playSpeeds: MenuInitialState.playSpeeds,
     startTime: undefined,
     endTime: undefined,
     currentSpeed: 1,
-    updateGridSize: jest.fn(),
+    handleChangeGridSize: jest.fn(),
   };
 
   it("defines the component", () => {
@@ -60,9 +59,9 @@ describe("<Menu />", () => {
   it("Menu renders with icons", () => {
     expect(wrapper.find(SemanticMenu)).toBeDefined();
     expect(wrapper.find(SemanticMenu.Item)).toBeDefined();
-    expect(wrapper.find(SemanticMenu.Item)).toHaveLength(5);
+    expect(wrapper.find(SemanticMenu.Item)).toHaveLength(4);
     expect(wrapper.find(SemanticIcon)).toBeDefined();
-    expect(wrapper.find(SemanticIcon)).toHaveLength(12);
+    expect(wrapper.find(SemanticIcon)).toHaveLength(13);
   });
 
   it("Dropdown renders", () => {
@@ -71,7 +70,7 @@ describe("<Menu />", () => {
 
   it("Buttons render", () => {
     expect(wrapper.find(SemanticButton)).toBeDefined();
-    expect(wrapper.find(SemanticButton)).toHaveLength(10);
+    expect(wrapper.find(SemanticButton)).toHaveLength(11);
   });
 
   it("Play button calls action", () => {
@@ -97,22 +96,22 @@ describe("<Menu />", () => {
   });
 
   it("Move Start Point button calls action", () => {
-    wrapper.find(SemanticButton).at(3).simulate("click");
+    wrapper.find(SemanticButton).at(8).simulate("click");
     expect(props.toggleMoveStart).toHaveBeenCalled();
   });
 
   it("Move End Point button calls action", () => {
-    wrapper.find(SemanticButton).at(4).simulate("click");
+    wrapper.find(SemanticButton).at(9).simulate("click");
     expect(props.toggleMoveEnd).toHaveBeenCalled();
   });
 
-  it("Clear button calls action", () => {
-    wrapper.find(SemanticButton).at(5).simulate("click");
+  it("Randomize walls button calls action", () => {
+    wrapper.find(SemanticButton).at(2).simulate("click");
     expect(props.randomizeWalls).toHaveBeenCalled();
   });
 
   it("Clear button calls action", () => {
-    wrapper.find(SemanticButton).at(6).simulate("click");
+    wrapper.find(SemanticButton).at(3).simulate("click");
     expect(props.onClear).toHaveBeenCalled();
   });
 

@@ -2,11 +2,11 @@ import { menuReducer } from "./menuReducer";
 import {
   START_VISUALIZATION,
   PAUSE_VISUALIZATION,
+  STOP_VISUALIZATION,
   CHANGE_ALGO,
   TOGGLE_MOVE_START,
   TOGGLE_MOVE_END,
 } from "../../actions/menuActions/menuActions";
-import { STOP_VISUALIZATION } from "../../actions/mazeActions/mazeActions";
 import { initialState } from "../../models/menu/initialState";
 import { MenuState } from "../../models/menu";
 
@@ -91,4 +91,6 @@ describe("Menu Reducer Tests", () => {
 
     expect(updatedState).toEqual(expectedState);
   });
+
+  // TODO: changeSpeed
 });

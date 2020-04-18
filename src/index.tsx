@@ -4,7 +4,6 @@ import ReactDOM from "react-dom";
 import * as React from "react";
 
 import { configureStore } from "./store/store";
-import "./assets/sass/main.scss";
 import App from "./views";
 
 export const store = configureStore();

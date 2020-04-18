@@ -1,21 +1,19 @@
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import {
-  handleDropdownChange,
-  handleDropdownSpeed,
+  handleChangeAlgo,
+  handleChangeSpeed,
   handleStartVisualization,
+  handleStopVisualization,
   handleClearGrid,
   handlePauseVisualization,
   toggleMoveStart,
   toggleMoveEnd,
-  saveMaze,
-} from "../../actions/menuActions/menuActions";
-import {
   loadMaze,
-  handleStopVisualization,
-  updateGridSize,
   randomizeWalls,
-} from "../../actions/mazeActions/mazeActions";
+  handleChangeGridSize,
+} from "../../actions/menuActions/menuActions";
+
 import MenuBar from "../../components/Menu";
 
 import { RootState } from "typesafe-actions";
@@ -24,7 +22,7 @@ const mapStateToProps = (state: RootState) => ({
   selectedAlgo: state.menu.selectedAlgo,
   algorithms: state.menu.algorithms,
   currentSpeed: state.menu.currentSpeed,
-  speed: state.menu.speed,
+  playSpeeds: state.menu.playSpeeds,
   isPlaying: state.menu.isPlaying,
   canMoveStart: state.menu.canMoveStart,
   canMoveEnd: state.menu.canMoveEnd,
@@ -36,8 +34,8 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators(
     {
-      handleDropdownChange,
-      handleDropdownSpeed,
+      handleDropdownChange: handleChangeAlgo,
+      handleDropdownSpeed: handleChangeSpeed,
       randomizeWalls,
       onStart: handleStartVisualization,
       onPause: handlePauseVisualization,
@@ -46,8 +44,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       toggleMoveStart,
       toggleMoveEnd,
       loadMaze,
-      saveMaze,
-      updateGridSize,
+      handleChangeGridSize,
     },
     dispatch
   );
