@@ -230,6 +230,8 @@ describe("Maze Reducer Tests", () => {
     expect(updatedState).toEqual(expectedState);
   });
 
+  // TODO: stopVis
+
   // TODO: randomizeWalls
 
   it("Changes the size of the gird", () => {

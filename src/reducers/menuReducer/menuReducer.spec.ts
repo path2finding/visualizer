@@ -6,6 +6,7 @@ import {
   CHANGE_ALGO,
   TOGGLE_MOVE_START,
   TOGGLE_MOVE_END,
+  CHANGE_SPEED,
 } from "../../actions/menuActions/menuActions";
 import { initialState } from "../../models/menu/initialState";
 import { MenuState } from "../../models/menu";
@@ -92,5 +93,15 @@ describe("Menu Reducer Tests", () => {
     expect(updatedState).toEqual(expectedState);
   });
 
-  // TODO: changeSpeed
+  it("Change Speed Expected State", () => {
+    const action = {
+      type: CHANGE_SPEED,
+      payload: 1,
+    };
+
+    const updatedState = menuReducer(initialState, action);
+    const expectedState: MenuState = { ...initialState, currentSpeed: 1 };
+
+    expect(updatedState).toEqual(expectedState);
+  });
 });
