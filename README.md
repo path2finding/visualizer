@@ -83,6 +83,16 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+## Running with Docker
+
+### `docker build -t path2finding-visualizer .`
+
+Builds the React UI in production production and assembles a docker image to host the build using Nginx.
+
+### `docker run -p 80:80 -d path2finding-visualizer`
+
+Runs the Nginx server hosting the React UI on port 80. Access the running server at http://localhost
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
