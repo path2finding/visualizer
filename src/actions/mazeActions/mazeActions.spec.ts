@@ -4,12 +4,19 @@ import {
   handleChangeEnd,
   makeWall,
   makeEmpty,
+  progressBFS,
+  progressDFS,
+  progressAstar,
   CHANGE_START,
   CHANGE_END,
   MAKE_WALL,
   MAKE_EMPTY,
+  PROGRESS_BFS,
+  PROGRESS_DFS,
+  PROGRESS_ASTAR,
 } from "./mazeActions";
 import { initialState } from "../../models/maze/initialState";
+import { Coord } from "../../models/maze";
 
 describe("Maze Action Tests", () => {
   const mockStore = configureStore();
@@ -79,9 +86,74 @@ describe("Maze Action Tests", () => {
     });
   });
 
-  // TODO: progressBFS
+  describe("Progress BFS", () => {
+    it("Should call PROGRESS_BFS action", () => {
+      const queue: Coord[] = [];
+      const coord = { x: 0, y: 0 };
+      const neighbors = [
+        { x: 1, y: 0 },
+        { x: 0, y: 1 },
+      ];
 
-  // TODO: progressDFS
+      const expectedActions = [
+        {
+          type: PROGRESS_BFS,
+          payload: {
+            queue: queue,
+            coord: coord,
+            neighbors: neighbors,
+          },
+        },
+      ];
+      reduxStore.dispatch(progressBFS(queue, coord, neighbors));
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
 
-  // TODO: progressASTAR
+  describe("Progress DFS", () => {
+    it("Should call PROGRESS_DFS action", () => {
+      const stack: Coord[] = [];
+      const coord = { x: 0, y: 0 };
+      const neighbors = [
+        { x: 1, y: 0 },
+        { x: 0, y: 1 },
+      ];
+
+      const expectedActions = [
+        {
+          type: PROGRESS_DFS,
+          payload: {
+            stack: stack,
+            coord: coord,
+            neighbors: neighbors,
+          },
+        },
+      ];
+      reduxStore.dispatch(progressDFS(stack, coord, neighbors));
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe("Progress A*", () => {
+    it("Should call PROGRESS_ASTAR action", () => {
+      const openSet: Coord[] = [];
+      const closedSet: Coord[] = [];
+      const newMazeInfo = initialState.mazeInfo;
+      const end = { x: 1, y: 1 };
+
+      const expectedActions = [
+        {
+          type: PROGRESS_ASTAR,
+          payload: {
+            openSet: openSet,
+            closedSet: closedSet,
+            newMazeInfo: newMazeInfo,
+            end: end,
+          },
+        },
+      ];
+      reduxStore.dispatch(progressAstar(openSet, closedSet, newMazeInfo, end));
+      expect(reduxStore.getActions()).toEqual(expectedActions);
+    });
+  });
 });
