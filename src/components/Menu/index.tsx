@@ -282,7 +282,6 @@ class MenuBar extends React.Component<Props, State> {
               />
               <span>Stop</span>
             </Button>
-            {/* TODO: fix */}
             {isPlaying && startTime && !endTime ? (
               <Menu.Item>
                 <Moment date={startTime} durationFromNow></Moment>

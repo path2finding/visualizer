@@ -52,7 +52,6 @@ describe("<Menu />", () => {
         <Menu {...props} />
       </Provider>
     );
-    // console.log('wrapper is', wrapper.debug());
     expect(wrapper).toBeDefined();
   });
 
@@ -114,21 +113,4 @@ describe("<Menu />", () => {
     wrapper.find(SemanticButton).at(3).simulate("click");
     expect(props.onClear).toHaveBeenCalled();
   });
-
-  // TODO: This fails because it's not hooked up to a reducer
-  // it("Save Maze button calls action", () => {
-  //   wrapper
-  //     .find(SemanticButton)
-  //     .at(5)
-  //     .simulate("click");
-  //   expect(props.saveMaze).toHaveBeenCalled();
-  // });
-
-  // it("Change dropdown selection", () => {
-  //   wrapper
-  //     .find(SemanticDropdown)
-  //     .simulate("click")
-  //     .simulate("keypress", { key: "Tab" });
-  //   expect(wrapper.find(SemanticDropdown).selectedAlgo).toBeDefined();
-  // });
 });
