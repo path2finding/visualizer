@@ -8,7 +8,7 @@ import {
   getCoord,
 } from "./";
 
-const heuristic = (a: Coord, b: Coord): number => {
+export const heuristic = (a: Coord, b: Coord): number => {
   // Manhattan distance formula
   return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 
