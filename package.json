@@ -40,7 +40,7 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.88.2",
-    "three": "^0.113.2",
+    "three": "^0.137.0",
     "typesafe-actions": "^5.1.0",
     "typescript": "~3.7.2",
     "yup": "^0.28.3"
